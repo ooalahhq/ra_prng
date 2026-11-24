@@ -46,13 +46,47 @@ secrets.toml
 # detail akses VPS (IP/user) -- repo ini publik, jangan pernah commit
 VPS_ACCESS.md
 
-# === Graphify knowledge graph outputs (regenerable) ===
-graphify-out/graph.html
-graphify-out/graph.json
-graphify-out/cost.json
-graphify-out/cache/
-graphify-out/manifest.json
-graphify-out/.graphify_*
+# === Local agent/workspace artifacts & internal notes ===
+graphify-out/
+CLAUDE.md
+.agents/
+RESULT.md
+docs/PITCH.md
+
+# === Local manuscript drafts, review notes, and LaTeX intermediates ===
+research/2026-9_ra-core-paper/DRAFT.md
+research/2026-9_ra-core-paper/DRAFT_v1.md
+research/2026-9_ra-core-paper/ieee/REVIEW_NOTES.md
+research/2026-9_ra-core-paper/ieee/main.blg
 
 # === pip-ra-core: Cython-generated C (regenerated from _bitgen.pyx on every build) ===
 pip-ra-core/ra_core/_bitgen.c
+pip-ra-core/build/
+
+# === Experiments allowlist (keep canonical ra_core v2 evidence; archive rest locally) ===
+experiments/*
+!experiments/2026-11-04_v2-clean-mc-harness/
+!experiments/2026-11-04_v2-engine-opt/
+!experiments/2026-11-04_v2-final-battery/
+!experiments/2026-11-04_v2-prng-shootout-and-mc/
+!experiments/2026-11-05_gpu-batch1/
+!experiments/2026-11-05_gpu-colab-k1/
+!experiments/2026-11-05_v2-vps-final-benchmark/
+
+# Local working notes & raster plot duplicates inside shootout folder
+experiments/2026-11-04_v2-prng-shootout-and-mc/PLAN.md
+experiments/2026-11-04_v2-prng-shootout-and-mc/RESULTS_PRE_AUDIT.md
+experiments/2026-11-04_v2-prng-shootout-and-mc/plots/*.png
+
+# Local ELF executables rebuilt by the November 2026 experiment harnesses
+/experiments/2026-11-04_v2-clean-mc-harness/clean_mc_shootout
+/experiments/2026-11-04_v2-engine-opt/run_stage2_engine_bench
+/experiments/2026-11-04_v2-final-battery/run_stage4_gate0_kat_bench
+/experiments/2026-11-04_v2-final-battery/run_stage4_sac_bic_perturbation
+/experiments/2026-11-04_v2-final-battery/stream_v2_final
+/experiments/2026-11-04_v2-prng-shootout-and-mc/mc_workload1_photon_v2
+/experiments/2026-11-04_v2-prng-shootout-and-mc/mc_workload2_pi_ising_v2
+/experiments/2026-11-04_v2-prng-shootout-and-mc/mc_workload3_gbm_v2
+/experiments/2026-11-04_v2-prng-shootout-and-mc/run_shootout_microbench
+/experiments/2026-11-05_gpu-colab-k1/gpu_k1_host_kat
+/experiments/2026-11-05_v2-vps-final-benchmark/run_stage6_suite_d_shootout

@@ -1,0 +1,7 @@
+PASS host frozen ra_core K1/K2/K4/K8 and official Philox KAT
+PASS unique address mapping for sampled Ising site/sweep pairs
+HOST_ISING_GOLDEN L=256 sweeps=32 ra_checksum=0x8210691e philox_checksum=0xf8a28877 ra_E=-1.417175 ra_M=0.582092 philox_E=-1.401489 philox_M=0.570770
+PASS audited CPU Ising checksum parity
+DEVICE name=NVIDIA RTX PRO 6000 Blackwell Server Edition cc=12.0 memory_bytes=101974081536 cuda_runtime=13000 cuda_driver=13000
+PASS GPU/CPU K1/K2/K4/K8 burst consumer parity, first 1024 addresses
+PASS GPU/CPU true Ising spins, draw XOR, accepts and observables

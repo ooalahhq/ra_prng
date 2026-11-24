@@ -1,0 +1,213 @@
+PASS host frozen ra_core K1/K2/K4/K8 and official Philox KAT
+PASS unique address mapping for sampled Ising site/sweep pairs
+HOST_ISING_GOLDEN L=256 sweeps=32 ra_checksum=0x8210691e philox_checksum=0xf8a28877 ra_E=-1.417175 ra_M=0.582092 philox_E=-1.401489 philox_M=0.570770
+PASS audited CPU Ising checksum parity
+DEVICE name=NVIDIA RTX PRO 6000 Blackwell Server Edition cc=12.0 memory_bytes=101974081536 cuda_runtime=13000 cuda_driver=13000
+PASS GPU/CPU K1/K2/K4/K8 burst consumer parity, first 1024 addresses
+PASS GPU/CPU true Ising spins, draw XOR, accepts and observables
+BATCH_START tests=ising,burst,crossover sequential=true
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=cpu rep=0 total_ms=0.923540
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=cpu rep=0 total_ms=1.160180
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=cpu rep=1 total_ms=1.154940
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=cpu rep=1 total_ms=0.887520
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=cpu rep=2 total_ms=0.878120
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=cpu rep=2 total_ms=1.155050
+PHYSICS test=ising L=64 sweeps=32 gen=ra E=-1.415039 abs_M=0.498535 accepted=29381 draws=131072 checksum=0x118b63e5
+PHYSICS test=ising L=64 sweeps=32 gen=philox E=-1.426758 abs_M=0.732910 accepted=27801 draws=131072 checksum=0x9cdf4806
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=gpu rep=0 kernel_ms=0.130528 total_ms=0.156900
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=gpu rep=0 kernel_ms=0.132640 total_ms=0.158350
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=gpu rep=1 kernel_ms=0.131712 total_ms=0.157590
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=gpu rep=1 kernel_ms=0.131552 total_ms=0.157240
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=gpu rep=2 kernel_ms=0.140096 total_ms=0.165740
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=gpu rep=2 kernel_ms=0.150016 total_ms=0.175700
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=gpu rep=3 kernel_ms=0.132864 total_ms=0.158570
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=gpu rep=3 kernel_ms=0.132032 total_ms=0.157550
+SAMPLE test=ising L=64 sweeps=32 gen=ra impl=gpu rep=4 kernel_ms=0.131264 total_ms=0.156910
+SAMPLE test=ising L=64 sweeps=32 gen=philox impl=gpu rep=4 kernel_ms=0.133088 total_ms=0.158660
+SUMMARY test=ising L=64 sweeps=32 gen=ra impl=gpu kernel_median_ms=0.131552 total_median_ms=0.157240 cpu_median_ms=0.887520
+SUMMARY test=ising L=64 sweeps=32 gen=philox impl=gpu kernel_median_ms=0.132864 total_median_ms=0.158570 cpu_median_ms=1.155050
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=cpu rep=0 total_ms=12.892650
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=cpu rep=0 total_ms=17.124509
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=cpu rep=1 total_ms=17.155690
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=cpu rep=1 total_ms=12.872010
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=cpu rep=2 total_ms=12.842010
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=cpu rep=2 total_ms=17.135010
+PHYSICS test=ising L=256 sweeps=32 gen=ra E=-1.417175 abs_M=0.582092 accepted=460065 draws=2097152 checksum=0x8210691e
+PHYSICS test=ising L=256 sweeps=32 gen=philox E=-1.401489 abs_M=0.570770 accepted=465000 draws=2097152 checksum=0xf8a28877
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=gpu rep=0 kernel_ms=0.132032 total_ms=0.236930
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=gpu rep=0 kernel_ms=0.131648 total_ms=0.220810
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=gpu rep=1 kernel_ms=0.131840 total_ms=0.220471
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=gpu rep=1 kernel_ms=0.131872 total_ms=0.221220
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=gpu rep=2 kernel_ms=0.131744 total_ms=0.220680
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=gpu rep=2 kernel_ms=0.137088 total_ms=0.226490
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=gpu rep=3 kernel_ms=0.131520 total_ms=0.220549
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=gpu rep=3 kernel_ms=0.131488 total_ms=0.220580
+SAMPLE test=ising L=256 sweeps=32 gen=ra impl=gpu rep=4 kernel_ms=0.131712 total_ms=0.220630
+SAMPLE test=ising L=256 sweeps=32 gen=philox impl=gpu rep=4 kernel_ms=0.131840 total_ms=0.227300
+SUMMARY test=ising L=256 sweeps=32 gen=ra impl=gpu kernel_median_ms=0.131744 total_median_ms=0.220680 cpu_median_ms=12.872010
+SUMMARY test=ising L=256 sweeps=32 gen=philox impl=gpu kernel_median_ms=0.131840 total_median_ms=0.220810 cpu_median_ms=17.135010
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=cpu rep=0 total_ms=218.202880
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=cpu rep=0 total_ms=288.780730
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=cpu rep=1 total_ms=289.608639
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=cpu rep=1 total_ms=221.856220
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=cpu rep=2 total_ms=222.009149
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=cpu rep=2 total_ms=288.251800
+PHYSICS test=ising L=1024 sweeps=32 gen=ra E=-1.417889 abs_M=0.609669 accepted=7395691 draws=33554432 checksum=0x6fd04790
+PHYSICS test=ising L=1024 sweeps=32 gen=philox E=-1.417698 abs_M=0.610199 accepted=7345033 draws=33554432 checksum=0xa23ada76
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=gpu rep=0 kernel_ms=0.263808 total_ms=1.288340
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=gpu rep=0 kernel_ms=0.262880 total_ms=1.139080
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=gpu rep=1 kernel_ms=0.263808 total_ms=1.145420
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=gpu rep=1 kernel_ms=0.262656 total_ms=1.148570
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=gpu rep=2 kernel_ms=0.262784 total_ms=1.143350
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=gpu rep=2 kernel_ms=0.264512 total_ms=1.146290
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=gpu rep=3 kernel_ms=0.263776 total_ms=1.144800
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=gpu rep=3 kernel_ms=0.264128 total_ms=1.138550
+SAMPLE test=ising L=1024 sweeps=32 gen=ra impl=gpu rep=4 kernel_ms=0.262624 total_ms=1.144120
+SAMPLE test=ising L=1024 sweeps=32 gen=philox impl=gpu rep=4 kernel_ms=0.263904 total_ms=1.145330
+SUMMARY test=ising L=1024 sweeps=32 gen=ra impl=gpu kernel_median_ms=0.262784 total_median_ms=1.144120 cpu_median_ms=221.856220
+SUMMARY test=ising L=1024 sweeps=32 gen=philox impl=gpu kernel_median_ms=0.263808 total_median_ms=1.145330 cpu_median_ms=288.780730
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=0 kernel_ms=0.014784 total_ms=0.647920
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=0 kernel_ms=0.014496 total_ms=0.651940
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=1 kernel_ms=0.014656 total_ms=0.676450
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=1 kernel_ms=0.013888 total_ms=0.640760
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=2 kernel_ms=0.012992 total_ms=0.647870
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=2 kernel_ms=0.014048 total_ms=0.648600
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=3 kernel_ms=0.014304 total_ms=0.660440
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=3 kernel_ms=0.014112 total_ms=0.646140
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=4 kernel_ms=0.014816 total_ms=0.650670
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=4 kernel_ms=0.014176 total_ms=0.643360
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=5 kernel_ms=0.012256 total_ms=0.643520
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=5 kernel_ms=0.014432 total_ms=0.646000
+SAMPLE test=burst k=2 n=4194304 gen=ra impl=gpu rep=6 kernel_ms=0.014272 total_ms=0.656850
+SAMPLE test=burst k=2 n=4194304 gen=philox impl=gpu rep=6 kernel_ms=0.014016 total_ms=0.650550
+SUMMARY test=burst k=2 n=4194304 gen=ra kernel_median_ms=0.014272 total_median_ms=0.647870
+SUMMARY test=burst k=2 n=4194304 gen=philox kernel_median_ms=0.014176 total_median_ms=0.650550
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=0 kernel_ms=0.018368 total_ms=0.667440
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=0 kernel_ms=0.014144 total_ms=0.649471
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=1 kernel_ms=0.014176 total_ms=0.649390
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=1 kernel_ms=0.018272 total_ms=0.657559
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=2 kernel_ms=0.018528 total_ms=0.656160
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=2 kernel_ms=0.014624 total_ms=0.651250
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=3 kernel_ms=0.014976 total_ms=0.669360
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=3 kernel_ms=0.018944 total_ms=0.649010
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=4 kernel_ms=0.018880 total_ms=0.649720
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=4 kernel_ms=0.014048 total_ms=0.649239
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=5 kernel_ms=0.014720 total_ms=0.651500
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=5 kernel_ms=0.016384 total_ms=0.652270
+SAMPLE test=burst k=4 n=4194304 gen=ra impl=gpu rep=6 kernel_ms=0.018944 total_ms=0.651401
+SAMPLE test=burst k=4 n=4194304 gen=philox impl=gpu rep=6 kernel_ms=0.014400 total_ms=0.645310
+SUMMARY test=burst k=4 n=4194304 gen=ra kernel_median_ms=0.018528 total_median_ms=0.652270
+SUMMARY test=burst k=4 n=4194304 gen=philox kernel_median_ms=0.014400 total_median_ms=0.649471
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=0 kernel_ms=0.031360 total_ms=0.662851
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=0 kernel_ms=0.023776 total_ms=0.661780
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=1 kernel_ms=0.020864 total_ms=0.677719
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=1 kernel_ms=0.030752 total_ms=0.667261
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=2 kernel_ms=0.026848 total_ms=0.664759
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=2 kernel_ms=0.022592 total_ms=0.651510
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=3 kernel_ms=0.022528 total_ms=0.654281
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=3 kernel_ms=0.027136 total_ms=0.660830
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=4 kernel_ms=0.027264 total_ms=0.666460
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=4 kernel_ms=0.023104 total_ms=0.655351
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=5 kernel_ms=0.022144 total_ms=0.641859
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=5 kernel_ms=0.026944 total_ms=0.654080
+SAMPLE test=burst k=8 n=4194304 gen=ra impl=gpu rep=6 kernel_ms=0.026688 total_ms=0.658990
+SAMPLE test=burst k=8 n=4194304 gen=philox impl=gpu rep=6 kernel_ms=0.022912 total_ms=0.652790
+SUMMARY test=burst k=8 n=4194304 gen=ra kernel_median_ms=0.027136 total_median_ms=0.662851
+SUMMARY test=burst k=8 n=4194304 gen=philox kernel_median_ms=0.022592 total_median_ms=0.654281
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=0 kernel_ms=0.003968 total_ms=0.019351
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=0 kernel_ms=0.004032 total_ms=0.019070
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=1 kernel_ms=0.004384 total_ms=0.020290
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=1 kernel_ms=0.004352 total_ms=0.020360
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=2 kernel_ms=0.004512 total_ms=0.017830
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=2 kernel_ms=0.004448 total_ms=0.016050
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=3 kernel_ms=0.003744 total_ms=0.015560
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=3 kernel_ms=0.004032 total_ms=0.015720
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=4 kernel_ms=0.004480 total_ms=0.016500
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=4 kernel_ms=0.003936 total_ms=0.015740
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=5 kernel_ms=0.003744 total_ms=0.015590
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=5 kernel_ms=0.003936 total_ms=0.017200
+SAMPLE test=burst k=1 n=4096 gen=ra impl=gpu rep=6 kernel_ms=0.004544 total_ms=0.016420
+SAMPLE test=burst k=1 n=4096 gen=philox impl=gpu rep=6 kernel_ms=0.003968 total_ms=0.015560
+SUMMARY test=burst k=1 n=4096 gen=ra kernel_median_ms=0.004352 total_median_ms=0.017200
+SUMMARY test=burst k=1 n=4096 gen=philox kernel_median_ms=0.003968 total_median_ms=0.015740
+SAMPLE test=burst k=1 n=4096 gen=ra impl=cpu rep=0 total_ms=0.013190
+SAMPLE test=burst k=1 n=4096 gen=philox impl=cpu rep=0 total_ms=0.022870
+SAMPLE test=burst k=1 n=4096 gen=philox impl=cpu rep=1 total_ms=0.022850
+SAMPLE test=burst k=1 n=4096 gen=ra impl=cpu rep=1 total_ms=0.013130
+SAMPLE test=burst k=1 n=4096 gen=ra impl=cpu rep=2 total_ms=0.013190
+SAMPLE test=burst k=1 n=4096 gen=philox impl=cpu rep=2 total_ms=0.022870
+SUMMARY test=burst k=1 n=4096 gen=ra impl=cpu total_median_ms=0.013190
+SUMMARY test=burst k=1 n=4096 gen=philox impl=cpu total_median_ms=0.022870
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=0 kernel_ms=0.004096 total_ms=0.031690
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=0 kernel_ms=0.004000 total_ms=0.032200
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=1 kernel_ms=0.004416 total_ms=0.032340
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=1 kernel_ms=0.004224 total_ms=0.028360
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=2 kernel_ms=0.004256 total_ms=0.028000
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=2 kernel_ms=0.003968 total_ms=0.027310
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=3 kernel_ms=0.004096 total_ms=0.027850
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=3 kernel_ms=0.004320 total_ms=0.027930
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=4 kernel_ms=0.003776 total_ms=0.029350
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=4 kernel_ms=0.003904 total_ms=0.032320
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=5 kernel_ms=0.004288 total_ms=0.031390
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=5 kernel_ms=0.003808 total_ms=0.031290
+SAMPLE test=burst k=1 n=65536 gen=ra impl=gpu rep=6 kernel_ms=0.004704 total_ms=0.032300
+SAMPLE test=burst k=1 n=65536 gen=philox impl=gpu rep=6 kernel_ms=0.004224 total_ms=0.031390
+SUMMARY test=burst k=1 n=65536 gen=ra kernel_median_ms=0.004224 total_median_ms=0.029350
+SUMMARY test=burst k=1 n=65536 gen=philox kernel_median_ms=0.004096 total_median_ms=0.031390
+SAMPLE test=burst k=1 n=65536 gen=ra impl=cpu rep=0 total_ms=0.209630
+SAMPLE test=burst k=1 n=65536 gen=philox impl=cpu rep=0 total_ms=0.365310
+SAMPLE test=burst k=1 n=65536 gen=philox impl=cpu rep=1 total_ms=0.365460
+SAMPLE test=burst k=1 n=65536 gen=ra impl=cpu rep=1 total_ms=0.209680
+SAMPLE test=burst k=1 n=65536 gen=ra impl=cpu rep=2 total_ms=0.214720
+SAMPLE test=burst k=1 n=65536 gen=philox impl=cpu rep=2 total_ms=0.365140
+SUMMARY test=burst k=1 n=65536 gen=ra impl=cpu total_median_ms=0.209680
+SUMMARY test=burst k=1 n=65536 gen=philox impl=cpu total_median_ms=0.365310
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=0 kernel_ms=0.004512 total_ms=0.183050
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=0 kernel_ms=0.006624 total_ms=0.183030
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=1 kernel_ms=0.005856 total_ms=0.183450
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=1 kernel_ms=0.004608 total_ms=0.182220
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=2 kernel_ms=0.006240 total_ms=0.182820
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=2 kernel_ms=0.006496 total_ms=0.184410
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=3 kernel_ms=0.006016 total_ms=0.182470
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=3 kernel_ms=0.005696 total_ms=0.184620
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=4 kernel_ms=0.006784 total_ms=0.184620
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=4 kernel_ms=0.006624 total_ms=0.183370
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=5 kernel_ms=0.006016 total_ms=0.181570
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=5 kernel_ms=0.006176 total_ms=0.182910
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=gpu rep=6 kernel_ms=0.006656 total_ms=0.183060
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=gpu rep=6 kernel_ms=0.006048 total_ms=0.189380
+SUMMARY test=burst k=1 n=1048576 gen=ra kernel_median_ms=0.006176 total_median_ms=0.183050
+SUMMARY test=burst k=1 n=1048576 gen=philox kernel_median_ms=0.006048 total_median_ms=0.183370
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=cpu rep=0 total_ms=3.373210
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=cpu rep=0 total_ms=5.883770
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=cpu rep=1 total_ms=5.862950
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=cpu rep=1 total_ms=3.616080
+SAMPLE test=burst k=1 n=1048576 gen=ra impl=cpu rep=2 total_ms=3.498800
+SAMPLE test=burst k=1 n=1048576 gen=philox impl=cpu rep=2 total_ms=5.876900
+SUMMARY test=burst k=1 n=1048576 gen=ra impl=cpu total_median_ms=3.498800
+SUMMARY test=burst k=1 n=1048576 gen=philox impl=cpu total_median_ms=5.876900
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=0 kernel_ms=0.012768 total_ms=0.638320
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=0 kernel_ms=0.014112 total_ms=0.639420
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=1 kernel_ms=0.014176 total_ms=0.645290
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=1 kernel_ms=0.012928 total_ms=0.641530
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=2 kernel_ms=0.012128 total_ms=0.648480
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=2 kernel_ms=0.014080 total_ms=0.644290
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=3 kernel_ms=0.014208 total_ms=0.643680
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=3 kernel_ms=0.014944 total_ms=0.628770
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=4 kernel_ms=0.014240 total_ms=0.636000
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=4 kernel_ms=0.015008 total_ms=0.644220
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=5 kernel_ms=0.013088 total_ms=0.637180
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=5 kernel_ms=0.014368 total_ms=0.642850
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=gpu rep=6 kernel_ms=0.013728 total_ms=0.644510
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=gpu rep=6 kernel_ms=0.014656 total_ms=0.636700
+SUMMARY test=burst k=1 n=4194304 gen=ra kernel_median_ms=0.013728 total_median_ms=0.641530
+SUMMARY test=burst k=1 n=4194304 gen=philox kernel_median_ms=0.014176 total_median_ms=0.643680
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=cpu rep=0 total_ms=13.480570
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=cpu rep=0 total_ms=23.483130
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=cpu rep=1 total_ms=23.499260
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=cpu rep=1 total_ms=13.484560
+SAMPLE test=burst k=1 n=4194304 gen=ra impl=cpu rep=2 total_ms=13.485730
+SAMPLE test=burst k=1 n=4194304 gen=philox impl=cpu rep=2 total_ms=23.463790
+SUMMARY test=burst k=1 n=4194304 gen=ra impl=cpu total_median_ms=13.484560
+SUMMARY test=burst k=1 n=4194304 gen=philox impl=cpu total_median_ms=23.483130
+BATCH_DONE output_sink=3111

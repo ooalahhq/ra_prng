@@ -12,7 +12,7 @@ from pathlib import Path
 
 _MODULE_DIR = Path(__file__).resolve().parent
 _INSTALLED_LIB_PATH = _MODULE_DIR / "libra_core_engine.so"  # pip install case
-_REPO_ROOT = _MODULE_DIR.parents[2]  # pip-ra-core/ra_core/ -> pip-ra-core/ -> repo root
+_REPO_ROOT = _MODULE_DIR.parents[1]  # pip-ra-core/ra_core/ -> pip-ra-core/ -> repo root
 _DEV_LIB_PATH = _REPO_ROOT / "build" / "lib" / "libra_core_engine.so"  # make build-ext-core case
 
 
@@ -37,6 +37,9 @@ _ALIGNMENT = 64  # matches alignas(64) on ra_core_engine_t's L/M fields
 def _load_library() -> ctypes.CDLL:
     lib = ctypes.CDLL(str(_LIB_PATH))
 
+    lib.ra_core_eval_k1.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
+    lib.ra_core_eval_k1.restype = ctypes.c_uint32
+
     lib.ra_core_orbit_into.argtypes = [
         ctypes.c_uint32, ctypes.c_uint32, ctypes.c_size_t, ctypes.POINTER(ctypes.c_uint32),
     ]
@@ -46,6 +49,14 @@ def _load_library() -> ctypes.CDLL:
         ctypes.c_uint32, ctypes.c_uint32, ctypes.c_size_t, ctypes.POINTER(ctypes.c_uint32),
     ]
     lib.ra_core_singleblock_into.restype = None
+
+    lib.ra_core_singleblock_x8_into.argtypes = [
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.c_size_t,
+        ctypes.POINTER(ctypes.c_uint32),
+    ]
+    lib.ra_core_singleblock_x8_into.restype = None
 
     lib.ra_core_engine_struct_size.argtypes = []
     lib.ra_core_engine_struct_size.restype = ctypes.c_size_t
@@ -57,6 +68,15 @@ def _load_library() -> ctypes.CDLL:
         ctypes.c_void_p, ctypes.c_size_t, ctypes.POINTER(ctypes.c_uint32),
     ]
     lib.ra_core_engine_next.restype = None
+
+    lib.ra_core_engine_next_u32.argtypes = [ctypes.c_void_p]
+    lib.ra_core_engine_next_u32.restype = ctypes.c_uint32
+
+    lib.ra_core_engine_next_u64.argtypes = [ctypes.c_void_p]
+    lib.ra_core_engine_next_u64.restype = ctypes.c_uint64
+
+    lib.ra_core_engine_next_double.argtypes = [ctypes.c_void_p]
+    lib.ra_core_engine_next_double.restype = ctypes.c_double
 
     lib.ra_core_engine_position.argtypes = [ctypes.c_void_p]
     lib.ra_core_engine_position.restype = ctypes.c_uint64

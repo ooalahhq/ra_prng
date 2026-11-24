@@ -50,7 +50,7 @@ from pathlib import Path
 
 DEFAULT_PRACTRAND_BIN = Path.home() / "Documents/research/PractRand/RNG_test"
 
-# addr_hi derivation (2026-09-11, HANDOVER.md state-size-pareto-frontier
+# addr_hi derivation (2026-09-11, state-size-pareto-frontier
 # Tahap D fix): driver_main_template.c's --single/--stream/--stream-hashed
 # gained a mandatory addr_hi argument on 2026-09-06 (Kandidat D 64-bit
 # address widening) -- this module predates that and called the binary
@@ -153,7 +153,7 @@ def run_one(cid: str, binary: Path, lane: Lane, ordering: str | None, base_key: 
     target_bytes = parse_size(tlmax)
     n_words = target_bytes // 4
     # +1 word safety margin for the continuous (--single) lane only
-    # (2026-09-11, HANDOVER.md state-size-pareto-frontier Tahap D): discovered
+    # (2026-09-11, state-size-pareto-frontier Tahap D): discovered
     # ra_core_orbit (production src/ra_core/c/ra_core.c, reproduces identically
     # in the parametrized core -- pre-existing, not introduced by this
     # experiment) writes exactly ONE WORD FEWER than requested whenever

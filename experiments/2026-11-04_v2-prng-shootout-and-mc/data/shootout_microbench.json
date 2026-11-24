@@ -1,0 +1,618 @@
+{
+  "suite_a_vigna_shootout": [
+    {
+      "name": "ra_core_v2 (N=256)", "category": "Bipartite Perm+Weyl", "state_bytes": 2048,
+      "inlined_stream": {"mibs": 1058.21, "gbs": 1.110, "ns_word": 3.6048, "ns_64b": 7.2097, "cyc_word": 10.797, "cpb": 2.6993},
+      "buffer_stream":  {"mibs": 1385.04, "gbs": 1.452, "ns_word": 2.7542, "ns_64b": 5.5084, "cyc_word": 8.249, "cpb": 2.0623},
+      "inlined_k1":     {"mibs": 532.04, "gbs": 0.558, "ns_word": 7.1700, "ns_64b": 14.3400, "cyc_word": 21.475, "cpb": 5.3688},
+      "buffer_k1":      {"mibs": 508.83, "gbs": 0.534, "ns_word": 7.4970, "ns_64b": 14.9940, "cyc_word": 22.455, "cpb": 5.6137}
+    },
+    {
+      "name": "ra_core_v1 (N=256)", "category": "Bipartite Perm+Weyl", "state_bytes": 2048,
+      "inlined_stream": {"mibs": 855.05, "gbs": 0.897, "ns_word": 4.4614, "ns_64b": 8.9228, "cyc_word": 13.363, "cpb": 3.3407},
+      "buffer_stream":  {"mibs": 825.80, "gbs": 0.866, "ns_word": 4.6194, "ns_64b": 9.2388, "cyc_word": 13.836, "cpb": 3.4589},
+      "inlined_k1":     {"mibs": 327.53, "gbs": 0.343, "ns_word": 11.6470, "ns_64b": 23.2940, "cyc_word": 34.885, "cpb": 8.7212},
+      "buffer_k1":      {"mibs": 322.00, "gbs": 0.338, "ns_word": 11.8470, "ns_64b": 23.6939, "cyc_word": 35.483, "cpb": 8.8707}
+    },
+    {
+      "name": "Philox4x32-10", "category": "Counter-Based (MUL)", "state_bytes": 24,
+      "inlined_stream": {"mibs": 792.14, "gbs": 0.831, "ns_word": 4.8157, "ns_64b": 9.6314, "cyc_word": 14.424, "cpb": 3.6060},
+      "buffer_stream":  {"mibs": 1158.85, "gbs": 1.215, "ns_word": 3.2918, "ns_64b": 6.5836, "cyc_word": 9.859, "cpb": 2.4648},
+      "inlined_k1":     {"mibs": 351.28, "gbs": 0.368, "ns_word": 10.8594, "ns_64b": 21.7187, "cyc_word": 32.526, "cpb": 8.1314},
+      "buffer_k1":      {"mibs": 230.00, "gbs": 0.241, "ns_word": 16.5856, "ns_64b": 33.1712, "cyc_word": 49.676, "cpb": 12.4191}
+    },
+    {
+      "name": "ChaCha8", "category": "Counter-Based (ARX)", "state_bytes": 64,
+      "inlined_stream": {"mibs": 1261.30, "gbs": 1.323, "ns_word": 3.0244, "ns_64b": 6.0488, "cyc_word": 9.059, "cpb": 2.2647},
+      "buffer_stream":  {"mibs": 1172.87, "gbs": 1.230, "ns_word": 3.2525, "ns_64b": 6.5049, "cyc_word": 9.741, "cpb": 2.4354},
+      "inlined_k1":     {"mibs": 82.13, "gbs": 0.086, "ns_word": 46.4452, "ns_64b": 92.8904, "cyc_word": 139.112, "cpb": 34.7779},
+      "buffer_k1":      {"mibs": 59.05, "gbs": 0.062, "ns_word": 64.6056, "ns_64b": 129.2113, "cyc_word": 193.505, "cpb": 48.3763}
+    },
+    {
+      "name": "ChaCha12", "category": "Counter-Based (ARX)", "state_bytes": 64,
+      "inlined_stream": {"mibs": 874.10, "gbs": 0.917, "ns_word": 4.3642, "ns_64b": 8.7283, "cyc_word": 13.071, "cpb": 3.2679},
+      "buffer_stream":  {"mibs": 847.07, "gbs": 0.888, "ns_word": 4.5034, "ns_64b": 9.0068, "cyc_word": 13.488, "cpb": 3.3721},
+      "inlined_k1":     {"mibs": 53.99, "gbs": 0.057, "ns_word": 70.6522, "ns_64b": 141.3044, "cyc_word": 211.616, "cpb": 52.9041},
+      "buffer_k1":      {"mibs": 42.89, "gbs": 0.045, "ns_word": 88.9410, "ns_64b": 177.8819, "cyc_word": 266.394, "cpb": 66.5984}
+    },
+    {
+      "name": "xoshiro256**", "category": "Scrambled Linear", "state_bytes": 32,
+      "inlined_stream": {"mibs": 5784.15, "gbs": 6.065, "ns_word": 0.6595, "ns_64b": 1.3190, "cyc_word": 1.975, "cpb": 0.4938},
+      "buffer_stream":  {"mibs": 2283.08, "gbs": 2.394, "ns_word": 1.6709, "ns_64b": 3.3417, "cyc_word": 5.004, "cpb": 1.2511},
+      "inlined_k1":     {"mibs": 1401.23, "gbs": 1.469, "ns_word": 2.7224, "ns_64b": 5.4448, "cyc_word": 8.153, "cpb": 2.0382},
+      "buffer_k1":      {"mibs": 517.57, "gbs": 0.543, "ns_word": 7.3704, "ns_64b": 14.7409, "cyc_word": 22.075, "cpb": 5.5188}
+    },
+    {
+      "name": "xoroshiro128++", "category": "Scrambled Linear", "state_bytes": 16,
+      "inlined_stream": {"mibs": 3466.70, "gbs": 3.635, "ns_word": 1.1004, "ns_64b": 2.2008, "cyc_word": 3.296, "cpb": 0.8240},
+      "buffer_stream":  {"mibs": 2542.13, "gbs": 2.666, "ns_word": 1.5006, "ns_64b": 3.0012, "cyc_word": 4.494, "cpb": 1.1236},
+      "inlined_k1":     {"mibs": 791.15, "gbs": 0.830, "ns_word": 4.8217, "ns_64b": 9.6434, "cyc_word": 14.442, "cpb": 3.6104},
+      "buffer_k1":      {"mibs": 730.48, "gbs": 0.766, "ns_word": 5.2222, "ns_64b": 10.4444, "cyc_word": 15.641, "cpb": 3.9103}
+    },
+    {
+      "name": "PCG32", "category": "Permuted LCG", "state_bytes": 16,
+      "inlined_stream": {"mibs": 2478.03, "gbs": 2.598, "ns_word": 1.5394, "ns_64b": 3.0788, "cyc_word": 4.611, "cpb": 1.1527},
+      "buffer_stream":  {"mibs": 2527.29, "gbs": 2.650, "ns_word": 1.5094, "ns_64b": 3.0188, "cyc_word": 4.521, "cpb": 1.1302},
+      "inlined_k1":     {"mibs": 2472.33, "gbs": 2.592, "ns_word": 1.5430, "ns_64b": 3.0859, "cyc_word": 4.621, "cpb": 1.1552},
+      "buffer_k1":      {"mibs": 1420.37, "gbs": 1.489, "ns_word": 2.6857, "ns_64b": 5.3714, "cyc_word": 8.044, "cpb": 2.0110}
+    },
+    {
+      "name": "SplitMix64", "category": "64-bit Weyl Mixer", "state_bytes": 8,
+      "inlined_stream": {"mibs": 4522.63, "gbs": 4.742, "ns_word": 0.8435, "ns_64b": 1.6869, "cyc_word": 2.526, "cpb": 0.6316},
+      "buffer_stream":  {"mibs": 2753.31, "gbs": 2.887, "ns_word": 1.3855, "ns_64b": 2.7710, "cyc_word": 4.149, "cpb": 1.0373},
+      "inlined_k1":     {"mibs": 1727.82, "gbs": 1.812, "ns_word": 2.2078, "ns_64b": 4.4156, "cyc_word": 6.613, "cpb": 1.6531},
+      "buffer_k1":      {"mibs": 1315.98, "gbs": 1.380, "ns_word": 2.8987, "ns_64b": 5.7975, "cyc_word": 8.682, "cpb": 2.1705}
+    },
+    {
+      "name": "WyRand", "category": "64x64->128 Folded", "state_bytes": 8,
+      "inlined_stream": {"mibs": 7096.12, "gbs": 7.441, "ns_word": 0.5376, "ns_64b": 1.0752, "cyc_word": 1.610, "cpb": 0.4025},
+      "buffer_stream":  {"mibs": 3993.32, "gbs": 4.187, "ns_word": 0.9553, "ns_64b": 1.9105, "cyc_word": 2.861, "cpb": 0.7152},
+      "inlined_k1":     {"mibs": 2929.39, "gbs": 3.072, "ns_word": 1.3022, "ns_64b": 2.6044, "cyc_word": 3.900, "cpb": 0.9751},
+      "buffer_k1":      {"mibs": 1870.65, "gbs": 1.962, "ns_word": 2.0392, "ns_64b": 4.0785, "cyc_word": 6.108, "cpb": 1.5269}
+    },
+    {
+      "name": "MT19937", "category": "GF(2) Twisted Reg", "state_bytes": 2500,
+      "inlined_stream": {"mibs": 1209.86, "gbs": 1.269, "ns_word": 3.1530, "ns_64b": 6.3060, "cyc_word": 9.444, "cpb": 2.3609},
+      "buffer_stream":  {"mibs": 1349.76, "gbs": 1.415, "ns_word": 2.8262, "ns_64b": 5.6524, "cyc_word": 8.465, "cpb": 2.1162},
+      "inlined_k1":     {"mibs": 2.27, "gbs": 0.002, "ns_word": 1683.2153, "ns_64b": 3366.4305, "cyc_word": 5041.289, "cpb": 1260.3221},
+      "buffer_k1":      {"mibs": 2.04, "gbs": 0.002, "ns_word": 1868.8232, "ns_64b": 3737.6464, "cyc_word": 5597.233, "cpb": 1399.3084}
+    }
+  ],
+  "suite_b_scalar_buffer": {
+    "k_labels": ["K=1", "K=2", "K=4", "K=8", "K=15", "K=31", "K=63", "K=127", "K=255", "K=256", "K=510", "K=10000", "stream"],
+    "generators": [
+      {
+        "name": "ra_core_v2 (N=256)", "family": "ra_core_v2", "state_bytes": 2048, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 508.83, "gbs": 0.534, "ns_word": 7.4970, "ns_64b": 14.9940, "cyc_word": 22.455, "cpb": 5.6137},
+          "K=2": {"mibs": 733.47, "gbs": 0.769, "ns_word": 5.2009, "ns_64b": 10.4018, "cyc_word": 15.577, "cpb": 3.8944},
+          "K=4": {"mibs": 796.62, "gbs": 0.835, "ns_word": 4.7886, "ns_64b": 9.5772, "cyc_word": 14.342, "cpb": 3.5856},
+          "K=8": {"mibs": 1003.69, "gbs": 1.052, "ns_word": 3.8007, "ns_64b": 7.6013, "cyc_word": 11.383, "cpb": 2.8459},
+          "K=15": {"mibs": 1112.04, "gbs": 1.166, "ns_word": 3.4304, "ns_64b": 6.8607, "cyc_word": 10.274, "cpb": 2.5686},
+          "K=31": {"mibs": 1231.91, "gbs": 1.292, "ns_word": 3.0966, "ns_64b": 6.1931, "cyc_word": 9.275, "cpb": 2.3187},
+          "K=63": {"mibs": 1205.48, "gbs": 1.264, "ns_word": 3.1645, "ns_64b": 6.3289, "cyc_word": 9.478, "cpb": 2.3695},
+          "K=127": {"mibs": 1233.44, "gbs": 1.293, "ns_word": 3.0927, "ns_64b": 6.1855, "cyc_word": 9.263, "cpb": 2.3158},
+          "K=255": {"mibs": 1158.68, "gbs": 1.215, "ns_word": 3.2923, "ns_64b": 6.5846, "cyc_word": 9.861, "cpb": 2.4652},
+          "K=256": {"mibs": 838.06, "gbs": 0.879, "ns_word": 4.5518, "ns_64b": 9.1037, "cyc_word": 13.634, "cpb": 3.4084},
+          "K=510": {"mibs": 1127.00, "gbs": 1.182, "ns_word": 3.3848, "ns_64b": 6.7696, "cyc_word": 10.138, "cpb": 2.5345},
+          "K=10000": {"mibs": 1152.49, "gbs": 1.208, "ns_word": 3.3100, "ns_64b": 6.6199, "cyc_word": 9.913, "cpb": 2.4784},
+          "stream": {"mibs": 1385.04, "gbs": 1.452, "ns_word": 2.7542, "ns_64b": 5.5084, "cyc_word": 8.249, "cpb": 2.0623}
+        }
+      },
+      {
+        "name": "ra_core_v2 (N=128)", "family": "ra_core_v2", "state_bytes": 1024, "max_k_single": 127,
+        "regimes": {
+          "K=1": {"mibs": 486.71, "gbs": 0.510, "ns_word": 7.8376, "ns_64b": 15.6753, "cyc_word": 23.474, "cpb": 5.8685},
+          "K=2": {"mibs": 766.17, "gbs": 0.803, "ns_word": 4.9789, "ns_64b": 9.9578, "cyc_word": 14.913, "cpb": 3.7282},
+          "K=4": {"mibs": 830.86, "gbs": 0.871, "ns_word": 4.5913, "ns_64b": 9.1825, "cyc_word": 13.751, "cpb": 3.4378},
+          "K=8": {"mibs": 1065.92, "gbs": 1.118, "ns_word": 3.5788, "ns_64b": 7.1576, "cyc_word": 10.719, "cpb": 2.6797},
+          "K=15": {"mibs": 1177.49, "gbs": 1.235, "ns_word": 3.2397, "ns_64b": 6.4794, "cyc_word": 9.703, "cpb": 2.4258},
+          "K=31": {"mibs": 1188.72, "gbs": 1.246, "ns_word": 3.2091, "ns_64b": 6.4181, "cyc_word": 9.612, "cpb": 2.4029},
+          "K=63": {"mibs": 1188.02, "gbs": 1.246, "ns_word": 3.2110, "ns_64b": 6.4219, "cyc_word": 9.617, "cpb": 2.4043},
+          "K=127": {"mibs": 1202.89, "gbs": 1.261, "ns_word": 3.1713, "ns_64b": 6.3425, "cyc_word": 9.498, "cpb": 2.3746},
+          "K=255": null,
+          "K=256": null,
+          "K=510": null,
+          "K=10000": null,
+          "stream": null
+        }
+      },
+      {
+        "name": "ra_core_v2 (N=64)", "family": "ra_core_v2", "state_bytes": 512, "max_k_single": 63,
+        "regimes": {
+          "K=1": {"mibs": 511.40, "gbs": 0.536, "ns_word": 7.4593, "ns_64b": 14.9185, "cyc_word": 22.341, "cpb": 5.5853},
+          "K=2": {"mibs": 734.44, "gbs": 0.770, "ns_word": 5.1940, "ns_64b": 10.3881, "cyc_word": 15.556, "cpb": 3.8891},
+          "K=4": {"mibs": 832.47, "gbs": 0.873, "ns_word": 4.5824, "ns_64b": 9.1647, "cyc_word": 13.725, "cpb": 3.4312},
+          "K=8": {"mibs": 1072.82, "gbs": 1.125, "ns_word": 3.5558, "ns_64b": 7.1115, "cyc_word": 10.650, "cpb": 2.6625},
+          "K=15": {"mibs": 1162.66, "gbs": 1.219, "ns_word": 3.2810, "ns_64b": 6.5620, "cyc_word": 9.827, "cpb": 2.4568},
+          "K=31": {"mibs": 1190.10, "gbs": 1.248, "ns_word": 3.2054, "ns_64b": 6.4107, "cyc_word": 9.600, "cpb": 2.4001},
+          "K=63": {"mibs": 1169.53, "gbs": 1.226, "ns_word": 3.2617, "ns_64b": 6.5235, "cyc_word": 9.769, "cpb": 2.4424},
+          "K=127": null,
+          "K=255": null,
+          "K=256": null,
+          "K=510": null,
+          "K=10000": null,
+          "stream": null
+        }
+      },
+      {
+        "name": "ra_core_v2 (N=32)", "family": "ra_core_v2", "state_bytes": 256, "max_k_single": 31,
+        "regimes": {
+          "K=1": {"mibs": 494.04, "gbs": 0.518, "ns_word": 7.7215, "ns_64b": 15.4430, "cyc_word": 23.127, "cpb": 5.7817},
+          "K=2": {"mibs": 730.95, "gbs": 0.766, "ns_word": 5.2188, "ns_64b": 10.4377, "cyc_word": 15.631, "cpb": 3.9077},
+          "K=4": {"mibs": 827.44, "gbs": 0.868, "ns_word": 4.6102, "ns_64b": 9.2204, "cyc_word": 13.808, "cpb": 3.4520},
+          "K=8": {"mibs": 1119.07, "gbs": 1.173, "ns_word": 3.4088, "ns_64b": 6.8176, "cyc_word": 10.210, "cpb": 2.5524},
+          "K=15": {"mibs": 1112.90, "gbs": 1.167, "ns_word": 3.4277, "ns_64b": 6.8554, "cyc_word": 10.266, "cpb": 2.5666},
+          "K=31": {"mibs": 1210.72, "gbs": 1.270, "ns_word": 3.1508, "ns_64b": 6.3015, "cyc_word": 9.437, "cpb": 2.3592},
+          "K=63": null,
+          "K=127": null,
+          "K=255": null,
+          "K=256": null,
+          "K=510": null,
+          "K=10000": null,
+          "stream": null
+        }
+      },
+      {
+        "name": "ra_core_v2 (N=16)", "family": "ra_core_v2", "state_bytes": 128, "max_k_single": 15,
+        "regimes": {
+          "K=1": {"mibs": 525.70, "gbs": 0.551, "ns_word": 7.2565, "ns_64b": 14.5130, "cyc_word": 21.734, "cpb": 5.4336},
+          "K=2": {"mibs": 704.31, "gbs": 0.739, "ns_word": 5.4162, "ns_64b": 10.8325, "cyc_word": 16.222, "cpb": 4.0556},
+          "K=4": {"mibs": 822.60, "gbs": 0.863, "ns_word": 4.6373, "ns_64b": 9.2747, "cyc_word": 13.890, "cpb": 3.4724},
+          "K=8": {"mibs": 1103.07, "gbs": 1.157, "ns_word": 3.4583, "ns_64b": 6.9165, "cyc_word": 10.358, "cpb": 2.5895},
+          "K=15": {"mibs": 1252.30, "gbs": 1.313, "ns_word": 3.0461, "ns_64b": 6.0923, "cyc_word": 9.123, "cpb": 2.2809},
+          "K=31": null,
+          "K=63": null,
+          "K=127": null,
+          "K=255": null,
+          "K=256": null,
+          "K=510": null,
+          "K=10000": null,
+          "stream": null
+        }
+      },
+      {
+        "name": "ra_core_v1 (N=256)", "family": "ra_core_v1", "state_bytes": 2048, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 322.00, "gbs": 0.338, "ns_word": 11.8470, "ns_64b": 23.6939, "cyc_word": 35.483, "cpb": 8.8707},
+          "K=2": {"mibs": 327.12, "gbs": 0.343, "ns_word": 11.6616, "ns_64b": 23.3232, "cyc_word": 34.928, "cpb": 8.7320},
+          "K=4": {"mibs": 468.53, "gbs": 0.491, "ns_word": 8.1418, "ns_64b": 16.2837, "cyc_word": 24.386, "cpb": 6.0965},
+          "K=8": {"mibs": 657.93, "gbs": 0.690, "ns_word": 5.7980, "ns_64b": 11.5961, "cyc_word": 17.366, "cpb": 4.3415},
+          "K=15": {"mibs": 824.28, "gbs": 0.864, "ns_word": 4.6279, "ns_64b": 9.2558, "cyc_word": 13.861, "cpb": 3.4653},
+          "K=31": {"mibs": 912.11, "gbs": 0.956, "ns_word": 4.1823, "ns_64b": 8.3645, "cyc_word": 12.526, "cpb": 3.1316},
+          "K=63": {"mibs": 962.11, "gbs": 1.009, "ns_word": 3.9649, "ns_64b": 7.9299, "cyc_word": 11.876, "cpb": 2.9689},
+          "K=127": {"mibs": 987.30, "gbs": 1.035, "ns_word": 3.8637, "ns_64b": 7.7275, "cyc_word": 11.573, "cpb": 2.8931},
+          "K=255": {"mibs": 942.39, "gbs": 0.988, "ns_word": 4.0479, "ns_64b": 8.0958, "cyc_word": 12.124, "cpb": 3.0310},
+          "K=256": {"mibs": 638.25, "gbs": 0.669, "ns_word": 5.9768, "ns_64b": 11.9537, "cyc_word": 17.902, "cpb": 4.4754},
+          "K=510": {"mibs": 682.43, "gbs": 0.716, "ns_word": 5.5899, "ns_64b": 11.1797, "cyc_word": 16.743, "cpb": 4.1857},
+          "K=10000": {"mibs": 765.69, "gbs": 0.803, "ns_word": 4.9820, "ns_64b": 9.9640, "cyc_word": 14.922, "cpb": 3.7304},
+          "stream": {"mibs": 825.80, "gbs": 0.866, "ns_word": 4.6194, "ns_64b": 9.2388, "cyc_word": 13.836, "cpb": 3.4589}
+        }
+      },
+      {
+        "name": "Philox4x32-10", "family": "CBRNG", "state_bytes": 24, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 230.00, "gbs": 0.241, "ns_word": 16.5856, "ns_64b": 33.1712, "cyc_word": 49.676, "cpb": 12.4191},
+          "K=2": {"mibs": 455.17, "gbs": 0.477, "ns_word": 8.3809, "ns_64b": 16.7618, "cyc_word": 25.102, "cpb": 6.2755},
+          "K=4": {"mibs": 772.53, "gbs": 0.810, "ns_word": 4.9379, "ns_64b": 9.8758, "cyc_word": 14.789, "cpb": 3.6974},
+          "K=8": {"mibs": 911.32, "gbs": 0.956, "ns_word": 4.1859, "ns_64b": 8.3718, "cyc_word": 12.537, "cpb": 3.1343},
+          "K=15": {"mibs": 930.74, "gbs": 0.976, "ns_word": 4.0985, "ns_64b": 8.1971, "cyc_word": 12.276, "cpb": 3.0689},
+          "K=31": {"mibs": 1057.39, "gbs": 1.109, "ns_word": 3.6077, "ns_64b": 7.2153, "cyc_word": 10.805, "cpb": 2.7014},
+          "K=63": {"mibs": 1133.34, "gbs": 1.188, "ns_word": 3.3659, "ns_64b": 6.7318, "cyc_word": 10.081, "cpb": 2.5204},
+          "K=127": {"mibs": 1179.56, "gbs": 1.237, "ns_word": 3.2340, "ns_64b": 6.4680, "cyc_word": 9.686, "cpb": 2.4216},
+          "K=255": {"mibs": 1161.63, "gbs": 1.218, "ns_word": 3.2839, "ns_64b": 6.5678, "cyc_word": 9.836, "cpb": 2.4590},
+          "K=256": {"mibs": 1067.94, "gbs": 1.120, "ns_word": 3.5720, "ns_64b": 7.1440, "cyc_word": 10.699, "cpb": 2.6747},
+          "K=510": {"mibs": 1145.95, "gbs": 1.202, "ns_word": 3.3289, "ns_64b": 6.6577, "cyc_word": 9.971, "cpb": 2.4926},
+          "K=10000": {"mibs": 1234.60, "gbs": 1.295, "ns_word": 3.0898, "ns_64b": 6.1796, "cyc_word": 9.254, "cpb": 2.3135},
+          "stream": {"mibs": 1158.85, "gbs": 1.215, "ns_word": 3.2918, "ns_64b": 6.5836, "cyc_word": 9.859, "cpb": 2.4648}
+        }
+      },
+      {
+        "name": "ChaCha8", "family": "CBRNG/ARX", "state_bytes": 64, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 59.05, "gbs": 0.062, "ns_word": 64.6056, "ns_64b": 129.2113, "cyc_word": 193.505, "cpb": 48.3763},
+          "K=2": {"mibs": 111.28, "gbs": 0.117, "ns_word": 34.2788, "ns_64b": 68.5575, "cyc_word": 102.671, "cpb": 25.6677},
+          "K=4": {"mibs": 228.14, "gbs": 0.239, "ns_word": 16.7210, "ns_64b": 33.4419, "cyc_word": 50.082, "cpb": 12.5206},
+          "K=8": {"mibs": 452.30, "gbs": 0.474, "ns_word": 8.4340, "ns_64b": 16.8681, "cyc_word": 25.261, "cpb": 6.3153},
+          "K=15": {"mibs": 900.05, "gbs": 0.944, "ns_word": 4.2383, "ns_64b": 8.4766, "cyc_word": 12.694, "cpb": 3.1736},
+          "K=31": {"mibs": 1124.77, "gbs": 1.179, "ns_word": 3.3915, "ns_64b": 6.7831, "cyc_word": 10.158, "cpb": 2.5396},
+          "K=63": {"mibs": 1265.46, "gbs": 1.327, "ns_word": 3.0145, "ns_64b": 6.0289, "cyc_word": 9.028, "cpb": 2.2571},
+          "K=127": {"mibs": 1306.29, "gbs": 1.370, "ns_word": 2.9203, "ns_64b": 5.8405, "cyc_word": 8.747, "cpb": 2.1867},
+          "K=255": {"mibs": 1355.05, "gbs": 1.421, "ns_word": 2.8152, "ns_64b": 5.6303, "cyc_word": 8.432, "cpb": 2.1080},
+          "K=256": {"mibs": 1361.32, "gbs": 1.427, "ns_word": 2.8022, "ns_64b": 5.6044, "cyc_word": 8.393, "cpb": 2.0983},
+          "K=510": {"mibs": 1109.03, "gbs": 1.163, "ns_word": 3.4397, "ns_64b": 6.8793, "cyc_word": 10.302, "cpb": 2.5756},
+          "K=10000": {"mibs": 1460.10, "gbs": 1.531, "ns_word": 2.6126, "ns_64b": 5.2253, "cyc_word": 7.825, "cpb": 1.9563},
+          "stream": {"mibs": 1172.87, "gbs": 1.230, "ns_word": 3.2525, "ns_64b": 6.5049, "cyc_word": 9.741, "cpb": 2.4354}
+        }
+      },
+      {
+        "name": "ChaCha12", "family": "CBRNG/ARX", "state_bytes": 64, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 42.89, "gbs": 0.045, "ns_word": 88.9410, "ns_64b": 177.8819, "cyc_word": 266.394, "cpb": 66.5984},
+          "K=2": {"mibs": 86.27, "gbs": 0.090, "ns_word": 44.2171, "ns_64b": 88.4343, "cyc_word": 132.438, "cpb": 33.1095},
+          "K=4": {"mibs": 171.34, "gbs": 0.180, "ns_word": 22.2637, "ns_64b": 44.5274, "cyc_word": 66.684, "cpb": 16.6709},
+          "K=8": {"mibs": 340.66, "gbs": 0.357, "ns_word": 11.1980, "ns_64b": 22.3959, "cyc_word": 33.540, "cpb": 8.3850},
+          "K=15": {"mibs": 673.34, "gbs": 0.706, "ns_word": 5.6653, "ns_64b": 11.3307, "cyc_word": 16.969, "cpb": 4.2422},
+          "K=31": {"mibs": 749.64, "gbs": 0.786, "ns_word": 5.0887, "ns_64b": 10.1774, "cyc_word": 15.242, "cpb": 3.8104},
+          "K=63": {"mibs": 872.29, "gbs": 0.915, "ns_word": 4.3732, "ns_64b": 8.7464, "cyc_word": 13.098, "cpb": 3.2746},
+          "K=127": {"mibs": 919.98, "gbs": 0.965, "ns_word": 4.1465, "ns_64b": 8.2930, "cyc_word": 12.419, "cpb": 3.1049},
+          "K=255": {"mibs": 928.10, "gbs": 0.973, "ns_word": 4.1102, "ns_64b": 8.2205, "cyc_word": 12.311, "cpb": 3.0777},
+          "K=256": {"mibs": 846.81, "gbs": 0.888, "ns_word": 4.5048, "ns_64b": 9.0096, "cyc_word": 13.493, "cpb": 3.3731},
+          "K=510": {"mibs": 787.99, "gbs": 0.826, "ns_word": 4.8411, "ns_64b": 9.6821, "cyc_word": 14.500, "cpb": 3.6250},
+          "K=10000": {"mibs": 975.59, "gbs": 1.023, "ns_word": 3.9101, "ns_64b": 7.8203, "cyc_word": 11.711, "cpb": 2.9278},
+          "stream": {"mibs": 847.07, "gbs": 0.888, "ns_word": 4.5034, "ns_64b": 9.0068, "cyc_word": 13.488, "cpb": 3.3721}
+        }
+      },
+      {
+        "name": "xoshiro256**", "family": "Linear", "state_bytes": 32, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 517.57, "gbs": 0.543, "ns_word": 7.3704, "ns_64b": 14.7409, "cyc_word": 22.075, "cpb": 5.5188},
+          "K=2": {"mibs": 860.25, "gbs": 0.902, "ns_word": 4.4344, "ns_64b": 8.8688, "cyc_word": 13.282, "cpb": 3.3204},
+          "K=4": {"mibs": 1301.15, "gbs": 1.364, "ns_word": 2.9318, "ns_64b": 5.8636, "cyc_word": 8.781, "cpb": 2.1953},
+          "K=8": {"mibs": 1645.46, "gbs": 1.725, "ns_word": 2.3183, "ns_64b": 4.6366, "cyc_word": 6.944, "cpb": 1.7359},
+          "K=15": {"mibs": 2170.58, "gbs": 2.276, "ns_word": 1.7575, "ns_64b": 3.5149, "cyc_word": 5.264, "cpb": 1.3159},
+          "K=31": {"mibs": 2328.34, "gbs": 2.441, "ns_word": 1.6384, "ns_64b": 3.2767, "cyc_word": 4.907, "cpb": 1.2268},
+          "K=63": {"mibs": 2436.67, "gbs": 2.555, "ns_word": 1.5655, "ns_64b": 3.1311, "cyc_word": 4.689, "cpb": 1.1723},
+          "K=127": {"mibs": 2601.77, "gbs": 2.728, "ns_word": 1.4662, "ns_64b": 2.9324, "cyc_word": 4.391, "cpb": 1.0979},
+          "K=255": {"mibs": 2660.20, "gbs": 2.789, "ns_word": 1.4340, "ns_64b": 2.8680, "cyc_word": 4.295, "cpb": 1.0738},
+          "K=256": {"mibs": 2671.66, "gbs": 2.801, "ns_word": 1.4278, "ns_64b": 2.8557, "cyc_word": 4.277, "cpb": 1.0691},
+          "K=510": {"mibs": 2355.57, "gbs": 2.470, "ns_word": 1.6194, "ns_64b": 3.2389, "cyc_word": 4.850, "cpb": 1.2126},
+          "K=10000": {"mibs": 2611.43, "gbs": 2.738, "ns_word": 1.4608, "ns_64b": 2.9215, "cyc_word": 4.375, "cpb": 1.0938},
+          "stream": {"mibs": 2283.08, "gbs": 2.394, "ns_word": 1.6709, "ns_64b": 3.3417, "cyc_word": 5.004, "cpb": 1.2511}
+        }
+      },
+      {
+        "name": "xoroshiro128++", "family": "Linear", "state_bytes": 16, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 730.48, "gbs": 0.766, "ns_word": 5.2222, "ns_64b": 10.4444, "cyc_word": 15.641, "cpb": 3.9103},
+          "K=2": {"mibs": 1105.78, "gbs": 1.159, "ns_word": 3.4498, "ns_64b": 6.8996, "cyc_word": 10.332, "cpb": 2.5831},
+          "K=4": {"mibs": 1697.68, "gbs": 1.780, "ns_word": 2.2470, "ns_64b": 4.4940, "cyc_word": 6.730, "cpb": 1.6825},
+          "K=8": {"mibs": 2030.21, "gbs": 2.129, "ns_word": 1.8790, "ns_64b": 3.7579, "cyc_word": 5.628, "cpb": 1.4069},
+          "K=15": {"mibs": 2281.37, "gbs": 2.392, "ns_word": 1.6721, "ns_64b": 3.3442, "cyc_word": 5.008, "cpb": 1.2520},
+          "K=31": {"mibs": 2432.45, "gbs": 2.551, "ns_word": 1.5683, "ns_64b": 3.1365, "cyc_word": 4.697, "cpb": 1.1743},
+          "K=63": {"mibs": 2675.00, "gbs": 2.805, "ns_word": 1.4261, "ns_64b": 2.8521, "cyc_word": 4.271, "cpb": 1.0678},
+          "K=127": {"mibs": 2769.10, "gbs": 2.904, "ns_word": 1.3776, "ns_64b": 2.7552, "cyc_word": 4.126, "cpb": 1.0315},
+          "K=255": {"mibs": 2677.73, "gbs": 2.808, "ns_word": 1.4246, "ns_64b": 2.8492, "cyc_word": 4.267, "cpb": 1.0667},
+          "K=256": {"mibs": 2626.98, "gbs": 2.755, "ns_word": 1.4521, "ns_64b": 2.9042, "cyc_word": 4.349, "cpb": 1.0873},
+          "K=510": {"mibs": 2683.34, "gbs": 2.814, "ns_word": 1.4216, "ns_64b": 2.8432, "cyc_word": 4.258, "cpb": 1.0645},
+          "K=10000": {"mibs": 2919.28, "gbs": 3.061, "ns_word": 1.3067, "ns_64b": 2.6135, "cyc_word": 3.914, "cpb": 0.9785},
+          "stream": {"mibs": 2542.13, "gbs": 2.666, "ns_word": 1.5006, "ns_64b": 3.0012, "cyc_word": 4.494, "cpb": 1.1236}
+        }
+      },
+      {
+        "name": "PCG32", "family": "LCG/Perm", "state_bytes": 16, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 1420.37, "gbs": 1.489, "ns_word": 2.6857, "ns_64b": 5.3714, "cyc_word": 8.044, "cpb": 2.0110},
+          "K=2": {"mibs": 2136.20, "gbs": 2.240, "ns_word": 1.7857, "ns_64b": 3.5715, "cyc_word": 5.349, "cpb": 1.3371},
+          "K=4": {"mibs": 2543.26, "gbs": 2.667, "ns_word": 1.4999, "ns_64b": 2.9999, "cyc_word": 4.492, "cpb": 1.1231},
+          "K=8": {"mibs": 2814.41, "gbs": 2.951, "ns_word": 1.3554, "ns_64b": 2.7108, "cyc_word": 4.060, "cpb": 1.0149},
+          "K=15": {"mibs": 2992.07, "gbs": 3.137, "ns_word": 1.2749, "ns_64b": 2.5499, "cyc_word": 3.819, "cpb": 0.9546},
+          "K=31": {"mibs": 2706.36, "gbs": 2.838, "ns_word": 1.4095, "ns_64b": 2.8191, "cyc_word": 4.222, "cpb": 1.0554},
+          "K=63": {"mibs": 2941.77, "gbs": 3.085, "ns_word": 1.2967, "ns_64b": 2.5935, "cyc_word": 3.884, "cpb": 0.9710},
+          "K=127": {"mibs": 2955.71, "gbs": 3.099, "ns_word": 1.2906, "ns_64b": 2.5812, "cyc_word": 3.866, "cpb": 0.9664},
+          "K=255": {"mibs": 2827.19, "gbs": 2.965, "ns_word": 1.3493, "ns_64b": 2.6986, "cyc_word": 4.041, "cpb": 1.0103},
+          "K=256": {"mibs": 2726.93, "gbs": 2.859, "ns_word": 1.3989, "ns_64b": 2.7978, "cyc_word": 4.190, "cpb": 1.0475},
+          "K=510": {"mibs": 2791.97, "gbs": 2.928, "ns_word": 1.3663, "ns_64b": 2.7326, "cyc_word": 4.092, "cpb": 1.0231},
+          "K=10000": {"mibs": 3068.73, "gbs": 3.218, "ns_word": 1.2431, "ns_64b": 2.4862, "cyc_word": 3.723, "cpb": 0.9308},
+          "stream": {"mibs": 2527.29, "gbs": 2.650, "ns_word": 1.5094, "ns_64b": 3.0188, "cyc_word": 4.521, "cpb": 1.1302}
+        }
+      },
+      {
+        "name": "SplitMix64", "family": "Weyl/Mix", "state_bytes": 8, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 1315.98, "gbs": 1.380, "ns_word": 2.8987, "ns_64b": 5.7975, "cyc_word": 8.682, "cpb": 2.1705},
+          "K=2": {"mibs": 1925.16, "gbs": 2.019, "ns_word": 1.9815, "ns_64b": 3.9630, "cyc_word": 5.935, "cpb": 1.4837},
+          "K=4": {"mibs": 2374.03, "gbs": 2.489, "ns_word": 1.6068, "ns_64b": 3.2137, "cyc_word": 4.813, "cpb": 1.2032},
+          "K=8": {"mibs": 2590.15, "gbs": 2.716, "ns_word": 1.4728, "ns_64b": 2.9455, "cyc_word": 4.411, "cpb": 1.1028},
+          "K=15": {"mibs": 2698.13, "gbs": 2.829, "ns_word": 1.4138, "ns_64b": 2.8277, "cyc_word": 4.235, "cpb": 1.0586},
+          "K=31": {"mibs": 2573.72, "gbs": 2.699, "ns_word": 1.4822, "ns_64b": 2.9643, "cyc_word": 4.439, "cpb": 1.1098},
+          "K=63": {"mibs": 2859.02, "gbs": 2.998, "ns_word": 1.3343, "ns_64b": 2.6685, "cyc_word": 3.996, "cpb": 0.9991},
+          "K=127": {"mibs": 2873.46, "gbs": 3.013, "ns_word": 1.3276, "ns_64b": 2.6551, "cyc_word": 3.976, "cpb": 0.9941},
+          "K=255": {"mibs": 3045.76, "gbs": 3.194, "ns_word": 1.2525, "ns_64b": 2.5049, "cyc_word": 3.751, "cpb": 0.9378},
+          "K=256": {"mibs": 2858.77, "gbs": 2.998, "ns_word": 1.3344, "ns_64b": 2.6688, "cyc_word": 3.997, "cpb": 0.9992},
+          "K=510": {"mibs": 3160.05, "gbs": 3.314, "ns_word": 1.2072, "ns_64b": 2.4143, "cyc_word": 3.616, "cpb": 0.9039},
+          "K=10000": {"mibs": 3177.05, "gbs": 3.331, "ns_word": 1.2007, "ns_64b": 2.4014, "cyc_word": 3.596, "cpb": 0.8990},
+          "stream": {"mibs": 2753.31, "gbs": 2.887, "ns_word": 1.3855, "ns_64b": 2.7710, "cyc_word": 4.149, "cpb": 1.0373}
+        }
+      },
+      {
+        "name": "WyRand", "family": "Weyl/MUL128", "state_bytes": 8, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 1870.65, "gbs": 1.962, "ns_word": 2.0392, "ns_64b": 4.0785, "cyc_word": 6.108, "cpb": 1.5269},
+          "K=2": {"mibs": 2503.84, "gbs": 2.625, "ns_word": 1.5235, "ns_64b": 3.0471, "cyc_word": 4.562, "cpb": 1.1406},
+          "K=4": {"mibs": 3193.16, "gbs": 3.348, "ns_word": 1.1946, "ns_64b": 2.3893, "cyc_word": 3.578, "cpb": 0.8945},
+          "K=8": {"mibs": 3586.15, "gbs": 3.760, "ns_word": 1.0637, "ns_64b": 2.1275, "cyc_word": 3.186, "cpb": 0.7965},
+          "K=15": {"mibs": 3914.63, "gbs": 4.105, "ns_word": 0.9745, "ns_64b": 1.9489, "cyc_word": 2.919, "cpb": 0.7297},
+          "K=31": {"mibs": 3796.69, "gbs": 3.981, "ns_word": 1.0047, "ns_64b": 2.0095, "cyc_word": 3.009, "cpb": 0.7523},
+          "K=63": {"mibs": 3981.13, "gbs": 4.175, "ns_word": 0.9582, "ns_64b": 1.9164, "cyc_word": 2.870, "cpb": 0.7175},
+          "K=127": {"mibs": 4150.37, "gbs": 4.352, "ns_word": 0.9191, "ns_64b": 1.8382, "cyc_word": 2.753, "cpb": 0.6882},
+          "K=255": {"mibs": 4277.20, "gbs": 4.485, "ns_word": 0.8919, "ns_64b": 1.7837, "cyc_word": 2.671, "cpb": 0.6678},
+          "K=256": {"mibs": 3844.83, "gbs": 4.032, "ns_word": 0.9922, "ns_64b": 1.9843, "cyc_word": 2.972, "cpb": 0.7429},
+          "K=510": {"mibs": 4232.11, "gbs": 4.438, "ns_word": 0.9014, "ns_64b": 1.8027, "cyc_word": 2.700, "cpb": 0.6749},
+          "K=10000": {"mibs": 4295.44, "gbs": 4.504, "ns_word": 0.8881, "ns_64b": 1.7762, "cyc_word": 2.660, "cpb": 0.6649},
+          "stream": {"mibs": 3993.32, "gbs": 4.187, "ns_word": 0.9553, "ns_64b": 1.9105, "cyc_word": 2.861, "cpb": 0.7152}
+        }
+      },
+      {
+        "name": "MT19937", "family": "Twister", "state_bytes": 2500, "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 2.04, "gbs": 0.002, "ns_word": 1868.8232, "ns_64b": 3737.6464, "cyc_word": 5597.233, "cpb": 1399.3084},
+          "K=2": {"mibs": 4.08, "gbs": 0.004, "ns_word": 934.4784, "ns_64b": 1868.9568, "cyc_word": 2798.863, "cpb": 699.7158},
+          "K=4": {"mibs": 8.52, "gbs": 0.009, "ns_word": 447.6245, "ns_64b": 895.2489, "cyc_word": 1340.702, "cpb": 335.1756},
+          "K=8": {"mibs": 16.22, "gbs": 0.017, "ns_word": 235.1879, "ns_64b": 470.3758, "cyc_word": 704.423, "cpb": 176.1056},
+          "K=15": {"mibs": 30.75, "gbs": 0.032, "ns_word": 124.0373, "ns_64b": 248.0745, "cyc_word": 371.504, "cpb": 92.8759},
+          "K=31": {"mibs": 63.00, "gbs": 0.066, "ns_word": 60.5544, "ns_64b": 121.1087, "cyc_word": 181.367, "cpb": 45.3417},
+          "K=63": {"mibs": 124.74, "gbs": 0.131, "ns_word": 30.5801, "ns_64b": 61.1601, "cyc_word": 91.589, "cpb": 22.8974},
+          "K=127": {"mibs": 228.26, "gbs": 0.239, "ns_word": 16.7123, "ns_64b": 33.4246, "cyc_word": 50.056, "cpb": 12.5141},
+          "K=255": {"mibs": 356.95, "gbs": 0.374, "ns_word": 10.6869, "ns_64b": 21.3737, "cyc_word": 32.009, "cpb": 8.0023},
+          "K=256": {"mibs": 384.34, "gbs": 0.403, "ns_word": 9.9254, "ns_64b": 19.8507, "cyc_word": 29.728, "cpb": 7.4321},
+          "K=510": {"mibs": 680.60, "gbs": 0.714, "ns_word": 5.6049, "ns_64b": 11.2098, "cyc_word": 16.788, "cpb": 4.1969},
+          "K=10000": {"mibs": 1334.87, "gbs": 1.400, "ns_word": 2.8577, "ns_64b": 5.7155, "cyc_word": 8.559, "cpb": 2.1397},
+          "stream": {"mibs": 1349.76, "gbs": 1.415, "ns_word": 2.8262, "ns_64b": 5.6524, "cyc_word": 8.465, "cpb": 2.1162}
+        }
+      }
+    ]
+  },
+  "suite_c_avx2_x8": {
+    "k_labels": ["K=1", "K=2", "K=4", "K=8", "K=15", "K=31", "K=63", "K=127", "K=255"],
+    "generators": [
+      {
+        "name": "ra_core_v2_x8 (N=256)", "family": "ra_core_v2", "max_k_single": 255,
+        "regimes": {
+          "K=1": {"mibs": 966.31, "gbs": 1.013, "ns_word": 3.9477, "ns_64b": 7.8954, "cyc_word": 11.824, "cpb": 2.9559},
+          "K=2": {"mibs": 1635.24, "gbs": 1.715, "ns_word": 2.3328, "ns_64b": 4.6656, "cyc_word": 6.986, "cpb": 1.7466},
+          "K=4": {"mibs": 2934.91, "gbs": 3.077, "ns_word": 1.2998, "ns_64b": 2.5995, "cyc_word": 3.893, "cpb": 0.9732},
+          "K=8": {"mibs": 4290.25, "gbs": 4.499, "ns_word": 0.8892, "ns_64b": 1.7783, "cyc_word": 2.663, "cpb": 0.6658},
+          "K=15": {"mibs": 5748.09, "gbs": 6.027, "ns_word": 0.6636, "ns_64b": 1.3273, "cyc_word": 1.988, "cpb": 0.4969},
+          "K=31": {"mibs": 5390.31, "gbs": 5.652, "ns_word": 0.7077, "ns_64b": 1.4154, "cyc_word": 2.120, "cpb": 0.5299},
+          "K=63": {"mibs": 7027.57, "gbs": 7.369, "ns_word": 0.5428, "ns_64b": 1.0856, "cyc_word": 1.626, "cpb": 0.4064},
+          "K=127": {"mibs": 7715.28, "gbs": 8.090, "ns_word": 0.4944, "ns_64b": 0.9889, "cyc_word": 1.481, "cpb": 0.3702},
+          "K=255": {"mibs": 6475.13, "gbs": 6.790, "ns_word": 0.5891, "ns_64b": 1.1783, "cyc_word": 1.765, "cpb": 0.4411}
+        }
+      },
+      {
+        "name": "ra_core_v2_x8 (N=128)", "family": "ra_core_v2", "max_k_single": 127,
+        "regimes": {
+          "K=1": {"mibs": 969.76, "gbs": 1.017, "ns_word": 3.9336, "ns_64b": 7.8673, "cyc_word": 11.781, "cpb": 2.9453},
+          "K=2": {"mibs": 1631.47, "gbs": 1.711, "ns_word": 2.3382, "ns_64b": 4.6764, "cyc_word": 7.003, "cpb": 1.7508},
+          "K=4": {"mibs": 2683.70, "gbs": 2.814, "ns_word": 1.4214, "ns_64b": 2.8429, "cyc_word": 4.257, "cpb": 1.0643},
+          "K=8": {"mibs": 3963.39, "gbs": 4.156, "ns_word": 0.9625, "ns_64b": 1.9250, "cyc_word": 2.883, "cpb": 0.7207},
+          "K=15": {"mibs": 5024.83, "gbs": 5.269, "ns_word": 0.7592, "ns_64b": 1.5183, "cyc_word": 2.274, "cpb": 0.5684},
+          "K=31": {"mibs": 5113.27, "gbs": 5.362, "ns_word": 0.7460, "ns_64b": 1.4921, "cyc_word": 2.234, "cpb": 0.5586},
+          "K=63": {"mibs": 6180.43, "gbs": 6.481, "ns_word": 0.6172, "ns_64b": 1.2344, "cyc_word": 1.849, "cpb": 0.4622},
+          "K=127": {"mibs": 6656.35, "gbs": 6.980, "ns_word": 0.5731, "ns_64b": 1.1462, "cyc_word": 1.716, "cpb": 0.4291},
+          "K=255": null
+        }
+      },
+      {
+        "name": "ra_core_v2_x8 (N=64)", "family": "ra_core_v2", "max_k_single": 63,
+        "regimes": {
+          "K=1": {"mibs": 983.56, "gbs": 1.031, "ns_word": 3.8784, "ns_64b": 7.7569, "cyc_word": 11.616, "cpb": 2.9040},
+          "K=2": {"mibs": 1942.89, "gbs": 2.037, "ns_word": 1.9634, "ns_64b": 3.9268, "cyc_word": 5.880, "cpb": 1.4701},
+          "K=4": {"mibs": 2882.89, "gbs": 3.023, "ns_word": 1.3232, "ns_64b": 2.6464, "cyc_word": 3.963, "cpb": 0.9907},
+          "K=8": {"mibs": 3736.52, "gbs": 3.918, "ns_word": 1.0209, "ns_64b": 2.0418, "cyc_word": 3.058, "cpb": 0.7644},
+          "K=15": {"mibs": 5090.66, "gbs": 5.338, "ns_word": 0.7494, "ns_64b": 1.4987, "cyc_word": 2.244, "cpb": 0.5611},
+          "K=31": {"mibs": 5494.44, "gbs": 5.761, "ns_word": 0.6943, "ns_64b": 1.3886, "cyc_word": 2.079, "cpb": 0.5198},
+          "K=63": {"mibs": 7209.58, "gbs": 7.560, "ns_word": 0.5291, "ns_64b": 1.0582, "cyc_word": 1.585, "cpb": 0.3962},
+          "K=127": null,
+          "K=255": null
+        }
+      },
+      {
+        "name": "ra_core_v2_x8 (N=32)", "family": "ra_core_v2", "max_k_single": 31,
+        "regimes": {
+          "K=1": {"mibs": 958.72, "gbs": 1.005, "ns_word": 3.9789, "ns_64b": 7.9579, "cyc_word": 11.917, "cpb": 2.9792},
+          "K=2": {"mibs": 2201.46, "gbs": 2.308, "ns_word": 1.7328, "ns_64b": 3.4656, "cyc_word": 5.190, "cpb": 1.2975},
+          "K=4": {"mibs": 2909.49, "gbs": 3.051, "ns_word": 1.3111, "ns_64b": 2.6222, "cyc_word": 3.927, "cpb": 0.9817},
+          "K=8": {"mibs": 3779.05, "gbs": 3.963, "ns_word": 1.0094, "ns_64b": 2.0189, "cyc_word": 3.023, "cpb": 0.7558},
+          "K=15": {"mibs": 5027.89, "gbs": 5.272, "ns_word": 0.7587, "ns_64b": 1.5174, "cyc_word": 2.272, "cpb": 0.5681},
+          "K=31": {"mibs": 6359.39, "gbs": 6.668, "ns_word": 0.5999, "ns_64b": 1.1997, "cyc_word": 1.797, "cpb": 0.4491},
+          "K=63": null,
+          "K=127": null,
+          "K=255": null
+        }
+      },
+      {
+        "name": "ra_core_v2_x8 (N=16)", "family": "ra_core_v2", "max_k_single": 15,
+        "regimes": {
+          "K=1": {"mibs": 1020.59, "gbs": 1.070, "ns_word": 3.7377, "ns_64b": 7.4755, "cyc_word": 11.195, "cpb": 2.7987},
+          "K=2": {"mibs": 1736.36, "gbs": 1.821, "ns_word": 2.1970, "ns_64b": 4.3939, "cyc_word": 6.580, "cpb": 1.6449},
+          "K=4": {"mibs": 2629.75, "gbs": 2.757, "ns_word": 1.4506, "ns_64b": 2.9012, "cyc_word": 4.344, "cpb": 1.0861},
+          "K=8": {"mibs": 4008.22, "gbs": 4.203, "ns_word": 0.9517, "ns_64b": 1.9034, "cyc_word": 2.850, "cpb": 0.7126},
+          "K=15": {"mibs": 5554.54, "gbs": 5.824, "ns_word": 0.6868, "ns_64b": 1.3735, "cyc_word": 2.057, "cpb": 0.5142},
+          "K=31": null,
+          "K=63": null,
+          "K=127": null,
+          "K=255": null
+        }
+      },
+      {
+        "name": "ra_core_v1_x8 (N=256)", "family": "ra_core_v1", "max_k_single": 255,
+        "regimes": {
+          "K=1": {"mibs": 827.21, "gbs": 0.867, "ns_word": 4.6115, "ns_64b": 9.2230, "cyc_word": 13.812, "cpb": 3.4529},
+          "K=2": {"mibs": 1123.74, "gbs": 1.178, "ns_word": 3.3946, "ns_64b": 6.7893, "cyc_word": 10.167, "cpb": 2.5417},
+          "K=4": {"mibs": 1907.00, "gbs": 2.000, "ns_word": 2.0004, "ns_64b": 4.0007, "cyc_word": 5.991, "cpb": 1.4978},
+          "K=8": {"mibs": 3327.06, "gbs": 3.489, "ns_word": 1.1466, "ns_64b": 2.2931, "cyc_word": 3.434, "cpb": 0.8585},
+          "K=15": {"mibs": 4175.48, "gbs": 4.378, "ns_word": 0.9136, "ns_64b": 1.8272, "cyc_word": 2.736, "cpb": 0.6841},
+          "K=31": {"mibs": 4170.03, "gbs": 4.373, "ns_word": 0.9148, "ns_64b": 1.8296, "cyc_word": 2.740, "cpb": 0.6850},
+          "K=63": {"mibs": 5826.87, "gbs": 6.110, "ns_word": 0.6547, "ns_64b": 1.3093, "cyc_word": 1.961, "cpb": 0.4902},
+          "K=127": {"mibs": 5555.83, "gbs": 5.826, "ns_word": 0.6866, "ns_64b": 1.3732, "cyc_word": 2.056, "cpb": 0.5141},
+          "K=255": {"mibs": 5917.15, "gbs": 6.205, "ns_word": 0.6447, "ns_64b": 1.2894, "cyc_word": 1.931, "cpb": 0.4827}
+        }
+      },
+      {
+        "name": "Philox4x32-10_x8", "family": "CBRNG", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 762.08, "gbs": 0.799, "ns_word": 5.0057, "ns_64b": 10.0113, "cyc_word": 14.992, "cpb": 3.7481},
+          "K=2": {"mibs": 1291.66, "gbs": 1.354, "ns_word": 2.9533, "ns_64b": 5.9066, "cyc_word": 8.845, "cpb": 2.2113},
+          "K=4": {"mibs": 2466.71, "gbs": 2.587, "ns_word": 1.5465, "ns_64b": 3.0929, "cyc_word": 4.632, "cpb": 1.1579},
+          "K=8": {"mibs": 3943.77, "gbs": 4.135, "ns_word": 0.9673, "ns_64b": 1.9345, "cyc_word": 2.897, "cpb": 0.7242},
+          "K=15": {"mibs": 3566.47, "gbs": 3.740, "ns_word": 1.0696, "ns_64b": 2.1392, "cyc_word": 3.204, "cpb": 0.8009},
+          "K=31": {"mibs": 3983.74, "gbs": 4.177, "ns_word": 0.9576, "ns_64b": 1.9151, "cyc_word": 2.868, "cpb": 0.7170},
+          "K=63": {"mibs": 4573.93, "gbs": 4.796, "ns_word": 0.8340, "ns_64b": 1.6680, "cyc_word": 2.498, "cpb": 0.6245},
+          "K=127": {"mibs": 4441.90, "gbs": 4.658, "ns_word": 0.8588, "ns_64b": 1.7176, "cyc_word": 2.572, "cpb": 0.6430},
+          "K=255": {"mibs": 3543.92, "gbs": 3.716, "ns_word": 1.0764, "ns_64b": 2.1528, "cyc_word": 3.224, "cpb": 0.8060}
+        }
+      },
+      {
+        "name": "ChaCha8_x8", "family": "CBRNG/ARX", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 468.29, "gbs": 0.491, "ns_word": 8.1460, "ns_64b": 16.2920, "cyc_word": 24.398, "cpb": 6.0996},
+          "K=2": {"mibs": 999.53, "gbs": 1.048, "ns_word": 3.8165, "ns_64b": 7.6330, "cyc_word": 11.431, "cpb": 2.8576},
+          "K=4": {"mibs": 1712.53, "gbs": 1.796, "ns_word": 2.2275, "ns_64b": 4.4550, "cyc_word": 6.672, "cpb": 1.6679},
+          "K=8": {"mibs": 3505.78, "gbs": 3.676, "ns_word": 1.0881, "ns_64b": 2.1762, "cyc_word": 3.259, "cpb": 0.8148},
+          "K=15": {"mibs": 6639.81, "gbs": 6.962, "ns_word": 0.5745, "ns_64b": 1.1490, "cyc_word": 1.721, "cpb": 0.4302},
+          "K=31": {"mibs": 7089.08, "gbs": 7.433, "ns_word": 0.5381, "ns_64b": 1.0762, "cyc_word": 1.612, "cpb": 0.4029},
+          "K=63": {"mibs": 8202.01, "gbs": 8.600, "ns_word": 0.4651, "ns_64b": 0.9302, "cyc_word": 1.393, "cpb": 0.3482},
+          "K=127": {"mibs": 8227.94, "gbs": 8.628, "ns_word": 0.4636, "ns_64b": 0.9273, "cyc_word": 1.389, "cpb": 0.3472},
+          "K=255": {"mibs": 9027.31, "gbs": 9.466, "ns_word": 0.4226, "ns_64b": 0.8451, "cyc_word": 1.266, "cpb": 0.3164}
+        }
+      },
+      {
+        "name": "xoshiro256**_x8", "family": "Linear", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 885.65, "gbs": 0.929, "ns_word": 4.3072, "ns_64b": 8.6145, "cyc_word": 12.900, "cpb": 3.2250},
+          "K=2": {"mibs": 1665.11, "gbs": 1.746, "ns_word": 2.2910, "ns_64b": 4.5819, "cyc_word": 6.861, "cpb": 1.7154},
+          "K=4": {"mibs": 2366.04, "gbs": 2.481, "ns_word": 1.6123, "ns_64b": 3.2245, "cyc_word": 4.829, "cpb": 1.2072},
+          "K=8": {"mibs": 5005.14, "gbs": 5.248, "ns_word": 0.7622, "ns_64b": 1.5243, "cyc_word": 2.283, "cpb": 0.5707},
+          "K=15": {"mibs": 5755.02, "gbs": 6.035, "ns_word": 0.6628, "ns_64b": 1.3257, "cyc_word": 1.985, "cpb": 0.4963},
+          "K=31": {"mibs": 6991.58, "gbs": 7.331, "ns_word": 0.5456, "ns_64b": 1.0912, "cyc_word": 1.634, "cpb": 0.4085},
+          "K=63": {"mibs": 7757.50, "gbs": 8.134, "ns_word": 0.4917, "ns_64b": 0.9835, "cyc_word": 1.473, "cpb": 0.3682},
+          "K=127": {"mibs": 9254.69, "gbs": 9.704, "ns_word": 0.4122, "ns_64b": 0.8244, "cyc_word": 1.235, "cpb": 0.3086},
+          "K=255": {"mibs": 9395.63, "gbs": 9.852, "ns_word": 0.4060, "ns_64b": 0.8120, "cyc_word": 1.216, "cpb": 0.3040}
+        }
+      },
+      {
+        "name": "xoroshiro128++_x8", "family": "Linear", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 1346.51, "gbs": 1.412, "ns_word": 2.8330, "ns_64b": 5.6661, "cyc_word": 8.485, "cpb": 2.1212},
+          "K=2": {"mibs": 2554.84, "gbs": 2.679, "ns_word": 1.4931, "ns_64b": 2.9862, "cyc_word": 4.472, "cpb": 1.1179},
+          "K=4": {"mibs": 3519.61, "gbs": 3.691, "ns_word": 1.0838, "ns_64b": 2.1677, "cyc_word": 3.246, "cpb": 0.8115},
+          "K=8": {"mibs": 5687.03, "gbs": 5.963, "ns_word": 0.6708, "ns_64b": 1.3415, "cyc_word": 2.009, "cpb": 0.5022},
+          "K=15": {"mibs": 8490.44, "gbs": 8.903, "ns_word": 0.4493, "ns_64b": 0.8986, "cyc_word": 1.346, "cpb": 0.3364},
+          "K=31": {"mibs": 8305.31, "gbs": 8.709, "ns_word": 0.4593, "ns_64b": 0.9186, "cyc_word": 1.376, "cpb": 0.3439},
+          "K=63": {"mibs": 10219.14, "gbs": 10.716, "ns_word": 0.3733, "ns_64b": 0.7466, "cyc_word": 1.118, "cpb": 0.2795},
+          "K=127": {"mibs": 9947.02, "gbs": 10.430, "ns_word": 0.3835, "ns_64b": 0.7670, "cyc_word": 1.149, "cpb": 0.2871},
+          "K=255": {"mibs": 9840.90, "gbs": 10.319, "ns_word": 0.3876, "ns_64b": 0.7753, "cyc_word": 1.161, "cpb": 0.2903}
+        }
+      },
+      {
+        "name": "PCG32_x8", "family": "LCG/Perm", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 2220.10, "gbs": 2.328, "ns_word": 1.7183, "ns_64b": 3.4365, "cyc_word": 5.146, "cpb": 1.2865},
+          "K=2": {"mibs": 3236.26, "gbs": 3.393, "ns_word": 1.1787, "ns_64b": 2.3575, "cyc_word": 3.530, "cpb": 0.8826},
+          "K=4": {"mibs": 3741.51, "gbs": 3.923, "ns_word": 1.0196, "ns_64b": 2.0391, "cyc_word": 3.053, "cpb": 0.7634},
+          "K=8": {"mibs": 4992.27, "gbs": 5.235, "ns_word": 0.7641, "ns_64b": 1.5282, "cyc_word": 2.289, "cpb": 0.5721},
+          "K=15": {"mibs": 5738.47, "gbs": 6.017, "ns_word": 0.6648, "ns_64b": 1.3295, "cyc_word": 1.991, "cpb": 0.4977},
+          "K=31": {"mibs": 4910.26, "gbs": 5.149, "ns_word": 0.7769, "ns_64b": 1.5538, "cyc_word": 2.327, "cpb": 0.5817},
+          "K=63": {"mibs": 6089.73, "gbs": 6.386, "ns_word": 0.6264, "ns_64b": 1.2528, "cyc_word": 1.876, "cpb": 0.4690},
+          "K=127": {"mibs": 5626.50, "gbs": 5.900, "ns_word": 0.6780, "ns_64b": 1.3560, "cyc_word": 2.031, "cpb": 0.5077},
+          "K=255": {"mibs": 5411.54, "gbs": 5.674, "ns_word": 0.7049, "ns_64b": 1.4098, "cyc_word": 2.111, "cpb": 0.5278}
+        }
+      },
+      {
+        "name": "SplitMix64_x8", "family": "Weyl/Mix", "max_k_single": 0,
+        "regimes": {
+          "K=1": {"mibs": 2920.67, "gbs": 3.063, "ns_word": 1.3061, "ns_64b": 2.6122, "cyc_word": 3.912, "cpb": 0.9780},
+          "K=2": {"mibs": 2696.29, "gbs": 2.827, "ns_word": 1.4148, "ns_64b": 2.8296, "cyc_word": 4.237, "cpb": 1.0593},
+          "K=4": {"mibs": 3286.09, "gbs": 3.446, "ns_word": 1.1609, "ns_64b": 2.3217, "cyc_word": 3.477, "cpb": 0.8692},
+          "K=8": {"mibs": 4354.56, "gbs": 4.566, "ns_word": 0.8760, "ns_64b": 1.7520, "cyc_word": 2.624, "cpb": 0.6559},
+          "K=15": {"mibs": 4638.01, "gbs": 4.863, "ns_word": 0.8225, "ns_64b": 1.6450, "cyc_word": 2.463, "cpb": 0.6158},
+          "K=31": {"mibs": 4178.24, "gbs": 4.381, "ns_word": 0.9130, "ns_64b": 1.8260, "cyc_word": 2.734, "cpb": 0.6836},
+          "K=63": {"mibs": 4656.29, "gbs": 4.882, "ns_word": 0.8193, "ns_64b": 1.6385, "cyc_word": 2.454, "cpb": 0.6134},
+          "K=127": {"mibs": 4585.08, "gbs": 4.808, "ns_word": 0.8320, "ns_64b": 1.6640, "cyc_word": 2.492, "cpb": 0.6230},
+          "K=255": {"mibs": 4220.62, "gbs": 4.426, "ns_word": 0.9038, "ns_64b": 1.8076, "cyc_word": 2.707, "cpb": 0.6768}
+        }
+      }
+    ]
+  },
+  "suite_d_stateful_engine": {
+    "k_values": [1, 2, 4, 8, 16, 64, 255, 256, 1000],
+    "engines": [
+      {
+        "name": "ra_engine_v2 (3-Stage OTF)",
+        "regimes": {
+          "K=1": {"mibs": 526.36, "gbs": 0.552, "ns_word": 7.2473, "ns_64b": 14.4947, "cyc_word": 21.706, "cpb": 5.4265},
+          "K=2": {"mibs": 536.34, "gbs": 0.562, "ns_word": 7.1125, "ns_64b": 14.2250, "cyc_word": 21.303, "cpb": 5.3257},
+          "K=4": {"mibs": 640.72, "gbs": 0.672, "ns_word": 5.9538, "ns_64b": 11.9076, "cyc_word": 17.832, "cpb": 4.4581},
+          "K=8": {"mibs": 590.07, "gbs": 0.619, "ns_word": 6.4648, "ns_64b": 12.9297, "cyc_word": 19.363, "cpb": 4.8408},
+          "K=16": {"mibs": 607.69, "gbs": 0.637, "ns_word": 6.2774, "ns_64b": 12.5547, "cyc_word": 18.802, "cpb": 4.7004},
+          "K=64": {"mibs": 613.80, "gbs": 0.644, "ns_word": 6.2149, "ns_64b": 12.4299, "cyc_word": 18.614, "cpb": 4.6535},
+          "K=255": {"mibs": 544.87, "gbs": 0.571, "ns_word": 7.0011, "ns_64b": 14.0022, "cyc_word": 20.969, "cpb": 5.2422},
+          "K=256": {"mibs": 324.93, "gbs": 0.341, "ns_word": 11.7401, "ns_64b": 23.4802, "cyc_word": 35.162, "cpb": 8.7906},
+          "K=1000": {"mibs": 691.77, "gbs": 0.725, "ns_word": 5.5144, "ns_64b": 11.0287, "cyc_word": 16.516, "cpb": 4.1290}
+        }
+      },
+      {
+        "name": "ra_engine_v1 (3-Stage OTF)",
+        "regimes": {
+          "K=1": {"mibs": 362.80, "gbs": 0.380, "ns_word": 10.5147, "ns_64b": 21.0295, "cyc_word": 31.493, "cpb": 7.8732},
+          "K=2": {"mibs": 439.64, "gbs": 0.461, "ns_word": 8.6768, "ns_64b": 17.3536, "cyc_word": 25.988, "cpb": 6.4971},
+          "K=4": {"mibs": 603.14, "gbs": 0.632, "ns_word": 6.3248, "ns_64b": 12.6495, "cyc_word": 18.943, "cpb": 4.7359},
+          "K=8": {"mibs": 645.46, "gbs": 0.677, "ns_word": 5.9101, "ns_64b": 11.8201, "cyc_word": 17.702, "cpb": 4.4254},
+          "K=16": {"mibs": 726.30, "gbs": 0.762, "ns_word": 5.2522, "ns_64b": 10.5045, "cyc_word": 15.731, "cpb": 3.9328},
+          "K=64": {"mibs": 926.87, "gbs": 0.972, "ns_word": 4.1157, "ns_64b": 8.2314, "cyc_word": 12.327, "cpb": 3.0817},
+          "K=255": {"mibs": 922.57, "gbs": 0.967, "ns_word": 4.1349, "ns_64b": 8.2697, "cyc_word": 12.384, "cpb": 3.0960},
+          "K=256": {"mibs": 322.36, "gbs": 0.338, "ns_word": 11.8338, "ns_64b": 23.6676, "cyc_word": 35.443, "cpb": 8.8607},
+          "K=1000": {"mibs": 663.27, "gbs": 0.695, "ns_word": 5.7513, "ns_64b": 11.5027, "cyc_word": 17.226, "cpb": 4.3064}
+        }
+      },
+      {
+        "name": "Philox4x32-10 (stream)",
+        "regimes": {
+          "K=1": {"mibs": 231.54, "gbs": 0.243, "ns_word": 16.4756, "ns_64b": 32.9511, "cyc_word": 49.347, "cpb": 12.3366},
+          "K=2": {"mibs": 336.70, "gbs": 0.353, "ns_word": 11.3298, "ns_64b": 22.6596, "cyc_word": 33.934, "cpb": 8.4835},
+          "K=4": {"mibs": 778.49, "gbs": 0.816, "ns_word": 4.9001, "ns_64b": 9.8002, "cyc_word": 14.676, "cpb": 3.6691},
+          "K=8": {"mibs": 625.14, "gbs": 0.656, "ns_word": 6.1022, "ns_64b": 12.2043, "cyc_word": 18.277, "cpb": 4.5692},
+          "K=16": {"mibs": 801.31, "gbs": 0.840, "ns_word": 4.7606, "ns_64b": 9.5212, "cyc_word": 14.259, "cpb": 3.5647},
+          "K=64": {"mibs": 759.22, "gbs": 0.796, "ns_word": 5.0245, "ns_64b": 10.0489, "cyc_word": 15.049, "cpb": 3.7621},
+          "K=255": {"mibs": 717.54, "gbs": 0.752, "ns_word": 5.3163, "ns_64b": 10.6327, "cyc_word": 15.923, "cpb": 3.9807},
+          "K=256": {"mibs": 769.46, "gbs": 0.807, "ns_word": 4.9576, "ns_64b": 9.9153, "cyc_word": 14.848, "cpb": 3.7121},
+          "K=1000": {"mibs": 767.81, "gbs": 0.805, "ns_word": 4.9683, "ns_64b": 9.9366, "cyc_word": 14.880, "cpb": 3.7201}
+        }
+      },
+      {
+        "name": "ChaCha8 (stream)",
+        "regimes": {
+          "K=1": {"mibs": 82.38, "gbs": 0.086, "ns_word": 46.3089, "ns_64b": 92.6178, "cyc_word": 138.703, "cpb": 34.6757},
+          "K=2": {"mibs": 130.89, "gbs": 0.137, "ns_word": 29.1442, "ns_64b": 58.2884, "cyc_word": 87.292, "cpb": 21.8229},
+          "K=4": {"mibs": 295.11, "gbs": 0.309, "ns_word": 12.9261, "ns_64b": 25.8523, "cyc_word": 38.716, "cpb": 9.6789},
+          "K=8": {"mibs": 454.29, "gbs": 0.476, "ns_word": 8.3970, "ns_64b": 16.7940, "cyc_word": 25.150, "cpb": 6.2875},
+          "K=16": {"mibs": 791.21, "gbs": 0.830, "ns_word": 4.8214, "ns_64b": 9.6427, "cyc_word": 14.441, "cpb": 3.6102},
+          "K=64": {"mibs": 714.03, "gbs": 0.749, "ns_word": 5.3425, "ns_64b": 10.6850, "cyc_word": 16.001, "cpb": 4.0002},
+          "K=255": {"mibs": 646.13, "gbs": 0.678, "ns_word": 5.9039, "ns_64b": 11.8079, "cyc_word": 17.683, "cpb": 4.4207},
+          "K=256": {"mibs": 719.61, "gbs": 0.755, "ns_word": 5.3011, "ns_64b": 10.6021, "cyc_word": 15.877, "cpb": 3.9692},
+          "K=1000": {"mibs": 814.00, "gbs": 0.854, "ns_word": 4.6864, "ns_64b": 9.3727, "cyc_word": 14.036, "cpb": 3.5090}
+        }
+      },
+      {
+        "name": "xoshiro256** (stream)",
+        "regimes": {
+          "K=1": {"mibs": 586.17, "gbs": 0.615, "ns_word": 6.5078, "ns_64b": 13.0156, "cyc_word": 19.491, "cpb": 4.8729},
+          "K=2": {"mibs": 869.38, "gbs": 0.912, "ns_word": 4.3878, "ns_64b": 8.7757, "cyc_word": 13.142, "cpb": 3.2854},
+          "K=4": {"mibs": 1250.00, "gbs": 1.311, "ns_word": 3.0518, "ns_64b": 6.1035, "cyc_word": 9.140, "cpb": 2.2851},
+          "K=8": {"mibs": 1566.16, "gbs": 1.642, "ns_word": 2.4357, "ns_64b": 4.8714, "cyc_word": 7.293, "cpb": 1.8234},
+          "K=16": {"mibs": 2130.22, "gbs": 2.234, "ns_word": 1.7908, "ns_64b": 3.5815, "cyc_word": 5.364, "cpb": 1.3409},
+          "K=64": {"mibs": 2626.50, "gbs": 2.754, "ns_word": 1.4524, "ns_64b": 2.9048, "cyc_word": 4.350, "cpb": 1.0875},
+          "K=255": {"mibs": 2590.21, "gbs": 2.716, "ns_word": 1.4727, "ns_64b": 2.9455, "cyc_word": 4.411, "cpb": 1.1027},
+          "K=256": {"mibs": 2770.53, "gbs": 2.905, "ns_word": 1.3769, "ns_64b": 2.7538, "cyc_word": 4.124, "cpb": 1.0309},
+          "K=1000": {"mibs": 3074.04, "gbs": 3.223, "ns_word": 1.2409, "ns_64b": 2.4819, "cyc_word": 3.717, "cpb": 0.9292}
+        }
+      },
+      {
+        "name": "PCG32 (stream)",
+        "regimes": {
+          "K=1": {"mibs": 2474.48, "gbs": 2.595, "ns_word": 1.5416, "ns_64b": 3.0832, "cyc_word": 4.617, "cpb": 1.1543},
+          "K=2": {"mibs": 2860.36, "gbs": 2.999, "ns_word": 1.3336, "ns_64b": 2.6673, "cyc_word": 3.994, "cpb": 0.9986},
+          "K=4": {"mibs": 2628.04, "gbs": 2.756, "ns_word": 1.4515, "ns_64b": 2.9031, "cyc_word": 4.347, "cpb": 1.0868},
+          "K=8": {"mibs": 2474.02, "gbs": 2.594, "ns_word": 1.5419, "ns_64b": 3.0838, "cyc_word": 4.618, "cpb": 1.1545},
+          "K=16": {"mibs": 2817.71, "gbs": 2.955, "ns_word": 1.3538, "ns_64b": 2.7077, "cyc_word": 4.055, "cpb": 1.0137},
+          "K=64": {"mibs": 2598.01, "gbs": 2.724, "ns_word": 1.4683, "ns_64b": 2.9366, "cyc_word": 4.398, "cpb": 1.0994},
+          "K=255": {"mibs": 2359.92, "gbs": 2.475, "ns_word": 1.6165, "ns_64b": 3.2329, "cyc_word": 4.841, "cpb": 1.2103},
+          "K=256": {"mibs": 2464.86, "gbs": 2.585, "ns_word": 1.5476, "ns_64b": 3.0953, "cyc_word": 4.635, "cpb": 1.1588},
+          "K=1000": {"mibs": 2666.58, "gbs": 2.796, "ns_word": 1.4306, "ns_64b": 2.8611, "cyc_word": 4.285, "cpb": 1.0711}
+        }
+      }
+    ]
+  }
+}

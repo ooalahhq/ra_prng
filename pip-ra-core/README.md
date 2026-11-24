@@ -28,6 +28,18 @@ nothing extra to install by hand.
 
 ## API
 
+### `eval_k1(key, addr_hi=0) -> int`
+
+Fast-path register-only lookup for `K=1` at address `(key, addr_hi)`.
+Evaluates only the 8 `M[]` taps in the active fan-in cone directly in CPU
+registers without allocating or initializing any state arrays. Bit-exact
+with the first 32-bit word of `generate(key, addr_hi, n)`.
+
+```python
+import ra_core
+w0 = ra_core.eval_k1(key=0xCAFEBABE, addr_hi=42)
+```
+
 ### `generate(key, addr_hi, n, *, mode="auto") -> bytes`
 
 Random-access, stateless: `n` little-endian uint32 words as `bytes`, from
@@ -41,16 +53,54 @@ words = ra_core.generate(key=0xCAFEBABE, addr_hi=42, n=1000)
 
 `mode="auto"` (default) picks `"singleblock"` for `n<=255` (faster
 fixed-size path) and `"orbit"` otherwise; pass `mode="orbit"` or
-`mode="singleblock"` to force one.
+`mode="singleblock"` to force one. (With XAG Dead-Cone Elimination promoted
+to `ra_core.c`, `orbit` for `n<=255` automatically delegates to the
+`singleblock` fast-path as well.)
 
-### `RaCoreEngine` - stateful streaming, fork, save/resume
+### `generate_x8(keys, addr_his, n) -> bytes`
 
-For when you need to keep pulling from the *same* stream over time (not
-just one-shot random access), rather than `generate()`:
+8-way lockstep SIMD batch generation (`1 <= n <= 255`): evaluates 8
+independent `(key, addr_hi)` addresses simultaneously in AVX2 vector
+registers (`u32x8`), exploiting the data-oblivious pre-reseed window to
+reach ~7.5 GB/s. Returns `n * 8` little-endian `uint32` words interleaved
+by step (`shape=(n, 8)`).
+
+```python
+raw = ra_core.generate_x8(
+    keys=[1, 2, 3, 4, 5, 6, 7, 8],
+    addr_his=[0] * 8,
+    n=255,
+)
+```
+
+### `RaCoreEngine` - lazy address-to-stream promotion, fork, save/resume
+
+For when you want to start at any specific `(key, addr_hi)` address and pull
+numbers incrementally on demand (`next_u32()`, `next_u64()`, `next_double()`,
+or `next(n)`), combining addressability with `xoshiro`/`PCG`-style streaming:
+
+- **Stage 0 (`RaCoreEngine(key, addr_hi)`)**: zero array initialization up front
+  (only stores `key`, `addr_hi`, `mode = 0`).
+- **Stage 1 (On-The-Fly Register Rolling for Cycle 0, `K = 1..255`)**:
+  Before the first `ra_reseed` (words #1 through #255), `L[]` has zero fan-out
+  to output and `M[idx] = rot32(idx * step_m, key ^ idx)` is a closed-form
+  expression of `idx`. Word #1 evaluates the 8 initial taps in registers and
+  caches them in an 8-word ring buffer `m_ring[8]`; each subsequent word
+  (#2..#255) computes **only one `rot32`** for the entering tap `M[i - 1]` and
+  pops the leaving tap from `m_ring[8]`, with **zero initialization of `L[256]`
+  or `M[256]`** for any trajectory of length `<= 255` words.
+- **Stage 2 (Full Multi-Cycle Orbit for `K >= 256`)**: only if a stream
+  actually crosses word #255 does the engine materialize `L[256]` and `M[256]`,
+  replay Cycle 0's 255 `L[i] <-> L[d]` swaps from `d_hist[255..1]`, run
+  `ra_reseed`, and stream 255-word `orbit` cycles directly into memory (no
+  `fmemopen` overhead), maintaining 100% bit-exact parity with
+  `generate(..., mode="orbit")`.
 
 ```python
 e = ra_core.RaCoreEngine(key=555, addr_hi=1)
-chunk1 = e.next(1000)
+first_word = e.next_u32()     # Stage 1 OTF register-only (no L[]/M[] init!)
+u = e.next_double()           # continues in Stage 1 OTF (1 rot32 per word)
+chunk1 = e.next(1000)         # crosses 255 -> promotes seamlessly to Stage 2 orbit
 chunk2 = e.next(500)          # continues where chunk1 left off
 print(e.key, e.addr_hi, e.position)   # introspection: address + how far in
 

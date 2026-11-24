@@ -7,7 +7,7 @@ BUILD    := build
 BIN      := $(BUILD)/bin
 LIB      := $(BUILD)/lib
 
-.PHONY: all build-c build-ext build-ext-core install dev-install test bench clean
+.PHONY: all build-c build-ext build-ext-core build-ext-bitgen install dev-install test bench clean
 
 all: build-c build-ext
 
@@ -43,9 +43,15 @@ $(LIB)/libra_prng2.so: src/ra_prng2/c/ra_prng2_struct.c
 # for the actual installable package.
 build-ext-core: $(LIB)/libra_core_engine.so
 
-$(LIB)/libra_core_engine.so: src/ra_core/c/ra_core_engine.c src/ra_core/c/ra_core.c
+$(LIB)/libra_core_engine.so: src/ra_core/c/ra_core_engine.c src/ra_core/c/ra_core.c src/ra_core/c/ra_core.h src/ra_core/c/ra_core_engine.h
 	mkdir -p $(LIB)
 	$(CC) $(CFLAGS) -fPIC -shared $< -o $@
+
+# Optional in-place build of the Cython numpy.random.BitGenerator extension for
+# running pip-ra-core/tests/ without a full `pip install ./pip-ra-core`.
+# Requires Cython (or a pre-generated pip-ra-core/ra_core/_bitgen.c) and numpy.
+build-ext-bitgen: $(LIB)/libra_core_engine.so
+	cd pip-ra-core && python3 setup.py build_ext --inplace
 
 # Editable install of the pure-Python ra_prng2 reference implementation (pyproject.toml).
 install: build-ext
@@ -54,7 +60,6 @@ install: build-ext
 dev-install: build-ext
 	pip install -e '.[dev]'
 
-# Tolerant while tests/ is still an empty scaffold (exit code 5 = "no tests collected").
 test:
 	pytest tests/ -q; code=$$?; \
 	if [ $$code -eq 5 ]; then echo "No tests collected yet - OK"; exit 0; fi; \
@@ -67,4 +72,4 @@ bench:
 	@echo "No automated bench runner yet - see benchmarks/comparisons/source/ and benchmarks/results/"
 
 clean:
-	rm -rf $(BUILD)
+	rm -rf $(BUILD) pip-ra-core/build pip-ra-core/ra_core/_bitgen*.so

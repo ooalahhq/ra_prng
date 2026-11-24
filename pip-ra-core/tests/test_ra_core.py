@@ -146,3 +146,78 @@ def test_numpy_bitgenerator_deterministic():
     a = np.random.Generator(RaCoreBitGenerator(7)).integers(0, 100, size=30)
     b = np.random.Generator(RaCoreBitGenerator(7)).integers(0, 100, size=30)
     assert (a == b).all()
+
+
+def test_lazy_k1_and_step_by_step_next_u32_parity():
+    key, addr_hi = 0xDEADBEEF, 99
+    # 1. Direct register K=1 evaluation matches generate(..., 1)
+    k1_word = ra_core.eval_k1(key, addr_hi)
+    ref_bytes = ra_core.generate(key, addr_hi, 600, mode="orbit")
+    ref_u32 = np.frombuffer(ref_bytes, dtype="<u4")
+    assert k1_word == int(ref_u32[0])
+
+    # 2. Pulling 1 word at a time via next_u32() transitions seamlessly from
+    #    lazy K=1 (word 0, no L/M array init) -> cycle 0 (words 1..254) ->
+    #    post-reseed cycles (words 255..599) and stays 100% bit-exact.
+    e = ra_core.RaCoreEngine(key, addr_hi)
+    assert e.position == 0
+    first = e.next_u32()
+    assert first == k1_word
+    assert e.position == 1
+
+    rest = [e.next_u32() for _ in range(599)]
+    all_drawn = np.array([first] + rest, dtype="<u4")
+    assert (all_drawn == ref_u32).all()
+    assert e.position == 600
+
+
+def test_generate_x8_matches_scalar_singleblock():
+    keys = [0, 1, 2, 0xCAFEBABE, 0xDEADBEEF, 0x12345678, 0xFFFFFFFF, 42]
+    addr_his = [0, 7, 13, 42, 99, 1024, 0xFFFFFFFF, 5]
+    for n in (1, 2, 3, 4, 8, 10, 254, 255):
+        interleaved = np.frombuffer(
+            ra_core.generate_x8(keys, addr_his, n), dtype="<u4"
+        ).reshape(n, 8)
+        for lane in range(8):
+            ref = np.frombuffer(
+                ra_core.generate(keys[lane], addr_his[lane], n, mode="singleblock"),
+                dtype="<u4",
+            )
+            assert (interleaved[:, lane] == ref).all()
+
+
+def test_golden_kat_v2_final_vectors():
+    """Frozen Golden KAT vectors for ra_core v2 Final (W2_D2_xag_opt + Opsi_A3 + eng_v2_E2)."""
+    kat_cases = [
+        (
+            0x00000000,
+            0x00000000,
+            [
+                0xC1DBBB12, 0xFBEDE3B9, 0x93B1E2C8, 0x2067AC16,
+                0xC477241F, 0x982A158D, 0xD77DD2E4, 0x89763004,
+            ],
+            (0x9297471C, 0xEB5F03E7, 0x8970AD1B),
+        ),
+        (
+            0x0000002A,
+            0x00000000,
+            [
+                0x9533450C, 0x288D3BD2, 0x7E833E19, 0xFF96B720,
+                0x8CD7BE6B, 0xE91267F5, 0xACC46C12, 0xE7271FF4,
+            ],
+            (0xB565EF5B, 0x50C62F0B, 0xF7C65DA2),
+        ),
+    ]
+    for key, addr_hi, want_first8, want_boundary in kat_cases:
+        assert ra_core.eval_k1(key, addr_hi) == want_first8[0]
+        words = np.frombuffer(
+            ra_core.generate(key, addr_hi, 300, mode="orbit"), dtype="<u4"
+        )
+        assert [int(x) for x in words[:8]] == want_first8
+        assert (int(words[254]), int(words[255]), int(words[256])) == want_boundary
+
+        eng = ra_core.RaCoreEngine(key, addr_hi)
+        eng_words = [eng.next_u32() for _ in range(300)]
+        assert eng_words[:8] == want_first8
+        assert (eng_words[254], eng_words[255], eng_words[256]) == want_boundary
+        assert eng.position == 300

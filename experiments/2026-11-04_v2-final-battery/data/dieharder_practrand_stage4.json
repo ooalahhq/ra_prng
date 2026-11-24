@@ -1,0 +1,316 @@
+{
+  "dieharder": {
+    "continuous_key42": {
+      "label": "continuous_key42",
+      "seconds": 230.81,
+      "all_114_subtests": {
+        "total": 114,
+        "passed": 113,
+        "weak": 1,
+        "failed": 0
+      },
+      "good_27_battery": {
+        "families_total": 27,
+        "families_clean_pass": 26,
+        "families_with_weak": 1,
+        "families_failed": 0,
+        "subtests_total": 110,
+        "subtests_passed": 109,
+        "subtests_weak": 1,
+        "subtests_failed": 0
+      },
+      "weak_details": [
+        "-d 102 (sts_serial|ntup=8): p=0.99786973"
+      ],
+      "fail_details": [],
+      "log_file": "dieharder_continuous_key42_full114.log"
+    },
+    "k1_weyl": {
+      "label": "k1_weyl",
+      "seconds": 252.34,
+      "all_114_subtests": {
+        "total": 114,
+        "passed": 113,
+        "weak": 1,
+        "failed": 0
+      },
+      "good_27_battery": {
+        "families_total": 27,
+        "families_clean_pass": 26,
+        "families_with_weak": 1,
+        "families_failed": 0,
+        "subtests_total": 110,
+        "subtests_passed": 109,
+        "subtests_weak": 1,
+        "subtests_failed": 0
+      },
+      "weak_details": [
+        "-d 203 (rgb_lagged_sum|ntup=26): p=0.99995937"
+      ],
+      "fail_details": [],
+      "log_file": "dieharder_k1_weyl_full114.log"
+    }
+  },
+  "practrand": [
+    {
+      "label": "continuous_key42",
+      "tlmax": "8GB",
+      "seconds": 56.05,
+      "status": "PASS (unusual)",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": [
+            "Gap-16:B                          R=  -4.3  p =1-1.0e-3   unusual"
+          ]
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": [
+            "DC6-9x1Bytes-1                    R=  +6.1  p =  2.9e-3   unusual"
+          ]
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": [
+            "DC6-9x1Bytes-1                    R=  +6.4  p =  1.8e-3   unusual"
+          ]
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        },
+        {
+          "length": "4gigabytes",
+          "anomalies": []
+        },
+        {
+          "length": "8gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_continuous_key42_8GB.log"
+    },
+    {
+      "label": "k1_weyl",
+      "tlmax": "2GB",
+      "seconds": 21.93,
+      "status": "CLEAN",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_k1_weyl_2GB.log"
+    },
+    {
+      "label": "k16_seq_key",
+      "tlmax": "2GB",
+      "seconds": 20.18,
+      "status": "CLEAN",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_k16_seq_key_2GB.log"
+    },
+    {
+      "label": "k64_seq_key",
+      "tlmax": "2GB",
+      "seconds": 20.26,
+      "status": "CLEAN",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_k64_seq_key_2GB.log"
+    },
+    {
+      "label": "k255_seq_key",
+      "tlmax": "2GB",
+      "seconds": 19.87,
+      "status": "CLEAN",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_k255_seq_key_2GB.log"
+    },
+    {
+      "label": "k255_seq_addr",
+      "tlmax": "2GB",
+      "seconds": 19.84,
+      "status": "CLEAN",
+      "checkpoints": [
+        {
+          "length": "16megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "32megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "64megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "128megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "256megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "512megabytes",
+          "anomalies": []
+        },
+        {
+          "length": "1gigabyte",
+          "anomalies": []
+        },
+        {
+          "length": "2gigabytes",
+          "anomalies": []
+        }
+      ],
+      "log_file": "practrand_k255_seq_addr_2GB.log"
+    }
+  ]
+}

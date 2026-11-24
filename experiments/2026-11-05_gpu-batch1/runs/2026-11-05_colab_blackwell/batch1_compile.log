@@ -1,0 +1,72 @@
+$ nvcc -O3 -std=c++17 -arch=sm_120 -Xptxas=-v batch1.cu -o batch1
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi1024ELb0EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi1024ELb0EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 26 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 72.136 ms
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi1024ELb1EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi1024ELb1EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 4.727 ms
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi256ELb0EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi256ELb0EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 26 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 4.690 ms
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi256ELb1EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi256ELb1EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 4.382 ms
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi64ELb0EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi64ELb0EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 26 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 4.621 ms
+ptxas info    : Compiling entry function '_Z17ising_half_kernelILi64ELb1EEvPaP10BlockAuditiiii' for 'sm_120'
+ptxas info    : Function properties for _Z17ising_half_kernelILi64ELb1EEvPaP10BlockAuditiiii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 24 registers, used 1 barriers, 64 bytes smem
+ptxas info    : Compile time = 4.586 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi8ELb0EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi8ELb0EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 26 registers, used 0 barriers
+ptxas info    : Compile time = 4.036 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi8ELb1EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi8ELb1EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 21 registers, used 0 barriers
+ptxas info    : Compile time = 3.536 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi4ELb0EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi4ELb0EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers
+ptxas info    : Compile time = 2.198 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi4ELb1EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi4ELb1EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 0 barriers
+ptxas info    : Compile time = 2.448 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi2ELb0EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi2ELb0EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers
+ptxas info    : Compile time = 2.021 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi2ELb1EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi2ELb1EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers
+ptxas info    : Compile time = 1.897 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi1ELb0EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi1ELb0EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers
+ptxas info    : Compile time = 1.886 ms
+ptxas info    : Compiling entry function '_Z12burst_kernelILi1ELb1EEvPjm' for 'sm_120'
+ptxas info    : Function properties for _Z12burst_kernelILi1ELb1EEvPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers
+ptxas info    : Compile time = 1.507 ms

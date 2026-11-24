@@ -1,0 +1,57 @@
+validate(singleblock): 39 keys checked, 0 checksum mismatches
+validate(orbit, K<=255 window): 39 keys checked, 0 checksum mismatches
+validate: PASS -- singleblock and orbit both match their known-answer checksums (v2 Final W2_D2_xag_opt + Opsi_A3).
+=== Stage 4 Gate 0 Verification Summary ===
+Total words cross-verified: 2720934
+mism_sb_vs_ref        = 0
+mism_sb_vs_orbit      = 0
+mism_file_vs_buf      = 0
+mism_avx2_vs_scalar   = 0
+mism_eng_u32_vs_orbit = 0
+mism_eng_fill_vs_orbit= 0
+mism_eng_discard_pos  = 0
+run_validate() rc     = 0
+
+Golden KAT [key0_addr0] (key=0x00000000, addr_hi=0x00000000):
+  k_mix=0x4ea2c4a4, step_m=0x24416e35, step_l=0x2785f64d
+  words[0..7]: 0xc1dbbb12 0xfbede3b9 0x93b1e2c8 0x2067ac16 0xc477241f 0x982a158d 0xd77dd2e4 0x89763004
+  words[254..256]: 0x9297471c 0xeb5f03e7 0x8970ad1b
+  FNV1a-64: K=1:0x92565b17647cb906 K=255:0xcf914a65c5bfc357 K=256:0x6415e0ce86e813cb K=1000:0x1cf49952f8feb78e K=10000:0xc64c15cff8f319a8
+
+Golden KAT [key42_addr0] (key=0x0000002a, addr_hi=0x00000000):
+  k_mix=0xc14755a0, step_m=0x0ec3467d, step_l=0xde211303
+  words[0..7]: 0x9533450c 0x288d3bd2 0x7e833e19 0xff96b720 0x8cd7be6b 0xe91267f5 0xacc46c12 0xe7271ff4
+  words[254..256]: 0xb565ef5b 0x50c62f0b 0xf7c65da2
+  FNV1a-64: K=1:0x113204a23f2c5aaa K=255:0xa2a2ab8dee50bccf K=256:0x537ab3a8a4916187 K=1000:0x44c2d9808184e9ca K=10000:0x49bc0a51ddac4419
+
+Golden KAT [key1_addr0] (key=0x00000001, addr_hi=0x00000000):
+  k_mix=0x5bf526f5, step_m=0xafed9981, step_l=0x196abc55
+  words[0..7]: 0xd8d07063 0xd78f6289 0x180d4a60 0xe7ddc2c3 0x508aa139 0x11c8ea1e 0x9d8ce965 0x37953664
+  words[254..256]: 0x9b622c40 0x1bc8ae33 0x274436e3
+  FNV1a-64: K=1:0x1ff90b90933eae2e K=255:0xc8db90b4a0564280 K=256:0x1c63f0ebe8e58f04 K=1000:0xa91fb6f8f9fb2cc8 K=10000:0xa02e21917ed13343
+
+Golden KAT [deadbeef_golden] (key=0xdeadbeef, addr_hi=0x9e3779b9):
+  k_mix=0xf28e02c1, step_m=0x1b0f916d, step_l=0x9a78d4e5
+  words[0..7]: 0x5612413d 0xc09648c9 0xd533833f 0xee2fc833 0x09e9cec7 0x3b89f8af 0xf08fbf4a 0x648a24c5
+  words[254..256]: 0x59bec6de 0xfcb0cbf3 0xbc40ce77
+  FNV1a-64: K=1:0x0be53b12082495b7 K=255:0xa81bf05044ea4b69 K=256:0x06c36fc913afaa13 K=1000:0x8e5bee39f3f10c3e K=10000:0x349bbbf26797e412
+
+Golden KAT [max_u32_all_ones] (key=0xffffffff, addr_hi=0xffffffff):
+  k_mix=0x49554d20, step_m=0x1833d849, step_l=0xe8337575
+  words[0..7]: 0x4ada0f26 0x78b8b5de 0xc07bf57c 0xb049a08e 0xd1fa8279 0xac4e4438 0x66c12ecf 0x90e051f1
+  words[254..256]: 0xb8e535c0 0x519cf7b7 0x34b20631
+  FNV1a-64: K=1:0xf502aa641cebbf06 K=255:0x7fb358921bbf86c3 K=256:0x5d7c3c982538c232 K=1000:0x8e06d454a2ca4770 K=10000:0x0568ba61cd5b4993
+
+=== Stage 4 Production Microbenchmark Sanity Check (Median of 7 Rounds) ===
+K        | Direct (MiB/s)     | Engine E2 (MiB/s)  | AVX2 x8 (MiB/s)   
+---------+--------------------+--------------------+-------------------
+K=1      |        425.8 MiB/s |        352.4 MiB/s |        883.1 MiB/s
+K=2      |        522.2 MiB/s |        379.2 MiB/s |       1660.9 MiB/s
+K=4      |        664.4 MiB/s |        475.8 MiB/s |       2760.7 MiB/s
+K=8      |        841.4 MiB/s |        524.5 MiB/s |       3714.1 MiB/s
+K=16     |        900.6 MiB/s |        567.1 MiB/s |       4799.3 MiB/s
+K=64     |        948.0 MiB/s |        567.0 MiB/s |       5944.3 MiB/s
+K=255    |        926.7 MiB/s |        583.2 MiB/s |       6180.4 MiB/s
+K=256    |        663.6 MiB/s |        279.4 MiB/s |          0.0 MiB/s
+K=1020   |        915.5 MiB/s |        402.6 MiB/s |          0.0 MiB/s
+Cont-u32 |                  - |        410.8 MiB/s |                  -

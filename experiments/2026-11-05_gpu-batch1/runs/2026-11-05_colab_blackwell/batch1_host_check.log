@@ -1,0 +1,5 @@
+$ g++ -std=c++17 -O3 -DRA_HOST_ONLY -x c++ batch1.cu -o batch1_host
+PASS host frozen ra_core K1/K2/K4/K8 and official Philox KAT
+PASS unique address mapping for sampled Ising site/sweep pairs
+HOST_ISING_GOLDEN L=256 sweeps=32 ra_checksum=0x8210691e philox_checksum=0xf8a28877 ra_E=-1.417175 ra_M=0.582092 philox_E=-1.401489 philox_M=0.570770
+PASS audited CPU Ising checksum parity

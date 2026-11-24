@@ -1,0 +1,465 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\DeclareMathOperator{\rot}{rot32}
+\DeclareMathOperator{\fmix}{fmix32}
+\DeclareMathOperator{\popcount}{popcount}
+\DeclareMathOperator{\Perm}{Perm}
+\DeclareMathOperator{\swap}{swap}
+\DeclareMathOperator{\SE}{SE}
+\DeclareMathOperator{\HW}{HW}
+
+\begin{document}
+
+\title{\texttt{ra\_core v2}: Deferred Prefix Computation and 2D Cross-Pre-Mixed Seeding for Addressable Permutation-Stream Pseudorandom Number Generation}
+
+\author{\IEEEauthorblockN{Hamas A. Rahman}
+\IEEEauthorblockA{\textit{State Polytechnic of Malang}\\
+Malang, East Java, Indonesia\\
+nexthamas95@gmail.com}
+}
+
+\maketitle
+
+\begin{abstract}
+Monte Carlo simulations, parallel lattice updates, and variable-length stochastic algorithms frequently require pseudorandom streams indexed by logical 2D coordinates $(\text{key}, \text{addr\_hi})$ whose consumed burst length $K$ ranges from one or two words ($K=1, 2$) to long continuous trajectories ($K \ge 256$). Counter-based random-access PRNGs (such as Philox4x32-10 in Random123 and ChaCha8) provide stateless $O(1)$ logical addressing and schedule-independent reproducibility, but evaluate full multi-round 4-word or 16-word cipher blocks even when a trajectory terminates after $K=1$ or $K=2$ draws. Conversely, stateful linear or permutation-array generators (such as Xoshiro256**, PCG64-DXSM, and the predecessor hybrid \texttt{ra\_core v1}) amortize sequential generation over a multi-word state, but normally require $O(N)$ state initialization per coordinate or exhibit structural correlation defects when seeded ad-hoc on structured 2D coordinates. Specifically, \texttt{ra\_core v1} suffered from three diagnostic bottlenecks: (i) independent 1D pre-mixing before \texttt{fmix32} coupled with an unshifted $i \cdot \text{step}$ origin that left $M[0]=0$ invariant and collapsed $(k_{\text{mix}}, \text{step}_m)$ onto a 1D affine relationship whenever either coordinate was held constant; (ii) a 7-tap cyclic bootstrap, a lag-1 serial feedback dependency $c_t \to d_t \to o_{t+1} \to a_{t+1}$, and an $O(N)$ end-of-cycle reseed scan; and (iii) a scalar one-word-at-a-time On-The-Fly (OTF) engine that regressed at mid-$K$ burst lengths ($K=8\ldots 255$).
+
+We present \texttt{ra\_core v2}, a mathematical and systems redesign centered on \emph{deferred computation of a stream prefix} within a permutation-coupled state architecture: (1) \emph{\texttt{Opsi\_A3} 2D Cross-Pre-Mix Key-Mixing with Odd-Forced Bijective Index Stepping}, which cross-mixes $(\text{key}, \text{addr\_hi})$ into both branches $(u, v)$ prior to dual \texttt{fmix32} avalanches, enforces odd Weyl increments ($\text{step}_m, \text{step}_l \equiv 1 \pmod 2$) so that the per-index map $i \mapsto (i+1)\cdot\text{step} \bmod 2^{32}$ is bijective over $i$, and eliminates the $i=0$ fixed-point zero slot with zero extra ALU instructions inside the generation loop; (2) \emph{\texttt{W2\_D2\_xag\_opt} Causal 2-Tap Ramp-Up, 2-Step Unrolled Recurrence, and In-Place Coupling}, which replaces the 7-tap cyclic wrap-around with a 2-tap causal ramp-up window ($W2$) so that word~\#1 ($K=1$) depends on only 2 state words and word~\#2 ($K=2$) on 3 state words, introduces lag-2 delayed feedback ($D2$) to decouple adjacent scramblers into a 2-step superscalar spine, and fuses $L \to M$ coupling directly into the orbit loop ($M[i+7] \mathrel{+}= L[d_{\text{use}}]$) with an $O(1)$ 7-word end-of-cycle guard fold (\texttt{END\_CYCLE\_M\_W2}); and (3) \emph{\texttt{eng\_v2\_E2} Even-$K$-Aligned Coupled Pair OTF Rolling}, which defers the computational work of $O(N)$ array initialization within a preallocated $3{,}520$-byte engine struct by evaluating $K=1, 2$ in registers, stepping $K=3\ldots 254$ in coupled 2-step OTF pairs over an 8-word ring buffer (caching 1 word across odd-to-even calls), and materializing the full $M, L$ arrays and $255$-word block buffer only when a trajectory reaches $K=256$.
+
+Empirically, \texttt{ra\_core v2} passes 57/57 non-repeating PractRand seeding regimes (combining 42 baseline regimes and 15 non-periodic adversarial regimes healed by \texttt{Opsi\_A3}, plus 8~GiB PASS on the canonical orbit, CLEAN from 128~MiB to 8~GiB), heals downscaled $N=16$ sub-orbit boundaries to 15/15 PASS (4~GiB CLEAN at $K=14$), increases exact Brent cycle lengths on reduced toy models by $1.98\times$--$2.34\times$ (raising minimum cycle length at $(n=4,w=8)$ by $6.40\times$ from $11{,}072$ to $70{,}876$), achieves ideal 2D Strict Avalanche ($\bar{p}=0.499959$, $\chi^2/\text{dof}=1.1070$) and Bit Independence ($\max |\rho| \le 0.00477$), and passes the 114-subtest Dieharder battery (113 PASS / 1 WEAK / 0 FAIL; 27/27 Good families PASS). On CPU, \texttt{ra\_core v2} reaches 1,596.5~MiB/s in scalar stateless mode at $K=255$ (1,435.8~MiB/s in Suite~D on the Intel Core i3-1115G4 client; 917.4~MiB/s on the 1.995~GHz Xeon KVM server), lifts stateful OTF throughput at $K=255$ from 918.9~MiB/s (\texttt{v2\_old}) to 1,219.4~MiB/s best-of-7 ($2.34\text{ cpb}$, $1.33\times$ over \texttt{v2\_old}; 1,162.9~MiB/s median) while outperforming \texttt{v1} OTF by $1.38\times$--$1.74\times$ at $K=1$, and reaches 10,687.9~MiB/s (10.44~GiB/s client; 6,180.4~MiB/s / 6.04~GiB/s server) in 8-way AVX2 SIMD. Across both CPU platforms, stateless \texttt{ra\_core v2} (\texttt{Opsi\_A3}) outperforms \texttt{Philox4x32-10} and \texttt{ChaCha8} in pure-generate bursts ($K=1\ldots 255$ and $K=510\ldots 1000$, $2.65\times$--$2.66\times$ faster than Philox at $K=1$), 2D Bernoulli sweeps ($1.304\times$--$1.342\times$), and $K=1$ True 2D Ising Checkerboard Metropolis at $T_c$ ($1.250\times$--$1.276\times$ faster than Philox), while stateful \texttt{eng\_v2\_E2} outperforms Philox in $K=1$ incremental draws and \texttt{E2-Slab} fixed-trajectory Photon Transport ($1.242\times$--$1.528\times$). Finally, an exploratory CUDA port on an NVIDIA RTX PRO 6000 Blackwell GPU (\texttt{sm\_120}) verifies 100\% bit-exact CPU--GPU parity across $K=1\ldots 8$ bursts and 32-sweep critical 2D Ising lattices ($L=64, 256, 1024$), showing tied GPU kernel execution times at $K=1$ and Ising ($1.001\times$--$1.010\times$) while documenting where 4-word block ciphers retain a GPU kernel advantage ($K=4, 8$).
+\end{abstract}
+
+\begin{IEEEkeywords}
+pseudorandom number generation, deferred prefix computation, 64-bit addressable seeding, XOR-AND graph (XAG) recurrence, on-the-fly register rolling, Ising Metropolis Monte Carlo
+\end{IEEEkeywords}
+
+\section{Introduction and Architectural Motivation}\label{sec:intro}
+
+Stochastic simulation workloads span a wide spectrum of pseudorandom access patterns parameterized by the burst length $K$---the number of 32-bit words drawn per logical 64-bit coordinate $(\text{key}, \text{addr\_hi})$:
+\begin{itemize}
+    \item \emph{Short Stateless Random Access ($K = 1, 2$):} Parallel checkerboard spin-lattice sweeps~\cite{metropolis1953equation,onsager1944crystal}, spatial shader noise, and stateless branching decisions where each coordinate $(\text{key}, \text{addr\_hi})$ emits one or two words.
+    \item \emph{Short-to-Medium Sub-Orbit Bursts ($K = 3\ldots 255$):} Discrete-monitored Asian option pricing ($K \in \{16, 64, 255\}$ steps per path), variable-depth branching particle cascades, and turbid-medium photon transport with early Russian-roulette termination.
+    \item \emph{Continuous Multi-Cycle Streaming ($K \ge 256$):} Bulk tensor generation, long-horizon molecular dynamics, and incremental stateful calls (\texttt{next\_u32()}, \texttt{fill\_u32()}).
+\end{itemize}
+
+In practice, combining logical addressability with sequential streaming does not require a hybrid state-array architecture: counter-based PRNGs such as \texttt{Philox4x32-10} and \texttt{Threefry} in Random123~\cite{salmon2011parallel}, \texttt{ChaCha8}~\cite{bernstein2008chacha}, and device-portable libraries such as OpenRAND~\cite{shashidhar2025openrand} already map application-level tuples $(\text{stream}, \text{substream}, \text{draw})$ directly to pseudorandom blocks, guaranteeing schedule-independent reproducibility across threads and CPU/GPU architectures. Likewise, fast stateful generators such as \texttt{Xoshiro256**}~\cite{blackman2018scrambled}, \texttt{PCG32}/\texttt{PCG64-DXSM}~\cite{oneill2014pcg}, \texttt{SFC64}, and \texttt{WyRand}~\cite{wang2019wyhash} can be seeded per coordinate via a hash or \texttt{SplitMix64} mixer. However, when workloads mix \emph{structured 2D coordinate addressing} with \emph{short or unknown-length prefix draws ($K=1\ldots 255$) on CPUs}, two practical costs arise:
+\begin{enumerate}
+    \item \emph{Fixed-Block Computation on Short Prefixes in Counter-Based Ciphers:} Counter-based block ciphers execute 8 to 10 rounds of 128-bit (4-word) or 512-bit (16-word) Feistel/ARX mixing per block regardless of $K$. On scalar x86-64 CPUs, this imposes a flat throughput ceiling ($\sim 0.77$--$1.08\text{ GiB/s}$) and discards 75\% of the computed block when only $K=1$ word is needed per coordinate, or when an incremental trajectory terminates mid-block.
+    \item \emph{Initialization Cost vs.\ Coordinate-Seeding Sensitivity in Stateful Engines:} Traditional state-array generators require initializing their multi-word state before emitting the first word ($K=1$). Conversely, if a lightweight 1-step multiplicative mixer is seeded directly with un-premixed 2D lattice coordinates $(\text{site}, \text{sweep})$ to avoid initialization overhead, structured correlations between adjacent coordinates can leak into the simulation trajectory (as illustrated by a diagnostic 32-sweep critical 2D Ising realization in Section~\ref{sec:ising}, where ad-hoc per-site seeded \texttt{WyRand} drops to $\langle |M| \rangle = 0.2888$ versus $0.56$--$0.67$ for well-diffused generators).
+\end{enumerate}
+
+This motivates the central design question of \texttt{ra\_core v2}: \emph{Can a permutation-coupled state-array generator ($N=256$ words each of $M$ and $L$) be structured so that the computational cost of evaluating a $K$-word stream prefix scales progressively with $K$---evaluating only 2 state words at $K=1$, 3 words at $K=2$, an 8-word ring buffer for $K \le 255$, and materializing the full $M, L$ permutation arrays only when $K \ge 256$---while producing the exact same bit stream as full-state multi-cycle generation and resisting structured 2D seeding?}
+
+\subsection{Diagnostic Limitations of \texttt{ra\_core v1}}
+
+The predecessor \texttt{ra\_core v1} architecture~\cite{rahman2025raprng2} combined a 256-word algebraic array $M$ with a 256-word dynamically permuted coupling array $L$. While \texttt{v1} introduced Dead-Cone Elimination for Cycle~0 ($K \le 255$) and an 8-word On-The-Fly (OTF) ring buffer, a four-stage diagnostic audit uncovered three structural flaws:
+\begin{enumerate}
+    \item \emph{1D Key-Mixing Manifold Collapse and $i=0$ Fixed Point:} In \texttt{v1}, $\text{km}_k = \fmix(G_M \oplus \text{key})$ depended only on $\text{key}$ while $\text{km}_p = \fmix(G_{M2} \oplus \text{addr\_hi})$ depended only on $\text{addr\_hi}$, and state words were initialized as $M[i] = \rot(i \cdot \text{step}_m, k_{\text{mix}} \oplus i)$. Whenever one coordinate was held constant ($\text{addr\_hi}=0$ across sequential keys, or $\text{key}=0$ across sequential $\text{addr\_hi}$), one \texttt{fmix32} branch froze to a constant $C$, collapsing both $k_{\text{mix}}$ and $\text{step}_m$ into deterministic affine transforms of a single 32-bit word without a nonlinear barrier between them. Moreover, even values of $\text{step}_m$ reduced the 2-adic subgroup order of $i \cdot \text{step}_m \bmod 2^{32}$, and at $i=0$, $M[0] = L[0] = 0$ was identically zero across all $2^{64}$ seeds. Consequently, \texttt{v1} failed PractRand~\cite{dotyhumphreypractrand} on sequential-key bursts (\texttt{2C\_seq\_K255}, \texttt{4A3\_contig\_seq\_K16/K64}), Gray-code keys (\texttt{2D1\_gray\_K255}), 2D bit-plane grids (\texttt{2E1\_grid\_bp\_K1/K255}), and fixed-key sequential addresses (\texttt{2F\_addr\_seq\_ctrl}).
+    \item \emph{Lag-1 Serial Feedback Bottleneck ($D1$) and $O(N)$ Reseed Overhead:} Step $t$ required the masked output $d_t = c_t \bmod 256$ from step $t-1$'s variable barrel rotation $\rot(u_{t-1}, b_{t-1})$ and xorshift before computing $a_t = (d_t \oplus o_t) \oplus s_t$, creating a strict $\sim 8$-cycle serial dependency chain per word. In addition, cycle boundaries executed two $O(N)$ scans (\texttt{ra\_reseed} and \texttt{ra\_hash}) plus a 6-word cyclic wrap copy $M[257\ldots 262] = M[1\ldots 6]$.
+    \item \emph{Mid-$K$ Stateful OTF Engine Regression in Unrolled \texttt{v2\_old}:} When the 1-word-at-a-time stateful OTF engine was initially adapted to \texttt{v2} (\texttt{eng\_v2\_old}), an inverted branch hint and serial 1-word evaluation prevented the OTF engine from exploiting lag-2 ($D2$) parallelism, causing $K=255$ throughput to drop to $918.9\text{ MiB/s}$ (versus $1{,}303.6\text{ MiB/s}$ for \texttt{eng\_v1\_baseline} in the Stage~2 ablation harness).
+\end{enumerate}
+
+\subsection{Summary of Contributions in \texttt{ra\_core v2}}
+
+This paper presents \texttt{ra\_core v2} (\texttt{W2\_D2\_xag\_opt} + \texttt{Opsi\_A3} + \texttt{eng\_v2\_E2}):
+\begin{enumerate}
+    \item \emph{Deferred Computation of a Stream Prefix via \texttt{W2\_D2\_xag\_opt} \& \texttt{eng\_v2\_E2} (Sections~\ref{sec:w2}--\ref{sec:engine}):} Combines a 2-tap causal ramp-up window ($W2$) with lag-2 delayed feedback ($D2$) and in-place per-step coupling ($M[i+7] \mathrel{+}= L[d_{\text{use}}]$) plus an $O(1)$ 7-word end-of-cycle guard fold (\texttt{END\_CYCLE\_M\_W2}). In the stateful engine \texttt{eng\_v2\_E2} ($\text{\texttt{sizeof(ra\_core\_engine\_t)}} = 3{,}520\text{ B}$ statically allocated), initialization computation is deferred dynamically: $K=1, 2$ execute in registers, $K=3\ldots 254$ step in coupled 2-word OTF pairs over \texttt{m\_ring[8]} (caching 1 word on odd calls), and full $M, L$ array materialization occurs only at $K=256$, lifting $K=255$ stateful engine throughput from $918.9\text{ MiB/s}$ (\texttt{v2\_old}) to $1{,}219.4\text{ MiB/s}$ best-of-7 ($1.33\times$ over \texttt{v2\_old}; $1{,}162.9\text{ MiB/s}$ median, recovering $93.5\%$ of \texttt{v1} baseline OTF throughput at $K=255$ while outperforming \texttt{v1} OTF by $1.38\times$--$1.74\times$ at $K=1$).
+    \item \emph{\texttt{Opsi\_A3} 2D Cross-Pre-Mix Key-Mixing (Section~\ref{sec:keymix}):} Cross-mixes $(\text{key}, \text{addr\_hi})$ into both $(u, v)$ branches before dual \texttt{fmix32} evaluations, forces odd Weyl increments ($\text{step}_m, \text{step}_l \equiv 1 \pmod 2$, making the index-to-word map bijective over $i$), and applies a $+1$ index offset $(i+1)\cdot\text{step}$ at zero in-loop instruction cost. This heals 16/16 adversarial seeding regimes (57/57 PASS overall), cures the $N=16$ $K=14$ boundary anomaly to 4~GiB CLEAN, and doubles exact Brent~\cite{brent1980improved} cycle lengths on reduced toy models.
+    \item \emph{Controlled Same-Work Monte Carlo Evaluation \& Cross-Platform CPU/GPU Characterization (Section~\ref{sec:mc}):} Applies a Dual-Mode Monte Carlo Evaluation Protocol---combining \emph{Coupled Stochastic Physics} with \emph{Fixed-Topology Same-Work Traces} ($0.000\%$ work drift, analogous to controlled common-random-number designs~\cite{law2015simulation})---across two x86-64 CPU nodes (Intel Core i3-1115G4 client + Xeon KVM 1.995~GHz server) and an exploratory CUDA port on an NVIDIA RTX PRO 6000 Blackwell GPU (\texttt{sm\_120}). We verify 100\% bit-exact parity across CPU scalar, 8-way AVX2, stateful OTF, and GPU CUDA execution, and delineate the hardware regimes where \texttt{ra\_core v2} accelerates CPU simulations ($1.250\times$--$1.276\times$ over Philox on $K=1$ 2D Ising; $1.242\times$--$1.528\times$ on \texttt{E2-Slab} photon transport) versus GPU regimes where execution is tied ($1.001\times$--$1.010\times$ on GPU Ising and $K=1$) or favors 4-word block ciphers ($K=4, 8$).
+\end{enumerate}
+
+\section{Mathematical Specification of \texttt{ra\_core v2}}\label{sec:arch}
+
+\subsection{Primitives, Parameters, and Guard Constants}
+
+Let $\mathbb{Z}_{2^{32}}$ denote 32-bit unsigned integers with modular addition $+$, subtraction $-$, multiplication $\cdot$, bitwise XOR $\oplus$, OR $\mid$, AND $\&$, shifts $\ll, \gg$, and 32-bit barrel rotation $\rot(x, r) = (x \ll (r \bmod 32)) \mid (x \gg ((-r) \bmod 32))$. For default state size $N = 256$ (\texttt{RA\_N = 256}), the index mask is $\text{RA\_MASK} = N - 1 = 255$, single-cycle capacity is $K_{\max} = N - 1 = 255$, and index offset is $\text{RA\_IDX\_OFF} = 1$. The MurmurHash3 finalizer $\fmix: \mathbb{Z}_{2^{32}} \to \mathbb{Z}_{2^{32}}$ is:
+\begin{equation}
+\begin{aligned}
+h_1 &= (h \oplus (h \gg 16)) \cdot \mathtt{0x85ebca6b}, \\
+h_2 &= (h_1 \oplus (h_1 \gg 13)) \cdot \mathtt{0xc2b2ae35}, \\
+\fmix(h) &= h_2 \oplus (h_2 \gg 16).
+\end{aligned}
+\end{equation}
+Four balanced guard constants ($\popcount = 16$ each) separate the mixing channels:
+\begin{equation}
+\begin{aligned}
+G_L &= \mathtt{0x38916df4}, &\quad G_M &= \mathtt{0x6c26fc92}, \\
+G_{L2} &= \mathtt{0x3eb13b90}, &\quad G_{M2} &= \mathtt{0x392456de}.
+\end{aligned}
+\end{equation}
+
+\subsection{\texttt{Opsi\_A3}: 2D Cross-Pre-Mix Key-Mixing and Odd-Step Bijective Initialization}\label{sec:keymix}
+
+Given $(\text{key}, \text{addr\_hi}) \in \mathbb{Z}_{2^{32}} \times \mathbb{Z}_{2^{32}}$, \texttt{ra\_core v2} derives $(k_{\text{mix}}, \text{step}_m, \text{step}_l)$ via \texttt{Opsi\_A3} (\texttt{ra\_derive\_m\_A3} and \texttt{ra\_derive\_l\_A3} in \texttt{src/ra\_core/c/ra\_core.h}):
+
+\paragraph{Primary Array $M$ Derivation}
+\begin{equation}\label{eq:derive_m}
+\begin{aligned}
+p_{\text{addr}, M} &= \mathtt{0x9e3779b1} \cdot \text{addr\_hi}, \\
+u_m &= (\mathtt{0x06a0dd9b} \cdot \text{key}) + p_{\text{addr}, M}, \\
+v_m &= p_{\text{addr}, M} \oplus \rot(\text{key}, 17), \\
+\text{km}_k &= \fmix(G_M \oplus u_m), \quad \text{km}_p = \fmix(G_{M2} \oplus v_m), \\
+k_{\text{mix}} &= \text{km}_k \oplus \rot(\text{km}_p, 13), \\
+\text{step}_m &= \big(\mathtt{0x06a0dd9b} \cdot (\text{km}_k + \text{km}_p)\big) \mid 1.
+\end{aligned}
+\end{equation}
+
+\paragraph{Coupling Array $L$ Derivation}
+\begin{equation}\label{eq:derive_l}
+\begin{aligned}
+p_{\text{addr}, L} &= \mathtt{0x85ebca77} \cdot \text{addr\_hi}, \\
+u_l &= (\mathtt{0x9e3779b7} \cdot \text{key}) + p_{\text{addr}, L}, \\
+v_l &= p_{\text{addr}, L} \oplus \rot(\text{key}, 15), \\
+\text{kl}_k &= \fmix(G_L \oplus u_l), \quad \text{kl}_p = \fmix(G_{L2} \oplus v_l), \\
+\text{step}_l &= \big(\mathtt{0x9e3779b7} \cdot (\text{kl}_k + \text{kl}_p)\big) \mid 1.
+\end{aligned}
+\end{equation}
+
+\paragraph{Bijective $+1$ Offset Array Initialization ($i \in \{0, \dots, N-1\}$)}
+\begin{equation}\label{eq:init_arrays}
+\begin{aligned}
+M_{\text{init}}[i] &= \rot\big((i + 1) \cdot \text{step}_m,\; k_{\text{mix}} \oplus i\big), \\
+L_{\text{init}}[i] &= \rot\big((i + 1) \cdot \text{step}_l,\; k_{\text{mix}} \oplus i\big), \quad \text{cons}_0 = k_{\text{mix}}.
+\end{aligned}
+\end{equation}
+
+\paragraph{Algebraic Necessity of 2D Cross-Pre-Mix Before \texttt{fmix32}}
+If $\text{km}_k$ depended only on $\text{key}$ and $\text{km}_p$ depended only on $\text{addr\_hi}$, holding either coordinate constant ($\text{addr\_hi}=0$ in per-key $K=1$ queries or $\text{key}=0$ in counter streams) would freeze one branch to a constant $C$. Then $k_{\text{mix}}$ and $\text{step}_m$ would become affine functions of the single remaining 32-bit word $\text{km}_k$ (or $\text{km}_p$) without any nonlinear barrier between them, collapsing $(k_{\text{mix}}, \text{step}_m)$ onto a 32-bit 1D manifold. By cross-mixing $(\text{key}, \text{addr\_hi})$ via modular addition in $u$ and rotated XOR in $v$ \emph{prior} to $\fmix$, both $\text{km}_k$ and $\text{km}_p$ undergo independent 3-round avalanches even when one coordinate is constant. Forcing odd increments ($\mid 1$) ensures $\gcd(\text{step}_m, 2^{32}) = \gcd(\text{step}_l, 2^{32}) = 1$ so the per-index map $i \mapsto (i+1)\cdot\text{step} \bmod 2^{32}$ is bijective over $i$ (avoiding even-step subgroup collapse, without claiming global coordinate-to-stream bijectivity), and the $+1$ offset $(i+1)\cdot\text{step}$ eliminates the $i=0$ zero fixed point ($M[0]=L[0]=0$) with \emph{zero extra ALU instructions} inside the generation loop.
+
+\subsection{Causal 2-Tap Ramp-Up Window ($W2$)}\label{sec:w2}
+
+Instead of copying 6 cyclic wrap words $M[257\ldots 262] = M[1\ldots 6]$ and computing a 7-tap XOR sum prior to step 0, \texttt{ra\_core v2} initializes the guard extension as:
+\begin{equation}
+M[N] = M[1], \quad M[N+1] = \dots = M[N+6] = 0.
+\end{equation}
+Each 255-word cycle starts at $i = N - 1 = 255$ with a 2-tap initial window:
+\begin{equation}
+o_{255} = M[255] \oplus (M[N] \ll 1) = M[255] \oplus (M[1] \ll 1).
+\end{equation}
+As $i$ descends from $255$ to $1$, the sliding window shifts left, absorbs $M[i-1]$, and evicts $M[i+6] \ll 7$:
+\begin{equation}
+o_{i-1} = M[i-1] \oplus \big((o_i \oplus (M[i+6] \ll 7)) \ll 1\big).
+\end{equation}
+In Cycle~0 (\texttt{singleblock}, $K \le 255$), because $M[257\ldots 262] = 0$, the eviction term $M[i+6] \ll 7$ is \emph{identically zero} for the first 6 words ($i = 255\ldots 250$). Thus $K=1$ touches only 2 words ($M[255], M[1]$), $K=2$ touches only 3 words ($M[255], M[254], M[1]$), and the first 3 unrolled pairs ($K=1\ldots 6$) execute $o_{i-1} = M[i-1] \oplus (o_i \ll 1)$ with zero eviction loads.
+
+\subsection{Lag-2 Delayed Feedback ($D2$) and 2-Step Unrolled Recurrence (\texttt{W2\_D2\_xag\_opt})}\label{sec:d2}
+
+To break the lag-1 dependency chain $c_t \to d_t \to a_{t+1}$, \texttt{ra\_core v2} maintains a lag-2 feedback queue $(d_0, d_1)$ initialized at the start of each cycle from $\text{cons}$:
+\begin{equation}
+\begin{aligned}
+s &= \text{cons} \ll 1, \quad d_0 = 0, \\
+d_1 &= \big(\rot(\text{cons}, 15) \oplus \mathtt{0x55}\big) \ \& \ \text{RA\_MASK}.
+\end{aligned}
+\end{equation}
+For each even/odd step pair $(i, i-1)$, both $d_0$ and $d_1$ are already available in registers. The pair executes in four stages:
+\begin{equation}\label{eq:unrolled_pair}
+\begin{aligned}
+o_1 &= M[i-1] \oplus \big((o_0 \oplus (M[i+6] \ll 7)) \ll 1\big), \\
+a_0 &= (d_0 \oplus o_0) \oplus s, \quad s_1 = \text{cons} + a_0, \\
+a_1 &= (d_1 \oplus o_1) \oplus s_1, \quad s_2 = \text{cons} + a_1, \\
+b_0 &= s_1 \oplus (o_0 + d_0), \quad b_1 = s_2 \oplus (o_1 + d_1), \\
+u_0 &= (a_0 \gg 13) \oplus a_0, \quad u_1 = (a_1 \gg 13) \oplus a_1, \\
+r_0 &= \rot(u_0, b_0), \quad r_1 = \rot(u_1, b_1), \\
+c_0 &= r_0 \oplus (r_0 \gg 17), \quad c_1 = r_1 \oplus (r_1 \gg 17), \\
+d_2 &= c_0 \ \& \ \text{RA\_MASK}, \quad d_3 = c_1 \ \& \ \text{RA\_MASK}, \\
+(s, d_0, d_1) &\leftarrow (s_2, d_2, d_3).
+\end{aligned}
+\end{equation}
+While the coupled spine $(a_0 \to s_1 \to a_1 \to s_2)$ preserves step-by-step state coupling at a serial cost of just 2 additions and 2 XORs per pair, the two nonlinear XAG scramblers $(b_0, u_0, r_0, c_0)$ and $(b_1, u_1, r_1, c_1)$ are \emph{100\% data-independent} and execute concurrently across dual superscalar ALU pipes.
+
+\subsection{In-Place Per-Step $L \to M$ Coupling and $O(1)$ Guard Fold}\label{sec:coupling}
+
+In multi-cycle streaming ($K > 255$, \texttt{ra\_core\_orbit}), \texttt{ra\_core v2} eliminates the $O(N)$ inter-cycle \texttt{ra\_reseed} and \texttt{ra\_hash} loops by injecting permuted $L$ elements directly into $M[i+7]$ (which has already exited the active window $[i-1\ldots i+5]$) during each 2-step pair $(i, i-1)$ for $i \in \{255, 253, \dots, 3\}$:
+\begin{equation}
+\begin{aligned}
+\swap(L[i], L[d_1]), &\qquad M[i+7] \mathrel{+}= L[i], \\
+\swap(L[i-1], L[d_2]), &\qquad M[i+6] \mathrel{+}= L[i-1],
+\end{aligned}
+\end{equation}
+and at the final step $i = 1$: $\swap(L[1], L[d_1])$ and $M[8] \mathrel{+}= L[1]$. Because steps $i = 255\ldots 249$ accumulate into the guard overflow slots $M[N+6\ldots N]$, transitioning to the next cycle requires only an $O(1)$ 7-word guard fold (\texttt{END\_CYCLE\_M\_W2}):
+\begin{equation}\label{eq:guard_fold}
+\begin{aligned}
+M[0] &\mathrel{+}= M[N] - M[1], \\
+M[g] &\mathrel{+}= M[N+g], \quad M[N+g] \leftarrow 0 \quad (g = 1\ldots 6), \\
+M[7] &\mathrel{+}= L[0], \quad M[N] \leftarrow M[1], \\
+\text{cons} &\leftarrow \text{cons} \oplus (c_{\text{last}} + s_{\text{last}} + L[0]).
+\end{aligned}
+\end{equation}
+
+\subsection{Register-Only Fast-Paths ($K=1, 2, 3\ldots 8$) and Deferred Prefix Computation in \texttt{eng\_v2\_E2}}\label{sec:engine}
+
+For stateless calls with $K \le 255$, Dead-Cone Elimination routes \texttt{ra\_core\_orbit} directly to \texttt{ra\_core\_singleblock}. For $K=1$ (\texttt{ra\_eval\_k1\_word}), $K=2$ (\texttt{ra\_eval\_k2\_words}), and $K=3\ldots 8$ (\texttt{ra\_eval\_k3\_to\_k8\_words}), \texttt{ra\_core v2} evaluates only the active taps $M[i]$ directly in scalar registers with zero stack array allocation.
+
+For incremental streaming where $K$ is unknown upfront (\texttt{ra\_core\_engine\_t}), the production C struct reserves $\text{\texttt{sizeof(ra\_core\_engine\_t)}} = 3{,}520\text{ B}$ upfront (containing scalar registers, \texttt{m\_ring[8]}, \texttt{d\_hist[256]}, \texttt{L[256]}, \texttt{M[264]}, and \texttt{block\_buf[256]}); thus, \textbf{what is deferred is the computational work of array initialization and permutation, not the struct's memory footprint}. Stage~2 introduced \texttt{eng\_v2\_E2} (\emph{Even-$K$-Aligned 2-Step Coupled OTF Pair Evaluation}):
+\begin{itemize}
+    \item \emph{Word \#1 ($K=1, i=255$, \texttt{mode = 0}):} Evaluates only 2 taps ($M[255], M[1]$) in registers, records \texttt{d\_hist[255]}, and returns $c_0$ immediately without writing \texttt{m\_ring[8]} or $M, L$.
+    \item \emph{Word \#2 ($K=2, i=254$, \texttt{mode = 1}):} Evaluates $M[254]$ in registers, initializes \texttt{m\_ring[0..7]} once without double-branching, records \texttt{d\_hist[254]}, sets $i = 253$, \texttt{mode = 3}, and returns $c_1$.
+    \item \emph{Words \#3..254 ($i=253\ldots 2$, \texttt{mode = 3} / \texttt{mode = 2}):} Evaluated in coupled 2-step OTF pairs $(253, 252), (251, 250), \dots, (3, 2)$ using the 2-step coupled spine and dual parallel scramblers (\ref{eq:unrolled_pair}). On odd calls ($K=3, 5, \dots, 253$, \texttt{mode = 3}), $c_0$ is returned immediately and $c_1$ is stored in \texttt{cached\_word} (transitioning to \texttt{mode = 2}; if a trajectory terminates at an odd $K \ge 3$, one extra word $c_1$ was computed and cached); on even calls ($K=4, 6, \dots, 254$, \texttt{mode = 2}), \texttt{cached\_word} is returned with zero ALU computation. In bulk \texttt{ra\_engine\_fill\_u32}, pairs $(c_0, c_1)$ write directly to the output buffer without touching \texttt{cached\_word}.
+    \item \emph{Word \#255 ($K=255, i=1$, \texttt{mode = 3}) \& Multi-Cycle Promotion ($K \ge 256$, \texttt{mode = 4}):} Step $i=1$ emits the final word of Cycle~0; if word \#256 is requested, \texttt{ra\_core\_engine\_promote} initializes $L$ and $M$, replays Cycle~0's recorded feedback indices \texttt{d\_hist[255..1]} to materialize $L$ swaps and $M[i+7] \mathrel{+}= L[i]$ updates, applies \texttt{END\_CYCLE\_M\_W2}, and fills the 255-word \texttt{block\_buf}.
+\end{itemize}
+
+\begin{table*}[t]
+\centering
+\caption{Stage 1 \& Stage 4 PractRand v0.94 Adversarial Seeding Sensitivity Matrix (16 Core Non-Periodic Regimes + 57-Regime Summary)}\label{tab:seeding}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Category} & \textbf{Regime ID \& $(K, \text{key}, \text{addr\_hi})$ Construction} & \textbf{\texttt{ra\_core v1}} & \textbf{\texttt{v2\_base} (1D \texttt{fmix32})} & \textbf{\texttt{ra\_core v2} (\texttt{Opsi\_A3})} & \textbf{Verified Horizon} \\
+\midrule
+1. Continuous Orbit & \texttt{1A\_orbit\_k42}: Single seed $(42, 0)$ continuous multi-cycle orbit & PASS & PASS & \textbf{PASS (0 anomalies)} & \textbf{8 GiB CLEAN} \\
+1. Continuous Orbit & \texttt{1B\_orbit\_k0}: All-zero seed $(0, 0)$ continuous multi-cycle orbit & PASS & PASS & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+2. Single-Word $K=1$ & \texttt{2A\_weyl\_K1}: Weyl sequence $\text{key}_n = n \cdot \mathtt{0x9e3779b9}$, $\text{addr\_hi}=0$ & PASS & PASS & \textbf{PASS (0 anomalies)} & 2 GiB CLEAN \\
+2. Sequential Key & \texttt{2B\_seq\_K1}: Sequential $\text{key} = 0, 1, 2, \dots$, $\text{addr\_hi}=0$ ($K=1$) & PASS & PASS & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+2. Sequential Key & \texttt{2C\_seq\_K255}: Sequential $\text{key} = 0, 1, 2, \dots$, $\text{addr\_hi}=0$ ($K=255$) & FAIL (64 MiB) & FAIL (128 MiB) & \textbf{PASS (0 anomalies)} & \textbf{2 GiB CLEAN} \\
+2. Gray-Code Key & \texttt{2D1\_gray\_K1} / \texttt{K255}: Gray code $\text{key}_n = n \oplus (n \gg 1)$ ($K=1, 255$) & FAIL ($K=255$, 64M) & FAIL ($K=255$, 128M) & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+2. Sparse Low-HW & \texttt{2D2\_sparse\_K255} ($\HW \le 3$) \& \texttt{2D2\_sparse\_hw4\_K1} ($\HW \le 4$)$^{\mathrm{a}}$ & PASS ($K=255$) & PASS ($K=255$) & \textbf{PASS (0 anomalies)} & \textbf{2 GiB CLEAN} \\
+2. 2D Bit-Plane Grid & \texttt{2E1\_grid\_bp\_K1} \& \texttt{K255}: $(\text{key} \in [0, 2^{16}), \text{addr\_hi} \in [0, 2^{16}))$ & FAIL (256M / 64M) & FAIL (256M / 128M) & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+2. Upper-Bit Counter & \texttt{2E2\_hi\_nibble\_K1}: $(\text{key} \ll 16, \text{addr\_hi} \ll 16)$ ($K=1$) & PASS & PASS & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+2. Sequential Addr & \texttt{2F\_addr\_seq\_ctrl}: Fixed $\text{key}=0$, $\text{addr\_hi} = 0, 1, 2, \dots$ ($K=1, 255$) & FAIL (16 MiB) & FAIL (16 MiB) & \textbf{PASS (0 anomalies)} & \textbf{2 GiB CLEAN} \\
+3. Interleaved Stripe & \texttt{3B\_stripe\_8\_K255}: 8-lane round-robin sequential keys ($K=255$) & FAIL (512 MiB) & PASS & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+4. Sub-Orbit Bursts & \texttt{4A2\_contig\_weyl\_K16}: Contiguous $K=16$ bursts, Weyl keys & PASS & PASS & \textbf{PASS (0 anomalies)} & 1 GiB CLEAN \\
+4. Sub-Orbit Bursts & \texttt{4A3\_contig\_seq\_K16} \& \texttt{K64}: Contiguous $K=16, 64$ bursts, seq.\ keys & FAIL (32M / 64M) & FAIL (64M / 128M) & \textbf{PASS (0 anomalies)} & \textbf{2 GiB CLEAN} \\
+\midrule
+\textbf{Full Evaluation Matrix} & \textbf{All 57 Non-Repeating Seeding \& Sub-Orbit Regimes (Stage 1 + Stage 4)} & 42 / 57 PASS & 49 / 57 PASS & \textbf{57 / 57 PASS (0 FAIL)} & \textbf{Up to 8 GiB} \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize $^{\mathrm{a}}$Combinatorial note: For $\HW(\text{key}), \HW(\text{addr\_hi}) \le 3$, there are $\sum_{j=0}^3 \binom{32}{j} = 5{,}489$ words, yielding $5{,}489^2 = 30.13\text{M}$ unique pairs ($\approx 114.9\text{ MiB}$ at $K=1$) before exact input-space wrap-around. Expanding to $\HW \le 4$ ($1.72 \times 10^9$ pairs $\approx 6.4\text{ GiB}$) passes 2~GiB completely clean.}
+\end{tabular}%
+}
+\end{table*}
+
+\section{Empirical Statistical Validation and Structural Analysis}\label{sec:stats}
+
+\subsection{Seeding Sensitivity: 16/16 Adversarial Regimes and 57/57 Matrix}
+
+Table~\ref{tab:seeding} summarizes the PractRand v0.94~\cite{dotyhumphreypractrand} evaluation across the 16 non-periodic adversarial seeding regimes in Stage~1 and the full 57-regime matrix in Stage~4. By eliminating the 1D constant-branch degeneracy and the $i=0$ zero slot, \texttt{ra\_core v2} (\texttt{Opsi\_A3}) heals \emph{every single seeding failure} of \texttt{v1} and \texttt{v2\_base}---including sequential keys at $K \in \{16, 64, 255\}$, Gray-code keys, 2D bit-plane grids, and the positive control \texttt{2F\_addr\_seq\_ctrl} ($\text{key}=0, \text{addr\_hi}=0, 1, 2, \dots$)---achieving \textbf{16/16 PASS} on the adversarial suite, \textbf{57/57 PASS (0 FAIL)} across the full matrix, and \textbf{8~GiB CLEAN} on the canonical continuous stream $(42, 0)$.
+
+\subsection{Downscaled $N=16$ Stress Test and Exact Toy-Model Brent Cycles}
+
+To stress-test cycle-boundary coupling under severe state compression, we compiled \texttt{ra\_core v2} with $N = 16$ (\texttt{RA\_N = 16}, $K_{\max} = 15$) and tested all 15 burst lengths $K \in [1, 15]$ in PractRand: \texttt{Opsi\_A3} achieves \textbf{15/15 PASS (0 FAIL, 0 SUSP)}, healing the prior $K=14$ anomaly (\texttt{BCFN(2+1,13-1,T)} SUSPICIOUS in \texttt{v2\_base}) to \textbf{4~GiB completely CLEAN}.
+
+Furthermore, we executed exact Brent cycle-length ($\lambda$) and tail-length ($\mu$) detection~\cite{brent1980improved,flajolet2009analytic,finch2022components} across 64 seeds on reduced-state toy models $(n, w)$ with $N = 2^n$ words of $w$ bits:
+\begin{itemize}
+    \item At $(n=3, w=4)$ ($N=8$, 4-bit words): mean cycle length $\bar{\lambda}$ increases by \textbf{$2.19\times$} from $1{,}062.4$ (\texttt{v2\_base}) and $874.2$ (\texttt{v1}) to \textbf{$2{,}326.8$}.
+    \item At $(n=4, w=4)$ ($N=16$, 4-bit words): $\bar{\lambda}$ increases by \textbf{$1.98\times$} from $1{,}469.8$ (\texttt{v2\_base}) and $1{,}190.5$ (\texttt{v1}) to \textbf{$2{,}907.7$}.
+    \item At $(n=2, w=8)$ ($N=4$, 8-bit words): $\bar{\lambda}$ increases by \textbf{$2.34\times$} from $4{,}983.7$ (\texttt{v2\_base}) and $4{,}112.0$ (\texttt{v1}) to \textbf{$11{,}673.8$}.
+    \item At $(n=4, w=8)$ ($N=16$, 8-bit words): the worst-case minimum cycle length $\min \lambda$ jumps by \textbf{$6.40\times$} from $11{,}072$ to \textbf{$70{,}876$}.
+\end{itemize}
+
+\subsection{ENT $\chi^2$ Distribution, 2D SAC ($64\times 32$), BIC ($32\times 32$), and Dieharder}
+
+\begin{enumerate}
+    \item \emph{ENT Byte-Level $\chi^2$ 32-Seed Distribution:} On the canonical 1~GiB orbit ($\text{key}=42, \text{addr\_hi}=0$), \texttt{Opsi\_A3} heals the prior byte-level $\chi^2$ tail reading from $p = 0.0022$ ($\chi^2 = 319.99$) to \textbf{$p = 0.5614$ ($\chi^2 = 250.45$)}, with entropy $7.9999998\text{ bits/byte}$ and serial correlation $-0.000015$. Across 32 independent seeds (100~MiB each), \textbf{32/32 seeds (100\%)} lie cleanly within $p \in [0.01, 0.99]$ with mean $\bar{\chi}^2 = 255.21 \pm 20.96$ (theoretical $\chi^2_{255}$: $\mu = 255.0, \sigma = 22.58$).
+    \item \emph{2D Strict Avalanche Criterion (SAC $64 \times 32 = 2{,}048$ cells, $10^5$ pairs)~\cite{webster1985strict}:} At $K=1$ (\texttt{word \#0}), flipping any of the 64 input bits ($\text{key}$ or $\text{addr\_hi}$) yields mean flip probability $\bar{p} = 0.499959$, $\max |p - 0.5| = 0.006620$, and $\chi^2/\text{dof} = 1.1070$. Equally tight SAC holds at mid-Cycle~0 (\texttt{word \#127}, $\bar{p}=0.500065$, $\chi^2/\text{dof}=0.9723$), end of Cycle~0 (\texttt{word \#254}, $\bar{p}=0.499916$, $\chi^2/\text{dof}=1.0113$), and Cycle~1 post-fold (\texttt{word \#255}, $\bar{p}=0.499970$, $\chi^2/\text{dof}=1.0084$).
+    \item \emph{Bit Independence Criterion (BIC $32 \times 32$, $6.4 \times 10^5$ avalanche vectors):} Across all 496 off-diagonal output bit pairs, maximum correlation is $\max |\rho| \le 0.00477$ (mean $|\rho| = 0.00098$--$0.00103$, matching the $1/\sqrt{640{,}000} \approx 0.00125$ sampling floor) for both intra-word (\texttt{Words \#0, \#1, \#7, \#127, \#254, \#255}) and cross-step (\texttt{Lag-1}, \texttt{Lag-2}) pairs.
+    \item \emph{Minimum Perturbation Distance:} Across 1-bit flip, $+1$ increment, and Gray-code step perturbations on $\text{key}$ and $\text{addr\_hi}$, mean output Hamming distance is $15.96$--$16.03\text{ bits}$ out of 32 at $K=1$ and $4{,}079.5$--$4{,}080.4\text{ bits}$ ($0.49993$--$0.50005$) out of $8{,}160$ across Cycle~0 ($K=255$).
+    \item \emph{Dieharder 114-Subtest Battery (\texttt{-a -g 200})~\cite{browndieharder}:} Both the continuous stream ($\text{key}=42, \text{addr\_hi}=0$) and the stateless $K=1$ Weyl stream achieve \textbf{113 PASS / 1 WEAK / 0 FAIL} across all 114 subtests and \textbf{27/27 PASS} across all 27 ``Good''-reliability test families.
+\end{enumerate}
+
+\begin{table*}[t]
+\centering
+\caption{Frozen Golden KAT Vectors and 64-Bit FNV-1a Checksums for \texttt{ra\_core v2 Final} (\texttt{Opsi\_A3} + \texttt{eng\_v2\_E2}, 0 Mismatches Across $2{,}720{,}934$ Verified Words)$^{\mathrm{a}}$}\label{tab:kat}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llclllcc}
+\toprule
+\textbf{Seed Label} & \textbf{$(\text{key}, \text{addr\_hi})$} & \textbf{Derived $(k_{\text{mix}}, \text{step}_m, \text{step}_l)$} & \textbf{Words \texttt{[0..1]} ($K=1,2$)} & \textbf{Words \texttt{[2..3]} ($K=3,4$)} & \textbf{Boundary \texttt{[254, 255, 256]}} & \textbf{\texttt{FNV1a-64} ($K=1$)} & \textbf{\texttt{FNV1a-64} ($K=255$)} \\
+\midrule
+\texttt{key0\_addr0} & \texttt{(0x00000000, 0x00000000)} & \texttt{(0x4ea2c4a4, 0x24416e35, 0x2785f64d)} & \texttt{0xc1dbbb12, 0xfbede3b9} & \texttt{0x93b1e2c8, 0x2067ac16} & \texttt{0x9297471c, 0xeb5f03e7, 0x8970ad1b} & \texttt{0x92565b17647cb906} & \texttt{0xcf914a65c5bfc357} \\
+\texttt{key42\_addr0} & \texttt{(0x0000002a, 0x00000000)} & \texttt{(0xc14755a0, 0x0ec3467d, 0xde211303)} & \texttt{0x9533450c, 0x288d3bd2} & \texttt{0x7e833e19, 0xff96b720} & \texttt{0xb565ef5b, 0x50c62f0b, 0xf7c65da2} & \texttt{0x113204a23f2c5aaa} & \texttt{0xa2a2ab8dee50bccf} \\
+\texttt{key1\_addr0} & \texttt{(0x00000001, 0x00000000)} & \texttt{(0x5bf526f5, 0xafed9981, 0x196abc55)} & \texttt{0xd8d07063, 0xd78f6289} & \texttt{0x180d4a60, 0xe7ddc2c3} & \texttt{0x9b622c40, 0x1bc8ae33, 0x274436e3} & \texttt{0x1ff90b90933eae2e} & \texttt{0xc8db90b4a0564280} \\
+\texttt{deadbeef} & \texttt{(0xdeadbeef, 0x9e3779b9)} & \texttt{(0xf28e02c1, 0x1b0f916d, 0x9a78d4e5)} & \texttt{0x5612413d, 0xc09648c9} & \texttt{0xd533833f, 0xee2fc833} & \texttt{0x59bec6de, 0xfcb0cbf3, 0xbc40ce77} & \texttt{0x0be53b12082495b7} & \texttt{0xa81bf05044ea4b69} \\
+\texttt{all\_ones} & \texttt{(0xffffffff, 0xffffffff)} & \texttt{(0x49554d20, 0x1833d849, 0xe8337575)} & \texttt{0x4ada0f26, 0x78b8b5de} & \texttt{0xc07bf57c, 0xb049a08e} & \texttt{0xb8e535c0, 0x519cf7b7, 0x34b20631} & \texttt{0xf502aa641cebbf06} & \texttt{0x7fb358921bbf86c3} \\
+\bottomrule
+\multicolumn{8}{l}{\footnotesize $^{\mathrm{a}}$For ablation reference prior to Stage 1 \texttt{Opsi\_A3} promotion, unpatched \texttt{v2\_base} yielded word \#0 \texttt{0x2df6d9b3} (\texttt{FNV1a-64} $K=255$: \texttt{0xb2f0606b65e67d3b}) at $(0,0)$ and \texttt{0xf736e01a} (\texttt{0xcab7cc568b67bd99}) at $(42,0)$.}
+\end{tabular}%
+}
+\end{table*}
+
+\subsection{Gate 0 Parity and Frozen Golden KAT Vectors}
+
+In Stage~4 Gate~0, we cross-verified \textbf{2,720,934 output words} across 39 canonical test keys and burst lengths $K \in [1, 2000]$ with \textbf{0 mismatches} between \texttt{ra\_core\_singleblock}, \texttt{ra\_core\_orbit}, the 1-step unoptimized reference, 8-way AVX2 \texttt{ra\_core\_singleblock\_x8\_into}, and stateful \texttt{ra\_core\_engine\_t} (\texttt{eng\_v2\_E2}: \texttt{next\_u32}, \texttt{fill\_u32}, \texttt{discard}, \texttt{fork}, \texttt{save}/\texttt{load}), passing all 53 repository \texttt{pytest} tests. Table~\ref{tab:kat} records the frozen Golden KAT vectors for \texttt{ra\_core v2 Final}.
+
+\section{Performance and Clean Monte Carlo Shootout}\label{sec:mc}
+
+All final benchmarks were executed on two pinned x86-64 nodes: \emph{Machine~A (Client Workstation Node:} Intel Core i3-1115G4 @ 3.00--4.10~GHz, AVX2/AVX-512, Arch Linux, \textbf{GCC 16.2.1}, \texttt{taskset -c 0}) and \emph{Machine~B (Server Validation Node:} Xeon-class KVM hypervisor, 8~vCPU @ fixed 1.995~GHz, AVX2/AVX-512, Debian~13, \textbf{GCC 14.2.0}, \texttt{taskset -c 3}), compiled with \texttt{-O3 -march=native -mavx2 -fno-tree-vectorize -ffp-contract=off -std=gnu17 -lm}. Because different stages used distinct sampling protocols, each table explicitly labels its harness and aggregation metric: \emph{best-of-7} / \emph{median-of-7} in the Stage~2 OTF engine ablation (\texttt{2026-11-04\_v2-engine-opt}), \emph{median-of-7} in the Stage~4 production sanity check (\texttt{2026-11-04\_v2-final-battery}), and \emph{median-of-9} interleaved rounds in the Stage~6 Cross-Machine \texttt{Suite~D} and Stage~3 Clean Monte Carlo (\texttt{2026-11-04\_v2-clean-mc-harness}) harnesses.
+
+\subsection{Throughput Across Burst Lengths $K$ and \texttt{eng\_v2\_E2} Speedup}
+
+\begin{table}[t]
+\centering
+\caption{Machine~A Throughput (\texttt{MiB/s}) Across Burst Lengths $K$: Stage~4 Stateless \texttt{ra\_core v2} \& 8-Way AVX2 (Med-of-7) and Stage~2 Stateful OTF Engine Ablation (\texttt{eng\_v2\_E2} vs.\ \texttt{v2\_old} \& \texttt{v1}, Best-of-7 / Med-of-7)}\label{tab:suite_d}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{rcccccc}
+\toprule
+\textbf{$K$} & \textbf{\texttt{v2} Stateless} & \textbf{\texttt{eng\_v2\_E2} OTF} & \textbf{\texttt{v2\_old} OTF} & \textbf{\texttt{v1} Base OTF} & \textbf{\texttt{E2} vs.\ \texttt{v2\_old} / \texttt{v1}} & \textbf{\texttt{v2} AVX2 ($\times 8$)} \\
+ & \textbf{(Med-of-7)} & \textbf{(Best / Med)} & \textbf{(Best / Med)} & \textbf{(Best / Med)} & \textbf{(Best-of-7)} & \textbf{(Med-of-7)} \\
+\midrule
+1 & \textbf{710.2} & \textbf{582.0 / 578.4} & 523.2 / 514.0 & 421.9 / 412.1 & \textbf{$1.11\times$ / $1.38\times$} & 1,329.2 \\
+2 & \textbf{764.4} & \textbf{710.7 / 682.9} & 666.6 / 634.0 & 609.1 / 606.8 & \textbf{$1.07\times$ / $1.17\times$} & 2,478.3 \\
+4 & \textbf{960.8} & \textbf{884.1 / 834.0} & 844.1 / 819.2 & 818.8 / 814.2 & \textbf{$1.05\times$ / $1.08\times$} & 4,119.9 \\
+8 & \textbf{1,292.1} & \textbf{1,012.6 / 997.4} & 915.2 / 855.7 & 939.2 / 918.2 & \textbf{$1.11\times$ / $1.08\times$} & 5,648.4 \\
+16 & \textbf{1,416.4} & \textbf{1,104.7 / 1,094.3} & 869.9 / 860.4 & 1,034.2 / 1,012.6 & \textbf{$1.27\times$ / $1.07\times$} & 7,578.0 \\
+64 & \textbf{1,476.4} & \textbf{1,169.9 / 1,156.0} & 927.4 / 879.6 & 1,252.7 / 1,197.9 & \textbf{$1.26\times$ / $0.93\times$} & 9,851.4 \\
+255 & \textbf{1,596.5} & \textbf{1,219.4 / 1,162.9} & 918.9 / 873.3 & 1,303.6 / 1,293.7 & \textbf{$1.33\times$ / $0.94\times$} & \textbf{10,687.9} \\
+256 & \textbf{1,240.1} & \textbf{539.4 / 437.4} & 486.6 / 393.8 & 452.9 / 304.7 & \textbf{$1.11\times$ / $1.19\times$} & --- \\
+1000 & \textbf{1,661.3}$^{\mathrm{a}}$ & 839.2 / 783.0 & 890.7 / 813.2 & 732.1 / 690.2 & $0.94\times$ / \textbf{$1.15\times$} & --- \\
+\bottomrule
+\multicolumn{7}{l}{\footnotesize $^{\mathrm{a}}$Stage~4 sanity check at $K=1020$; in 9-round \texttt{Suite~D} at $K=1000$, \texttt{Opsi\_A3} reaches $1{,}390.5\text{ MiB/s}$ (A) / $863.4\text{ MiB/s}$ (B).}
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:suite_d} demonstrates that \texttt{eng\_v2\_E2} eliminates the mid-$K$ bottleneck of unrolled \texttt{eng\_v2\_old}, lifting $K=255$ stateful OTF throughput from $918.9\text{ MiB/s}$ to \textbf{$1{,}219.4\text{ MiB/s}$ best-of-7 ($2.34\text{ cpb}$, $1.33\times$ over \texttt{v2\_old}; $1{,}162.9\text{ MiB/s}$ median)}, recovering $93.5\%$ of \texttt{eng\_v1\_baseline}'s simpler 1-step OTF loop at $K=255$ ($1{,}303.6\text{ MiB/s}$) while outperforming \texttt{eng\_v1\_baseline} at $K=1\ldots 16$ ($1.38\times$ at $K=1$), $K=256$ ($1.19\times$), and $K=1000$ ($1.15\times$). Against \texttt{Philox4x32-10}, incremental \texttt{eng\_v2\_E2} leads at $K=1,2$ on both machines ($1.92\times$--$2.10\times$ at $K=1$) and at $K=16\ldots 255$ on Machine~A ($1{,}104.7$--$1{,}219.4$ vs.\ $1{,}073.2$--$1{,}077.7\text{ MiB/s}$ best-of-7), whereas at $K \ge 256$ (where \texttt{eng\_v2\_E2} materializes $M, L$ on the fly) and at $K=4\ldots 255$ on Machine~B (\texttt{Suite~D}: $663.5$ vs.\ $766.5\text{ MiB/s}$ at $K=255$), \texttt{Philox4x32-10} is faster than incremental OTF. When $K$ is known upfront (\texttt{Opsi\_A3} Direct Stateless), \texttt{ra\_core v2} outperforms \texttt{Philox4x32-10} and \texttt{ChaCha8} across $K=1\ldots 255$ and $K=510\ldots 1000$ on both machines, reaching \textbf{$1{,}596.5\text{ MiB/s}$} at $K=255$ ($1{,}435.8\text{ MiB/s}$ in \texttt{Suite~D}) and \textbf{$10{,}687.9\text{ MiB/s}$ ($10.44\text{ GiB/s}$ client; $6{,}180.4\text{ MiB/s}$ / $6.04\text{ GiB/s}$ server)} in 8-way AVX2.
+
+\subsection{Dual-Mode Clean Monte Carlo Evaluation Methodology}
+
+In variable-length Monte Carlo simulations (branching cascades, Russian-roulette photon transport), coupling a PRNG directly to branching decisions causes \emph{stochastic work drift}: different random streams produce $0.5$--$2\%$ different total node or step counts, confounding generator speed with trajectory-length fluctuations. Following the spirit of controlled simulation experimental design (such as Common Random Numbers in variance-reduction methodology~\cite{law2015simulation}), Stage~3 employed a \emph{Dual-Mode Evaluation Protocol}:
+\begin{enumerate}
+    \item \emph{Coupled Stochastic Physics (\texttt{3A} / \texttt{E1}):} Each PRNG drives all branching and survival decisions to verify unbiased physical convergence.
+    \item \emph{Fixed-Topology Same-Work Trace (\texttt{3B} / \texttt{E2}):} A reference schedule fixes the exact node/step counts while each candidate PRNG is seeded per coordinate and executes all physical floating-point kernels (\texttt{logf}, \texttt{cosf}, \texttt{sinf}), guaranteeing \textbf{$0.000\%$ work drift} across all 10 tested generators.
+\end{enumerate}
+
+\subsection{Workloads 2b-1 \& 2b-2: 2D Lattice Bernoulli Sweep and True 2D Ising Checkerboard Metropolis at $T_c$}\label{sec:ising}
+
+\begin{table*}[t]
+\centering
+\caption{Workload 2b-2: True 2D Ising Checkerboard Metropolis at Critical Temperature $T_c = 2/\ln(1+\sqrt{2}) \approx 2.269185$ ($256\times 256$ Lattice, 32 Sweeps, $2{,}097{,}152$ Spin Updates; Client Machine~A / Server Machine~B Medians)}\label{tab:ising}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Generator} & \textbf{Mode 2b-2A ($K=1$ Per-Site) Time (\texttt{ms}, A / B)} & \textbf{Speedup vs.\ Philox (A / B)} & \textbf{Mode 2b-2A Energy $\langle E \rangle / N$} & \textbf{Mode 2b-2A Magnetization $\langle |M| \rangle$} & \textbf{Mode 2b-2B ($K=128$ Row-Batch) Time (\texttt{ms}, A / B)} & \textbf{Speedup vs.\ Philox (A / B)} & \textbf{Mode 2b-2B $\langle E \rangle / N$ / $\langle |M| \rangle$} \\
+\midrule
+\textbf{\texttt{ra\_core v2} (\texttt{Opsi\_A3} Stateless)} & \textbf{19.106 / 29.501} & \textbf{1.250$\times$ / 1.276$\times$} & $-1.417175$ & $0.582092$ & \textbf{12.465} / 22.573 & \textbf{1.072$\times$} / 0.949$\times$ & $-1.422180$ / $0.625549$ \\
+\textbf{\texttt{ra\_core v2} (\texttt{eng\_v2\_E2} Stateful)} & --- & --- & --- & --- & 13.883 / 29.698 & 0.962$\times$ / 0.721$\times$ & $-1.422180$ / $0.625549$ \\
+\texttt{ra\_core v1} (\texttt{W0\_D0} Baseline) & 23.626 / 41.553 & 1.010$\times$ / 0.906$\times$ & $-1.421265$ & $0.625916$ & 14.544 / 21.905 & 0.918$\times$ / 0.977$\times$ & $-1.420898$ / $0.615570$ \\
+\texttt{Philox4x32-10} & 23.873 / 37.644 & 1.000$\times$ / 1.000$\times$ & $-1.401489$ & $0.570770$ & 13.357 / \textbf{21.411} & 1.000$\times$ / 1.000$\times$ & $-1.404419$ / $0.563965$ \\
+\texttt{ChaCha8} & 83.605 / 143.400 & 0.286$\times$ / 0.263$\times$ & $-1.408936$ & $0.616394$ & --- & --- & --- \\
+\texttt{Squares32} & 10.029 / 18.017 & 2.380$\times$ / 2.089$\times$ & $-1.430908$ & $0.607330$ & 9.914 / 16.031 & 1.347$\times$ / 1.336$\times$ & $-1.428345$ / $0.649567$ \\
+\texttt{WyRand} (ad-hoc per-site seed) & 11.423 / 18.249 & 2.090$\times$ / 2.063$\times$ & $-1.270264$ & \textbf{0.288757 (ANOMALY)} & 9.320 / 14.715 & 1.433$\times$ / 1.455$\times$ & $-1.365356$ / $0.561890$ \\
+\texttt{SplitMix64} (ad-hoc per-site seed) & 10.138 / 17.480 & 2.355$\times$ / 2.154$\times$ & $-1.389526$ & $0.564026$ & 10.219 / 15.458 & 1.307$\times$ / 1.385$\times$ & $-1.425110$ / $0.641815$ \\
+\texttt{PCG32} (re-seeded per call) & 9.815 / 16.420 & 2.432$\times$ / 2.293$\times$ & $-1.429504$ & $0.616547$ & 10.723 / 15.556 & 1.246$\times$ / 1.376$\times$ & $-1.413269$ / $0.578949$ \\
+\texttt{SFC64} (re-seeded per call) & 16.078 / 25.324 & 1.485$\times$ / 1.486$\times$ & $-1.423401$ & $0.652832$ & 9.606 / 17.711 & 1.390$\times$ / 1.209$\times$ & $-1.430725$ / $0.626923$ \\
+\texttt{Xoshiro256**} (re-seeded per call) & 10.929 / 18.080 & 2.184$\times$ / 2.082$\times$ & $-1.441589$ & $0.673187$ & 9.859 / 15.080 & 1.355$\times$ / 1.420$\times$ & $-1.403992$ / $0.582336$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+In Workload \texttt{2b-1} (\emph{2D Lattice Bernoulli Sweep}, $2{,}097{,}152$ draws, $K=1$ per site), \texttt{ra\_core v2} (\texttt{Opsi\_A3}) completes in \textbf{15.351~ms on Machine~A} (\textbf{$1.342\times$ faster than \texttt{Philox4x32-10}} at 20.608~ms and \textbf{$5.09\times$ faster than \texttt{ChaCha8}} at 78.115~ms) and \textbf{22.436~ms on Machine~B} (\textbf{$1.304\times$ faster than Philox} at 29.258~ms).
+
+In Workload \texttt{2b-2} (Table~\ref{tab:ising}), we simulate 32 sweeps ($2{,}097{,}152$ spin updates) of a true 2D Ising ferromagnet $H = -J \sum_{\langle i,j \rangle} s_i s_j$ at Onsager's critical temperature $T_c = 2/\ln(1+\sqrt{2}) \approx 2.2691853$~\cite{onsager1944crystal} using a Black/White checkerboard decomposition~\cite{metropolis1953equation}:
+\begin{itemize}
+    \item \emph{Mode 2b-2A (Per-Site Stateless $K=1$, $\text{key}=\text{site}$, $\text{addr\_hi}=2\cdot\text{sweep}+\text{parity}$):} \texttt{ra\_core v2} (\texttt{Opsi\_A3}) finishes in \textbf{19.106~ms on Machine~A} and \textbf{29.501~ms on Machine~B}---\textbf{$1.250\times$--$1.276\times$ faster than \texttt{Philox4x32-10}} (23.873 / 37.644~ms) and \textbf{$1.237\times$--$1.409\times$ faster than \texttt{ra\_core v1}} (23.626 / 41.553~ms)---while yielding $\langle E \rangle / N = -1.417175$ and $\langle |M| \rangle = 0.582092$, consistent with the $[0.564, 0.673]$ magnetization range of \texttt{Philox4x32-10}, \texttt{ChaCha8}, and other well-diffused generators. Notably, under the tested ad-hoc per-site coordinate mapping ($\text{seed} = \text{key} \oplus (\text{addr\_hi} \ll 32)$ followed by one wide multiply), \textbf{\texttt{WyRand} exhibits a diagnostic lattice anomaly} on this 32-sweep realization, dropping to $\langle |M| \rangle = 0.288757$ ($0.288811$ in preliminary runs) and $\langle E \rangle / N = -1.270264$. While a single 32-sweep realization does not prove asymptotic equilibrium bias or a universal failure of \texttt{WyRand} under full \texttt{splitmix64} seeding, it illustrates how feeding un-premixed 2D lattice coordinates into a 1-step multiplicative mixer can perturb trajectory observables in ways that \texttt{Opsi\_A3}'s dual-\texttt{fmix32} pre-mixing prevents.
+    \item \emph{Mode 2b-2B (Row-Sublattice Batched $K=128$):} In Philox's multi-block regime, \texttt{Opsi\_A3} is \textbf{$1.072\times$ faster than \texttt{Philox4x32-10} on Machine~A} (12.465 vs.\ 13.357~ms) and within $5\%$ on Machine~B (22.573 vs.\ 21.411~ms), while \texttt{eng\_v2\_E2} produces 100\% bit-identical observables and spin checksums (\texttt{0x63695284}).
+\end{itemize}
+
+\subsection{Workloads 2a (Asian Option), 3A/3B (Branching Tree), and E1/E2 (Photon Transport)}
+
+\begin{table}[t]
+\centering
+\caption{Clean Monte Carlo Application Shootout (Machine~A Client / Machine~B Server Medians in \texttt{ms}): Asian Option GBM (\texttt{2a}), Branching Tree (\texttt{3A}/\texttt{3B}), and Photon Transport (\texttt{E1}/\texttt{E2})}\label{tab:mc_summary}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Workload / Horizon} & \textbf{\texttt{v2} (\texttt{Opsi\_A3})} & \textbf{\texttt{eng\_v2\_E2}} & \textbf{\texttt{ra\_core v1}} & \textbf{Philox4x32} \\
+\midrule
+Asian Option $K=16$ ($1.60\text{M}$ draws) & \textbf{8.422} / 13.965 & 9.716 / 17.562 & 11.149 / 16.796 & 9.219 / \textbf{13.934} \\
+Asian Option $K=64$ ($1.28\text{M}$ draws) & \textbf{15.588} / 24.383 & 16.342 / 26.860 & 19.644 / 28.193 & 16.723 / \textbf{23.973} \\
+Asian Option $K=255$ ($5.10\text{M}$ draws) & \textbf{22.859} / 37.705 & 24.646 / 40.483 & 30.326 / 43.961 & 25.787 / \textbf{36.946} \\
+\midrule
+Tree \texttt{3A} Coupled ($\sim 47\text{k}$ draws) & --- & \textbf{0.740 / 1.176} & 0.773 / 1.298$^{\mathrm{a}}$ & 0.845 / 1.203 \\
+Tree \texttt{3B} Fixed ($396{,}628$ draws) & \textbf{1.978} / 3.370 & 2.412 / 4.529 & 2.634 / 5.006 & 2.089 / \textbf{2.949} \\
+Photon \texttt{E1-Slab} ($P_{\text{rej}}=0.90$) & --- & 7.955 / \textbf{9.255} & \textbf{7.832} / 9.771$^{\mathrm{a}}$ & 8.566 / 12.354 \\
+Photon \texttt{E2-Slab} ($731{,}124$ draws) & --- & \textbf{5.282 / 7.064} & 6.175 / 8.378$^{\mathrm{a}}$ & 8.069 / 8.773 \\
+Deep Slab \texttt{E2} ($15.08\text{M}$ draws, A) & \textbf{112.69} & \textbf{127.63} & 142.84$^{\mathrm{a}}$ & 123.62 \\
+\bottomrule
+\multicolumn{5}{l}{\footnotesize $^{\mathrm{a}}$\texttt{ra\_core v1} Stateful OTF engine (\texttt{eng\_v1}) in \texttt{3A} and Photon Transport \texttt{E1}/\texttt{E2}.}
+\end{tabular}%
+}
+\end{table}
+
+Table~\ref{tab:mc_summary} summarizes the remaining Monte Carlo benchmarks:
+\begin{itemize}
+    \item \emph{Workload 2a (Asian Option Pricing, $K \in \{16, 64, 255\}$):} \texttt{ra\_core v2} (\texttt{Opsi\_A3}) is \textbf{$1.260\times$--$1.327\times$ faster than \texttt{ra\_core v1} on Machine~A} ($1.156\times$--$1.203\times$ on Machine~B), \textbf{$1.073\times$--$1.128\times$ faster than \texttt{Philox4x32-10} on Machine~A}, and at virtual parity ($0.980\times$--$0.998\times$) with Philox on Machine~B, while yielding identical option payoffs ($6.0183, 5.8475, 5.7867$) across both machines.
+    \item \emph{Workload 3A/3B (Branching Particle Tree):} Under Fixed-Topology Mode~\texttt{3B} (exact $18{,}704$ nodes and $396{,}628$ draws, $0.000\%$ work drift), \texttt{Direct\_A3} is \textbf{$1.331\times$ faster than \texttt{v1} on Machine~A} (1.978 vs.\ 2.634~ms) and \textbf{$1.485\times$ faster on Machine~B} (3.370 vs.\ 5.006~ms), outperforming \texttt{Philox4x32-10} by \textbf{$1.056\times$ on Machine~A} (2.089~ms) while trailing Philox on Machine~B (2.949~ms) and beating \texttt{ChaCha8} on both (2.315 / 4.175~ms). (An earlier micro-tree prototype reported 0.464 vs.\ 0.482~ms prior to standardizing the 396,628-draw harness.) In Coupled Mode~\texttt{3A}, \texttt{eng\_v2\_E2} beats \texttt{Philox4x32-10} on both machines ($0.740$ vs.\ $0.845\text{ ms}$ on A; $1.176$ vs.\ $1.203\text{ ms}$ on B).
+    \item \emph{Workload E1/E2 (Photon Transport):} In the cross-machine Fixed-Topology \texttt{E2-Slab} benchmark ($P_{\text{rej}}=0.90$, exact $731{,}124$ draws), stateful \texttt{eng\_v2\_E2} outperforms \texttt{eng\_v1} by \textbf{$1.169\times$--$1.186\times$} and outperforms \texttt{Philox4x32-10} by \textbf{$1.528\times$ on Machine~A} (5.282 vs.\ 8.069~ms) and \textbf{$1.242\times$ on Machine~B} (7.064 vs.\ 8.773~ms). In the Machine~A Deep Turbid-Slab run ($15{,}076{,}849$ exact draws), \texttt{eng\_v2\_E2} (127.63~ms) achieves a \textbf{$1.119\times$ speedup over \texttt{v1} OTF} (142.84~ms) and beats \texttt{ChaCha8} (135.75~ms), while buffered \texttt{Opsi\_A3} (112.69~ms) outperforms both \texttt{Philox4x32-10} (123.62~ms) and \texttt{Xoshiro256**} (118.21~ms).
+\end{itemize}
+
+\subsection{Cross-Architecture Reproducibility and Second-Machine Server Validation}\label{sec:cross_arch}
+
+\begin{table*}[t]
+\centering
+\caption{Cross-Architecture Reproducibility and Performance Parity: Client Workstation Node (Intel Core i3-1115G4, Arch Linux, GCC~16.2.1) vs.\ Server/Cloud x86-64 Validation Node (8~vCPU @ 1.995~GHz, Debian~13, GCC~14.2.0)}\label{tab:cross_arch}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+\textbf{Benchmark / Regime} & \textbf{Metric / Comparison} & \textbf{Client Node (GCC 16.2.1)} & \textbf{Server Node (GCC 14.2.0)} & \textbf{Cross-Machine Parity \& Speedup} \\
+\midrule
+Gate 0 Parity \& Golden KATs & Verified Words (\texttt{Mismatches}) & $2{,}720{,}934$ (\texttt{0}) & $2{,}720{,}934$ (\texttt{0}) & \textbf{100\% Bit-Exact (\texttt{0} mismatches, 5/5 KATs)} \\
+Suite D: $K=1$ Stateless & \texttt{Opsi\_A3} vs.\ \texttt{Philox4x32-10} & $716.65$ vs.\ $270.44\text{ MiB/s}$ ($3.98$ vs.\ $10.56\text{ cpb}$) & \textbf{$461.09$ vs.\ $173.15\text{ MiB/s}$ ($4.12$ vs.\ $10.99\text{ cpb}$)} & \textbf{$2.66\times$ speedup on Server (\texttt{CoV} $4.15\%$, \texttt{0xef31cf72})} \\
+Suite D: $K=64$ Stateless & \texttt{Opsi\_A3} vs.\ \texttt{Philox4x32-10} & $1{,}438.82$ vs.\ $1{,}078.68\text{ MiB/s}$ ($1.99$ vs.\ $2.65\text{ cpb}$) & \textbf{$960.00$ vs.\ $803.48\text{ MiB/s}$ ($1.98$ vs.\ $2.37\text{ cpb}$)} & \textbf{$1.19\times$ speedup on Server ($1.98\text{ cpb}$, \texttt{0x964a23b6})} \\
+Suite D: $K=255$ Stateless & \texttt{Opsi\_A3} vs.\ \texttt{Philox4x32-10} & $1{,}435.75$ vs.\ $1{,}074.15\text{ MiB/s}$ ($1.99$ vs.\ $2.66\text{ cpb}$) & \textbf{$917.39$ vs.\ $766.49\text{ MiB/s}$ ($2.07$ vs.\ $2.48\text{ cpb}$)} & \textbf{$1.20\times$ speedup on Server (8-way AVX2: $6{,}180.4\text{ MiB/s}$ / $6.04\text{ GiB/s}$)} \\
+Workload 2b-1: Bernoulli ($K=1$) & \texttt{Opsi\_A3} vs.\ \texttt{Philox4x32-10} & $15.351$ vs.\ $20.608\text{ ms}$ ($21.92$ vs.\ $29.43\text{ cyc/d}$) & \textbf{$22.436$ vs.\ $29.258\text{ ms}$ ($21.34$ vs.\ $27.83\text{ cyc/d}$)} & \textbf{$1.304\times$ speedup on Server (\texttt{CoV} $4.70\%$, \texttt{0x82121719})} \\
+Workload 2b-2A: 2D Ising ($K=1$) & \texttt{Opsi\_A3} vs.\ \texttt{Philox4x32-10} & $19.106$ vs.\ $23.873\text{ ms}$ ($27.29$ vs.\ $34.09\text{ cyc/d}$) & \textbf{$29.501$ vs.\ $37.644\text{ ms}$ ($28.06$ vs.\ $35.81\text{ cyc/d}$)} & \textbf{$1.276\times$ speedup on Server ($\langle E \rangle/N = -1.417175$, $\langle |M| \rangle = 0.582092$)} \\
+Workload 2b-2A: \texttt{WyRand} Anomaly & Magnetization $\langle |M| \rangle$ at $T_c$ & $0.288757$ ($0.288811$) & \textbf{$0.288757$ ($0.288811$)} & \textbf{Identical ad-hoc per-site seeding anomaly (\texttt{0xf7acbcfe})} \\
+Workload 3B: Fixed-Topology Tree & \texttt{Direct\_A3} / \texttt{eng\_v2\_E2} vs.\ \texttt{v1} / \texttt{Philox} & $1.978$ / $2.412$ vs.\ $2.634$ / $2.089\text{ ms}$ & \textbf{$3.370$ / $4.529$ vs.\ $5.006$ / $2.949\text{ ms}$} & \textbf{$396{,}628$ exact draws, $1.331\times$--$1.485\times$ over \texttt{v1} (\texttt{0x650730d8b86d062d})} \\
+Workload E2-Slab ($P_{\text{rej}}=0.90$) & \texttt{eng\_v2\_E2} vs.\ \texttt{Philox4x32-10} & $5.282$ vs.\ $8.069\text{ ms}$ ($21.63$ vs.\ $33.05\text{ cyc/d}$) & \textbf{$7.064$ vs.\ $8.773\text{ ms}$ ($19.27$ vs.\ $23.93\text{ cyc/d}$)} & \textbf{$1.242\times$ speedup on Server ($731{,}124$ draws, \texttt{CoV} $3.37\%$)} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+To verify that the bit-exact specification, cycle-normalized speedups, and Monte Carlo physical observables of \texttt{ra\_core v2} are invariant across hardware microarchitectures, operating systems, and compiler versions, we executed the full Gate~0 verification, Suite~D pure-generate shootout ($K \in [1, 1000]$ across 11 PRNGs), and Clean Monte Carlo battery on a second independent server node: a \emph{Server/Cloud x86-64 Validation Node} (Common KVM Xeon-class processor, 8~vCPU @ fixed $1.995\text{ GHz}$, AVX2/AVX-512, Debian~13, Linux $6.12.90$, \textbf{GCC 14.2.0}), pinned to a dedicated core (\texttt{taskset -c 3}) and compared against the client workstation node (Intel Core i3-1115G4 @ $3.00$--$4.10\text{ GHz}$, Arch Linux, \textbf{GCC 16.2.1}). Table~\ref{tab:cross_arch} confirms three findings: (i) \textbf{zero bit-level drift across compilers and platforms} across all $2{,}720{,}934$ Gate~0 words, all 5 Golden KAT digests, all 110 Suite~D stream checksums, and all 240 Monte Carlo workload checksums (\texttt{-fno-tree-vectorize -ffp-contract=off}); (ii) \textbf{cycle-normalized invariance}, where instruction efficiency matches closely across machines ($4.12$ vs.\ $3.98\text{ cpb}$ at $K=1$; $1.98$ vs.\ $1.99\text{ cpb}$ at $K=64$; $28.06$ vs.\ $27.29\text{ cyc/draw}$ in 2D Ising $K=1$); and (iii) \textbf{tighter server timing stability} ($\text{CoV} = 1.00\%$--$4.83\%$ on the fixed-clock server node), confirming that the speedups of \texttt{ra\_core v2} over \texttt{ra\_core v1}, \texttt{Philox4x32-10}, and \texttt{ChaCha8} in stateless burst generation ($K=1\ldots 255$ and $K=510\ldots 1000$), $K=1$ lattice sweeps, and \texttt{E2-Slab} photon transport hold robustly across CPU architectures.
+
+\subsection{Exploratory GPU CUDA Parity and Performance Characterization (\texttt{Blackwell sm\_120})}\label{sec:gpu}
+
+\begin{table}[t]
+\centering
+\caption{Exploratory CUDA Characterization on NVIDIA RTX PRO 6000 Blackwell (\texttt{sm\_120}, CUDA~13.0): CPU$\leftrightarrow$GPU Bit-Exact Parity and Kernel/Total Medians (\texttt{ms})}\label{tab:gpu_blackwell}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Regime ($N$ or Lattice $L$)} & \textbf{RA Kernel} & \textbf{Philox Kernel} & \textbf{RA Total} & \textbf{Philox Total} & \textbf{Philox/RA} \\
+ & \textbf{(\texttt{ms})} & \textbf{(\texttt{ms})} & \textbf{(\texttt{ms})} & \textbf{(\texttt{ms})} & \textbf{(Kernel)} \\
+\midrule
+Probe \texttt{raw\_k1} ($16.78\text{M}$, 64~MiB) & 0.0416 & 0.0415 & --- & --- & $0.998\times$ \\
+Probe \texttt{bernoulli\_k1} ($16.78\text{M}$) & 0.0719 & 0.0720 & --- & --- & $1.001\times$ \\
+\midrule
+Ising $K=1$, 32 Sweeps ($L=64$)$^{\mathrm{a}}$ & 0.132 & 0.133 & 0.157 & 0.159 & $1.010\times$ \\
+Ising $K=1$, 32 Sweeps ($L=256$)$^{\mathrm{a}}$ & 0.132 & 0.132 & 0.221 & 0.221 & $1.001\times$ \\
+Ising $K=1$, 32 Sweeps ($L=1024$)$^{\mathrm{a}}$ & 0.263 & 0.264 & 0.264$^{\mathrm{b}}$ / 1.144 & 1.145 & $1.004\times$ \\
+\midrule
+Short Burst $K=2$ ($4.19\text{M}$ addrs) & 0.0143 & 0.0142 & 0.648 & 0.651 & $0.993\times$ \\
+Short Burst $K=4$ ($4.19\text{M}$ addrs) & 0.0185 & \textbf{0.0144} & 0.652 & 0.649 & $0.777\times$ \\
+Short Burst $K=8$ ($4.19\text{M}$ addrs) & 0.0271 & \textbf{0.0226} & 0.663 & 0.654 & $0.833\times$ \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize $^{\mathrm{a}}$100\% bit-exact CPU$\leftrightarrow$GPU parity on all final spins, draw XORs, accept counts, $E/N$, and $|M|$.} \\
+\multicolumn{6}{l}{\footnotesize $^{\mathrm{b}}$RA GPU total is $1.144\text{ ms}$ vs.\ Philox $1.145\text{ ms}$ (host-CPU Ising at $L=1024$: RA $221.86\text{ ms}$ vs.\ Philox $288.78\text{ ms}$, $1.30\times$).}
+\end{tabular}%
+}
+\end{table}
+
+To test whether the frozen \texttt{ra\_core v2} specification translates cleanly to SIMT execution without bit drift, we implemented a CUDA C++17 port (\texttt{2026-11-05\_gpu-colab-k1} and \texttt{2026-11-05\_gpu-batch1}) and ran a sequential characterization batch on an \emph{NVIDIA RTX PRO 6000 Blackwell Server Edition GPU} (\texttt{sm\_120}, $97{,}887\text{ MiB}$, CUDA~13.0 / \texttt{nvcc 13.0.88 -O3 -std=c++17 -arch=sm\_120}) against our direct Random123-compatible \texttt{Philox4x32-10} kernel. Table~\ref{tab:gpu_blackwell} highlights three findings:
+\begin{enumerate}
+    \item \emph{Bit-Exact CPU--GPU Simulation Parity:} Across all frozen KAT vectors ($K \in \{1, 2, 4, 8\}$), 1,024-address burst checks, and 32-sweep True 2D Ising Checkerboard Metropolis simulations at $L \in \{64, 256, 1024\}$, the GPU kernels match the C/C++ CPU reference with \textbf{zero mismatches} on every final spin, draw XOR, accepted flip count, energy ($\langle E \rangle/N = -1.417175$ at $L=256$, checksum \texttt{0x8210691e}), and magnetization ($\langle |M| \rangle = 0.582092$). \texttt{ptxas} reports zero stack frame and zero register spills ($10$--$12$ registers for \texttt{ra\_core v2} vs.\ $14$--$16$ for Philox at $K=1$).
+    \item \emph{CPU ALU-Bound vs.\ GPU Bandwidth/Block-Bound Regimes:} Whereas \texttt{ra\_core v2} is $1.30\times$--$1.33\times$ faster than Philox on the host CPU for 2D Ising and $1.68\times$--$1.74\times$ faster on the host CPU for $K=1$ size curves, GPU kernel execution times at $K=1$, $K=2$, and 2D Ising ($L=64, 256, 1024$) are \textbf{effectively tied ($0.993\times$--$1.010\times$)}, as warp parallelism and memory/launch overhead mask per-draw ALU differences ($\sim 1.61\text{ TB/s}$ effective write bandwidth in \texttt{raw\_k1}). Conversely, at $K=4$ and $K=8$ on the GPU, \texttt{Philox4x32-10} achieves $1.20\times$--$1.29\times$ faster kernel times ($0.0144$ vs.\ $0.0185\text{ ms}$ at $K=4$) because one 4-word Feistel block maps natively to four outputs without stepping a sequential window.
+    \item \emph{Scope Boundaries:} This single-device batch compares our direct Random123-compatible Philox kernel rather than vendor-tuned device libraries (such as \texttt{cuRAND}) and includes audit transfers in \texttt{GPU total}. Thus, the CUDA port serves as a \emph{cross-architecture bit-exactness validation and hardware-regime boundary analysis}, showing that deferred prefix computation yields its speed advantage on CPU scalar/SIMD workloads while supporting bit-identical trajectory replay on GPUs.
+\end{enumerate}
+
+\section{State-Size Scaling and Conclusion}\label{sec:conclusion}
+
+Parameterized compile-time scaling over $N \in \{16, 32, 64, 128, 256\}$ (\texttt{-DRA\_N}) confirms that \texttt{ra\_core v2} passes all sub-orbit boundary ($K \in [1, N-1]$) and continuous orbit PractRand suites from $N=16$ (160~B state, 15/15 PASS including 4~GiB CLEAN at $K=14$) up to $N=256$ (2,080~B orbit state, 57/57 regimes PASS, 8~GiB CLEAN).
+
+By uniting \texttt{Opsi\_A3} 2D cross-pre-mix key derivation, \texttt{W2\_D2\_xag\_opt} 2-step unrolled recurrence with in-place $L \to M$ coupling, and \texttt{eng\_v2\_E2} coupled pair OTF rolling, \texttt{ra\_core v2} demonstrates how a permutation-array generator can defer stream-prefix computation on CPUs---achieving $2.65\times$--$2.66\times$ speedup over Philox at $K=1$, $1.250\times$--$1.276\times$ on $K=1$ critical 2D Ising sweeps, $1.242\times$--$1.528\times$ on fixed-trajectory \texttt{E2-Slab} photon transport, and $10.44\text{ GiB/s}$ client / $6.04\text{ GiB/s}$ server in 8-way AVX2---while maintaining bit-exact parity across CPU scalar, SIMD, stateful OTF, and GPU CUDA execution and identifying wide-block GPU throughput and static engine footprint reduction as clear directions for future work.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

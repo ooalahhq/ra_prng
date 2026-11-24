@@ -1,0 +1,22 @@
+{
+  "created_utc": "2026-11-05T01:51:13.568589+00:00",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition, 12.0, 97887 MiB, 580.82.07",
+  "nvcc": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Wed_Aug_20_01:58:59_PM_PDT_2025\nCuda compilation tools, release 13.0, V13.0.88\nBuild cuda_13.0.r13.0/compiler.36424714_0",
+  "compiler_command": [
+    "nvcc",
+    "-O3",
+    "-std=c++17",
+    "-arch=sm_120",
+    "-Xptxas=-v",
+    "batch1.cu",
+    "-o",
+    "batch1"
+  ],
+  "header_sha256": "8438538680baa708f0a1016ee4dca20638e602953868f4709f838cd1bc992663",
+  "source_sha256": "8c70e96a9ca8112200ff3bb784374c709dd932d696fa44e4808aa3e681723863",
+  "host_check_passed": true,
+  "gpu_check_passed": true,
+  "batch_complete": true,
+  "scope": "sequential Ising K1, bursts K2/K4/K8, K1 size crossover",
+  "results_sha256": "6a542c8f90dcac6ea7a5e8abc5db0f9d725b339744dd3e4338da5894f985a7fb"
+}

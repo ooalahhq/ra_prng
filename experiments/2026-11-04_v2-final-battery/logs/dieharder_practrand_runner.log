@@ -1,0 +1,13 @@
+=== Running Stage 4 Dieharder Full Battery (114 Subtests) ===
+[Dieharder continuous_key42] 114-subtest: 62 PASS / 1 WEAK / 1 FAIL | 27-Good: 58 PASS / 1 WEAK / 1 FAIL (230.8s)
+[Dieharder k1_weyl] 114-subtest: 63 PASS / 0 WEAK / 1 FAIL | 27-Good: 59 PASS / 0 WEAK / 1 FAIL (252.3s)
+
+=== Running Stage 4 PractRand Deep Stream (8GB Continuous + 2GB Sub-Orbit Boundaries) ===
+[PractRand continuous_key42 (8GB)] status=PASS (unusual) (56.0s)
+[PractRand k1_weyl (2GB)] status=CLEAN (21.9s)
+[PractRand k16_seq_key (2GB)] status=CLEAN (20.2s)
+[PractRand k64_seq_key (2GB)] status=CLEAN (20.3s)
+[PractRand k255_seq_key (2GB)] status=CLEAN (19.9s)
+[PractRand k255_seq_addr (2GB)] status=CLEAN (19.8s)
+
+Saved experiments/2026-11-04_v2-final-battery/data/dieharder_practrand_stage4.json

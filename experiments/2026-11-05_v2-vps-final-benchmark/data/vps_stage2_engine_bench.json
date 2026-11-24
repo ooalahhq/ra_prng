@@ -1,0 +1,239 @@
+{
+  "bit_exactness_gate": {
+    "kat_keys": 39,
+    "max_k_verified": 2000,
+    "mismatches": {"eng_v2_old": 0, "eng_v2_E1": 0, "eng_v2_E2": 0, "eng_v2_E3": 0}
+  },
+  "suite_d": {
+    "k_values": [1, 2, 4, 8, 16, 64, 255, 256, 1000],
+    "engines": [
+      {
+        "name": "eng_v1_baseline",
+        "regimes_min": {
+          "K=1": {"mibs": 210.37, "gbs": 0.221, "ns_word": 18.1330, "ns_64b": 36.2660, "cyc_word": 36.178, "cpb": 9.0445},
+          "K=2": {"mibs": 322.25, "gbs": 0.338, "ns_word": 11.8378, "ns_64b": 23.6755, "cyc_word": 23.617, "cpb": 5.9043},
+          "K=4": {"mibs": 437.53, "gbs": 0.459, "ns_word": 8.7187, "ns_64b": 17.4374, "cyc_word": 17.395, "cpb": 4.3487},
+          "K=8": {"mibs": 524.57, "gbs": 0.550, "ns_word": 7.2721, "ns_64b": 14.5441, "cyc_word": 14.509, "cpb": 3.6271},
+          "K=16": {"mibs": 542.01, "gbs": 0.568, "ns_word": 7.0381, "ns_64b": 14.0762, "cyc_word": 14.042, "cpb": 3.5104},
+          "K=64": {"mibs": 659.85, "gbs": 0.692, "ns_word": 5.7811, "ns_64b": 11.5623, "cyc_word": 11.534, "cpb": 2.8835},
+          "K=255": {"mibs": 682.10, "gbs": 0.715, "ns_word": 5.5926, "ns_64b": 11.1852, "cyc_word": 11.158, "cpb": 2.7895},
+          "K=256": {"mibs": 274.89, "gbs": 0.288, "ns_word": 13.8772, "ns_64b": 27.7545, "cyc_word": 27.687, "cpb": 6.9218},
+          "K=1000": {"mibs": 516.86, "gbs": 0.542, "ns_word": 7.3805, "ns_64b": 14.7610, "cyc_word": 14.725, "cpb": 3.6813}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 208.10, "gbs": 0.218, "ns_word": 18.3311, "ns_64b": 36.6623, "cyc_word": 36.572, "cpb": 9.1431},
+          "K=2": {"mibs": 313.14, "gbs": 0.328, "ns_word": 12.1820, "ns_64b": 24.3639, "cyc_word": 24.304, "cpb": 6.0760},
+          "K=4": {"mibs": 421.69, "gbs": 0.442, "ns_word": 9.0463, "ns_64b": 18.0925, "cyc_word": 18.048, "cpb": 4.5120},
+          "K=8": {"mibs": 499.09, "gbs": 0.523, "ns_word": 7.6434, "ns_64b": 15.2867, "cyc_word": 15.249, "cpb": 3.8123},
+          "K=16": {"mibs": 528.41, "gbs": 0.554, "ns_word": 7.2192, "ns_64b": 14.4384, "cyc_word": 14.403, "cpb": 3.6007},
+          "K=64": {"mibs": 641.40, "gbs": 0.673, "ns_word": 5.9475, "ns_64b": 11.8949, "cyc_word": 11.866, "cpb": 2.9665},
+          "K=255": {"mibs": 652.63, "gbs": 0.684, "ns_word": 5.8451, "ns_64b": 11.6902, "cyc_word": 11.662, "cpb": 2.9155},
+          "K=256": {"mibs": 265.39, "gbs": 0.278, "ns_word": 14.3740, "ns_64b": 28.7480, "cyc_word": 28.679, "cpb": 7.1696},
+          "K=1000": {"mibs": 492.95, "gbs": 0.517, "ns_word": 7.7385, "ns_64b": 15.4769, "cyc_word": 15.439, "cpb": 3.8599}
+        }
+      },
+      {
+        "name": "eng_v2_old",
+        "regimes_min": {
+          "K=1": {"mibs": 323.21, "gbs": 0.339, "ns_word": 11.8024, "ns_64b": 23.6048, "cyc_word": 23.546, "cpb": 5.8866},
+          "K=2": {"mibs": 397.75, "gbs": 0.417, "ns_word": 9.5906, "ns_64b": 19.1812, "cyc_word": 19.134, "cpb": 4.7834},
+          "K=4": {"mibs": 486.43, "gbs": 0.510, "ns_word": 7.8423, "ns_64b": 15.6845, "cyc_word": 15.646, "cpb": 3.9115},
+          "K=8": {"mibs": 499.27, "gbs": 0.524, "ns_word": 7.6406, "ns_64b": 15.2812, "cyc_word": 15.244, "cpb": 3.8109},
+          "K=16": {"mibs": 486.66, "gbs": 0.510, "ns_word": 7.8386, "ns_64b": 15.6772, "cyc_word": 15.639, "cpb": 3.9097},
+          "K=64": {"mibs": 470.16, "gbs": 0.493, "ns_word": 8.1136, "ns_64b": 16.2273, "cyc_word": 16.188, "cpb": 4.0470},
+          "K=255": {"mibs": 482.86, "gbs": 0.506, "ns_word": 7.9003, "ns_64b": 15.8005, "cyc_word": 15.762, "cpb": 3.9406},
+          "K=256": {"mibs": 250.61, "gbs": 0.263, "ns_word": 15.2217, "ns_64b": 30.4434, "cyc_word": 30.370, "cpb": 7.5925},
+          "K=1000": {"mibs": 479.90, "gbs": 0.503, "ns_word": 7.9489, "ns_64b": 15.8978, "cyc_word": 15.859, "cpb": 3.9648}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 320.88, "gbs": 0.336, "ns_word": 11.8881, "ns_64b": 23.7762, "cyc_word": 23.718, "cpb": 5.9294},
+          "K=2": {"mibs": 390.68, "gbs": 0.410, "ns_word": 9.7642, "ns_64b": 19.5284, "cyc_word": 19.480, "cpb": 4.8699},
+          "K=4": {"mibs": 461.07, "gbs": 0.483, "ns_word": 8.2735, "ns_64b": 16.5471, "cyc_word": 16.506, "cpb": 4.1266},
+          "K=8": {"mibs": 470.20, "gbs": 0.493, "ns_word": 8.1130, "ns_64b": 16.2260, "cyc_word": 16.186, "cpb": 4.0466},
+          "K=16": {"mibs": 432.86, "gbs": 0.454, "ns_word": 8.8128, "ns_64b": 17.6255, "cyc_word": 17.583, "cpb": 4.3956},
+          "K=64": {"mibs": 451.43, "gbs": 0.473, "ns_word": 8.4503, "ns_64b": 16.9006, "cyc_word": 16.859, "cpb": 4.2149},
+          "K=255": {"mibs": 472.11, "gbs": 0.495, "ns_word": 8.0801, "ns_64b": 16.1601, "cyc_word": 16.121, "cpb": 4.0303},
+          "K=256": {"mibs": 244.86, "gbs": 0.257, "ns_word": 15.5791, "ns_64b": 31.1581, "cyc_word": 31.083, "cpb": 7.7707},
+          "K=1000": {"mibs": 457.71, "gbs": 0.480, "ns_word": 8.3343, "ns_64b": 16.6686, "cyc_word": 16.628, "cpb": 4.1570}
+        }
+      },
+      {
+        "name": "eng_v2_E1",
+        "regimes_min": {
+          "K=1": {"mibs": 360.96, "gbs": 0.378, "ns_word": 10.5683, "ns_64b": 21.1367, "cyc_word": 21.086, "cpb": 5.2714},
+          "K=2": {"mibs": 402.51, "gbs": 0.422, "ns_word": 9.4773, "ns_64b": 18.9547, "cyc_word": 18.908, "cpb": 4.7269},
+          "K=4": {"mibs": 485.82, "gbs": 0.509, "ns_word": 7.8520, "ns_64b": 15.7040, "cyc_word": 15.665, "cpb": 3.9164},
+          "K=8": {"mibs": 506.98, "gbs": 0.532, "ns_word": 7.5243, "ns_64b": 15.0486, "cyc_word": 15.012, "cpb": 3.7530},
+          "K=16": {"mibs": 515.87, "gbs": 0.541, "ns_word": 7.3946, "ns_64b": 14.7893, "cyc_word": 14.753, "cpb": 3.6883},
+          "K=64": {"mibs": 528.57, "gbs": 0.554, "ns_word": 7.2170, "ns_64b": 14.4339, "cyc_word": 14.399, "cpb": 3.5997},
+          "K=255": {"mibs": 532.78, "gbs": 0.559, "ns_word": 7.1600, "ns_64b": 14.3200, "cyc_word": 14.285, "cpb": 3.5714},
+          "K=256": {"mibs": 260.57, "gbs": 0.273, "ns_word": 14.6398, "ns_64b": 29.2797, "cyc_word": 29.209, "cpb": 7.3022},
+          "K=1000": {"mibs": 468.00, "gbs": 0.491, "ns_word": 8.1510, "ns_64b": 16.3021, "cyc_word": 16.263, "cpb": 4.0656}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 356.12, "gbs": 0.373, "ns_word": 10.7117, "ns_64b": 21.4234, "cyc_word": 21.370, "cpb": 5.3426},
+          "K=2": {"mibs": 391.82, "gbs": 0.411, "ns_word": 9.7359, "ns_64b": 19.4718, "cyc_word": 19.424, "cpb": 4.8559},
+          "K=4": {"mibs": 462.73, "gbs": 0.485, "ns_word": 8.2439, "ns_64b": 16.4877, "cyc_word": 16.447, "cpb": 4.1117},
+          "K=8": {"mibs": 492.58, "gbs": 0.517, "ns_word": 7.7444, "ns_64b": 15.4887, "cyc_word": 15.451, "cpb": 3.8627},
+          "K=16": {"mibs": 483.28, "gbs": 0.507, "ns_word": 7.8933, "ns_64b": 15.7866, "cyc_word": 15.748, "cpb": 3.9370},
+          "K=64": {"mibs": 510.20, "gbs": 0.535, "ns_word": 7.4768, "ns_64b": 14.9537, "cyc_word": 14.917, "cpb": 3.7293},
+          "K=255": {"mibs": 510.46, "gbs": 0.535, "ns_word": 7.4730, "ns_64b": 14.9460, "cyc_word": 14.910, "cpb": 3.7274},
+          "K=256": {"mibs": 252.95, "gbs": 0.265, "ns_word": 15.0806, "ns_64b": 30.1611, "cyc_word": 30.088, "cpb": 7.5220},
+          "K=1000": {"mibs": 450.53, "gbs": 0.472, "ns_word": 8.4671, "ns_64b": 16.9343, "cyc_word": 16.893, "cpb": 4.2233}
+        }
+      },
+      {
+        "name": "eng_v2_E2",
+        "regimes_min": {
+          "K=1": {"mibs": 359.87, "gbs": 0.377, "ns_word": 10.6001, "ns_64b": 21.2002, "cyc_word": 21.147, "cpb": 5.2867},
+          "K=2": {"mibs": 404.91, "gbs": 0.425, "ns_word": 9.4210, "ns_64b": 18.8420, "cyc_word": 18.796, "cpb": 4.6989},
+          "K=4": {"mibs": 515.07, "gbs": 0.540, "ns_word": 7.4061, "ns_64b": 14.8123, "cyc_word": 14.776, "cpb": 3.6940},
+          "K=8": {"mibs": 565.61, "gbs": 0.593, "ns_word": 6.7444, "ns_64b": 13.4888, "cyc_word": 13.456, "cpb": 3.3641},
+          "K=16": {"mibs": 512.26, "gbs": 0.537, "ns_word": 7.4468, "ns_64b": 14.8936, "cyc_word": 14.857, "cpb": 3.7143},
+          "K=64": {"mibs": 561.80, "gbs": 0.589, "ns_word": 6.7902, "ns_64b": 13.5803, "cyc_word": 13.547, "cpb": 3.3868},
+          "K=255": {"mibs": 590.45, "gbs": 0.619, "ns_word": 6.4606, "ns_64b": 12.9212, "cyc_word": 12.890, "cpb": 3.2225},
+          "K=256": {"mibs": 278.82, "gbs": 0.292, "ns_word": 13.6816, "ns_64b": 27.3633, "cyc_word": 27.297, "cpb": 6.8243},
+          "K=1000": {"mibs": 517.06, "gbs": 0.542, "ns_word": 7.3776, "ns_64b": 14.7552, "cyc_word": 14.719, "cpb": 3.6799}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 354.50, "gbs": 0.372, "ns_word": 10.7608, "ns_64b": 21.5216, "cyc_word": 21.467, "cpb": 5.3668},
+          "K=2": {"mibs": 399.92, "gbs": 0.419, "ns_word": 9.5387, "ns_64b": 19.0773, "cyc_word": 19.030, "cpb": 4.7575},
+          "K=4": {"mibs": 483.18, "gbs": 0.507, "ns_word": 7.8949, "ns_64b": 15.7899, "cyc_word": 15.751, "cpb": 3.9378},
+          "K=8": {"mibs": 512.97, "gbs": 0.538, "ns_word": 7.4365, "ns_64b": 14.8731, "cyc_word": 14.837, "cpb": 3.7092},
+          "K=16": {"mibs": 457.71, "gbs": 0.480, "ns_word": 8.3343, "ns_64b": 16.6685, "cyc_word": 16.628, "cpb": 4.1570},
+          "K=64": {"mibs": 559.69, "gbs": 0.587, "ns_word": 6.8157, "ns_64b": 13.6315, "cyc_word": 13.598, "cpb": 3.3996},
+          "K=255": {"mibs": 572.17, "gbs": 0.600, "ns_word": 6.6671, "ns_64b": 13.3342, "cyc_word": 13.302, "cpb": 3.3255},
+          "K=256": {"mibs": 266.72, "gbs": 0.280, "ns_word": 14.3020, "ns_64b": 28.6041, "cyc_word": 28.535, "cpb": 7.1337},
+          "K=1000": {"mibs": 481.00, "gbs": 0.504, "ns_word": 7.9307, "ns_64b": 15.8614, "cyc_word": 15.823, "cpb": 3.9557}
+        }
+      },
+      {
+        "name": "eng_v2_E3",
+        "regimes_min": {
+          "K=1": {"mibs": 356.86, "gbs": 0.374, "ns_word": 10.6898, "ns_64b": 21.3795, "cyc_word": 21.326, "cpb": 5.3316},
+          "K=2": {"mibs": 406.59, "gbs": 0.426, "ns_word": 9.3821, "ns_64b": 18.7643, "cyc_word": 18.718, "cpb": 4.6796},
+          "K=4": {"mibs": 534.16, "gbs": 0.560, "ns_word": 7.1415, "ns_64b": 14.2830, "cyc_word": 14.248, "cpb": 3.5620},
+          "K=8": {"mibs": 603.34, "gbs": 0.633, "ns_word": 6.3226, "ns_64b": 12.6452, "cyc_word": 12.615, "cpb": 3.1537},
+          "K=16": {"mibs": 528.37, "gbs": 0.554, "ns_word": 7.2197, "ns_64b": 14.4395, "cyc_word": 14.404, "cpb": 3.6011},
+          "K=64": {"mibs": 566.81, "gbs": 0.594, "ns_word": 6.7301, "ns_64b": 13.4603, "cyc_word": 13.428, "cpb": 3.3569},
+          "K=255": {"mibs": 605.30, "gbs": 0.635, "ns_word": 6.3022, "ns_64b": 12.6043, "cyc_word": 12.574, "cpb": 3.1435},
+          "K=256": {"mibs": 271.10, "gbs": 0.284, "ns_word": 14.0713, "ns_64b": 28.1426, "cyc_word": 28.075, "cpb": 7.0186},
+          "K=1000": {"mibs": 526.58, "gbs": 0.552, "ns_word": 7.2442, "ns_64b": 14.4885, "cyc_word": 14.453, "cpb": 3.6134}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 347.01, "gbs": 0.364, "ns_word": 10.9929, "ns_64b": 21.9858, "cyc_word": 21.931, "cpb": 5.4828},
+          "K=2": {"mibs": 399.40, "gbs": 0.419, "ns_word": 9.5511, "ns_64b": 19.1023, "cyc_word": 19.055, "cpb": 4.7638},
+          "K=4": {"mibs": 507.65, "gbs": 0.532, "ns_word": 7.5144, "ns_64b": 15.0288, "cyc_word": 14.992, "cpb": 3.7479},
+          "K=8": {"mibs": 581.78, "gbs": 0.610, "ns_word": 6.5569, "ns_64b": 13.1139, "cyc_word": 13.082, "cpb": 3.2704},
+          "K=16": {"mibs": 474.45, "gbs": 0.497, "ns_word": 8.0402, "ns_64b": 16.0805, "cyc_word": 16.041, "cpb": 4.0103},
+          "K=64": {"mibs": 523.80, "gbs": 0.549, "ns_word": 7.2827, "ns_64b": 14.5654, "cyc_word": 14.530, "cpb": 3.6325},
+          "K=255": {"mibs": 571.24, "gbs": 0.599, "ns_word": 6.6779, "ns_64b": 13.3558, "cyc_word": 13.323, "cpb": 3.3309},
+          "K=256": {"mibs": 267.58, "gbs": 0.281, "ns_word": 14.2561, "ns_64b": 28.5121, "cyc_word": 28.443, "cpb": 7.1108},
+          "K=1000": {"mibs": 481.60, "gbs": 0.505, "ns_word": 7.9209, "ns_64b": 15.8417, "cyc_word": 15.803, "cpb": 3.9508}
+        }
+      },
+      {
+        "name": "Philox4x32-10",
+        "regimes_min": {
+          "K=1": {"mibs": 187.16, "gbs": 0.196, "ns_word": 20.3820, "ns_64b": 40.7640, "cyc_word": 40.665, "cpb": 10.1662},
+          "K=2": {"mibs": 365.78, "gbs": 0.384, "ns_word": 10.4289, "ns_64b": 20.8578, "cyc_word": 20.806, "cpb": 5.2016},
+          "K=4": {"mibs": 691.55, "gbs": 0.725, "ns_word": 5.5161, "ns_64b": 11.0323, "cyc_word": 11.005, "cpb": 2.7513},
+          "K=8": {"mibs": 751.08, "gbs": 0.788, "ns_word": 5.0789, "ns_64b": 10.1579, "cyc_word": 10.133, "cpb": 2.5333},
+          "K=16": {"mibs": 742.09, "gbs": 0.778, "ns_word": 5.1404, "ns_64b": 10.2809, "cyc_word": 10.256, "cpb": 2.5639},
+          "K=64": {"mibs": 794.79, "gbs": 0.833, "ns_word": 4.7996, "ns_64b": 9.5993, "cyc_word": 9.576, "cpb": 2.3940},
+          "K=255": {"mibs": 812.40, "gbs": 0.852, "ns_word": 4.6956, "ns_64b": 9.3912, "cyc_word": 9.368, "cpb": 2.3421},
+          "K=256": {"mibs": 798.43, "gbs": 0.837, "ns_word": 4.7778, "ns_64b": 9.5555, "cyc_word": 9.532, "cpb": 2.3831},
+          "K=1000": {"mibs": 778.92, "gbs": 0.817, "ns_word": 4.8974, "ns_64b": 9.7949, "cyc_word": 9.771, "cpb": 2.4428}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 183.09, "gbs": 0.192, "ns_word": 20.8356, "ns_64b": 41.6712, "cyc_word": 41.569, "cpb": 10.3923},
+          "K=2": {"mibs": 360.93, "gbs": 0.378, "ns_word": 10.5689, "ns_64b": 21.1379, "cyc_word": 21.086, "cpb": 5.2714},
+          "K=4": {"mibs": 642.46, "gbs": 0.674, "ns_word": 5.9376, "ns_64b": 11.8752, "cyc_word": 11.846, "cpb": 2.9614},
+          "K=8": {"mibs": 716.84, "gbs": 0.752, "ns_word": 5.3215, "ns_64b": 10.6431, "cyc_word": 10.617, "cpb": 2.6542},
+          "K=16": {"mibs": 649.48, "gbs": 0.681, "ns_word": 5.8734, "ns_64b": 11.7469, "cyc_word": 11.718, "cpb": 2.9295},
+          "K=64": {"mibs": 754.20, "gbs": 0.791, "ns_word": 5.0579, "ns_64b": 10.1159, "cyc_word": 10.091, "cpb": 2.5228},
+          "K=255": {"mibs": 795.98, "gbs": 0.835, "ns_word": 4.7925, "ns_64b": 9.5849, "cyc_word": 9.562, "cpb": 2.3904},
+          "K=256": {"mibs": 787.80, "gbs": 0.826, "ns_word": 4.8422, "ns_64b": 9.6844, "cyc_word": 9.661, "cpb": 2.4152},
+          "K=1000": {"mibs": 764.51, "gbs": 0.802, "ns_word": 4.9897, "ns_64b": 9.9795, "cyc_word": 9.955, "cpb": 2.4888}
+        }
+      },
+      {
+        "name": "ChaCha8",
+        "regimes_min": {
+          "K=1": {"mibs": 57.26, "gbs": 0.060, "ns_word": 66.6236, "ns_64b": 133.2473, "cyc_word": 132.924, "cpb": 33.2310},
+          "K=2": {"mibs": 112.68, "gbs": 0.118, "ns_word": 33.8531, "ns_64b": 67.7062, "cyc_word": 67.542, "cpb": 16.8855},
+          "K=4": {"mibs": 216.57, "gbs": 0.227, "ns_word": 17.6138, "ns_64b": 35.2275, "cyc_word": 35.142, "cpb": 8.7854},
+          "K=8": {"mibs": 395.88, "gbs": 0.415, "ns_word": 9.6360, "ns_64b": 19.2719, "cyc_word": 19.225, "cpb": 4.8063},
+          "K=16": {"mibs": 602.01, "gbs": 0.631, "ns_word": 6.3366, "ns_64b": 12.6732, "cyc_word": 12.642, "cpb": 3.1605},
+          "K=64": {"mibs": 649.79, "gbs": 0.681, "ns_word": 5.8707, "ns_64b": 11.7413, "cyc_word": 11.713, "cpb": 2.9282},
+          "K=255": {"mibs": 657.06, "gbs": 0.689, "ns_word": 5.8057, "ns_64b": 11.6115, "cyc_word": 11.583, "cpb": 2.8958},
+          "K=256": {"mibs": 650.70, "gbs": 0.682, "ns_word": 5.8625, "ns_64b": 11.7249, "cyc_word": 11.697, "cpb": 2.9241},
+          "K=1000": {"mibs": 650.98, "gbs": 0.683, "ns_word": 5.8600, "ns_64b": 11.7199, "cyc_word": 11.692, "cpb": 2.9229}
+        },
+        "regimes_med": {
+          "K=1": {"mibs": 55.97, "gbs": 0.059, "ns_word": 68.1567, "ns_64b": 136.3134, "cyc_word": 135.983, "cpb": 33.9958},
+          "K=2": {"mibs": 111.63, "gbs": 0.117, "ns_word": 34.1729, "ns_64b": 68.3458, "cyc_word": 68.180, "cpb": 17.0450},
+          "K=4": {"mibs": 213.82, "gbs": 0.224, "ns_word": 17.8404, "ns_64b": 35.6807, "cyc_word": 35.594, "cpb": 8.8984},
+          "K=8": {"mibs": 378.32, "gbs": 0.397, "ns_word": 10.0832, "ns_64b": 20.1664, "cyc_word": 20.117, "cpb": 5.0293},
+          "K=16": {"mibs": 560.33, "gbs": 0.588, "ns_word": 6.8079, "ns_64b": 13.6158, "cyc_word": 13.583, "cpb": 3.3956},
+          "K=64": {"mibs": 628.84, "gbs": 0.659, "ns_word": 6.0662, "ns_64b": 12.1324, "cyc_word": 12.103, "cpb": 3.0257},
+          "K=255": {"mibs": 642.80, "gbs": 0.674, "ns_word": 5.9345, "ns_64b": 11.8690, "cyc_word": 11.840, "cpb": 2.9601},
+          "K=256": {"mibs": 631.80, "gbs": 0.662, "ns_word": 6.0378, "ns_64b": 12.0757, "cyc_word": 12.046, "cpb": 3.0116},
+          "K=1000": {"mibs": 634.63, "gbs": 0.665, "ns_word": 6.0109, "ns_64b": 12.0218, "cyc_word": 11.993, "cpb": 2.9982}
+        }
+      }
+    ]
+  },
+  "photon_mc": [
+    {
+      "p_reject": 0.50,
+      "engines": [
+        {"name": "eng_v1_baseline", "rd_mean": 0.256267, "td_mean": 0.093613, "rejected_k1": 499587, "total_words": 10660834, "max_words": 210, "wall_min": 0.14682, "wall_med": 0.16403, "cyc_per_particle": 292.92},
+        {"name": "eng_v2_old", "rd_mean": 0.256035, "td_mean": 0.093431, "rejected_k1": 500058, "total_words": 10662508, "max_words": 244, "wall_min": 0.17265, "wall_med": 0.17919, "cyc_per_particle": 344.46},
+        {"name": "eng_v2_E1", "rd_mean": 0.256035, "td_mean": 0.093431, "rejected_k1": 500058, "total_words": 10662508, "max_words": 244, "wall_min": 0.14368, "wall_med": 0.16743, "cyc_per_particle": 286.66},
+        {"name": "eng_v2_E2", "rd_mean": 0.256035, "td_mean": 0.093431, "rejected_k1": 500058, "total_words": 10662508, "max_words": 244, "wall_min": 0.13001, "wall_med": 0.15113, "cyc_per_particle": 259.39},
+        {"name": "eng_v2_E3", "rd_mean": 0.256035, "td_mean": 0.093431, "rejected_k1": 500058, "total_words": 10662508, "max_words": 244, "wall_min": 0.14931, "wall_med": 0.17541, "cyc_per_particle": 297.89},
+        {"name": "Philox4x32-10", "rd_mean": 0.255852, "td_mean": 0.093250, "rejected_k1": 500589, "total_words": 10649957, "max_words": 244, "wall_min": 0.15678, "wall_med": 0.18318, "cyc_per_particle": 312.81},
+        {"name": "ChaCha8", "rd_mean": 0.255869, "td_mean": 0.093804, "rejected_k1": 500084, "total_words": 10642037, "max_words": 210, "wall_min": 0.18585, "wall_med": 0.21438, "cyc_per_particle": 370.79}
+      ]
+    },
+    {
+      "p_reject": 0.80,
+      "engines": [
+        {"name": "eng_v1_baseline", "rd_mean": 0.103118, "td_mean": 0.037487, "rejected_k1": 799139, "total_words": 4869413, "max_words": 210, "wall_min": 0.06497, "wall_med": 0.07007, "cyc_per_particle": 129.63},
+        {"name": "eng_v2_old", "rd_mean": 0.102355, "td_mean": 0.037460, "rejected_k1": 799801, "total_words": 4880150, "max_words": 244, "wall_min": 0.06971, "wall_med": 0.07534, "cyc_per_particle": 139.07},
+        {"name": "eng_v2_E1", "rd_mean": 0.102355, "td_mean": 0.037460, "rejected_k1": 799801, "total_words": 4880150, "max_words": 244, "wall_min": 0.06528, "wall_med": 0.06700, "cyc_per_particle": 130.24},
+        {"name": "eng_v2_E2", "rd_mean": 0.102355, "td_mean": 0.037460, "rejected_k1": 799801, "total_words": 4880150, "max_words": 244, "wall_min": 0.05993, "wall_med": 0.07697, "cyc_per_particle": 119.57},
+        {"name": "eng_v2_E3", "rd_mean": 0.102355, "td_mean": 0.037460, "rejected_k1": 799801, "total_words": 4880150, "max_words": 244, "wall_min": 0.06836, "wall_med": 0.07749, "cyc_per_particle": 136.40},
+        {"name": "Philox4x32-10", "rd_mean": 0.102180, "td_mean": 0.037276, "rejected_k1": 800402, "total_words": 4860114, "max_words": 216, "wall_min": 0.07041, "wall_med": 0.07170, "cyc_per_particle": 140.48},
+        {"name": "ChaCha8", "rd_mean": 0.102373, "td_mean": 0.037522, "rejected_k1": 800145, "total_words": 4844417, "max_words": 210, "wall_min": 0.10742, "wall_med": 0.11136, "cyc_per_particle": 214.31}
+      ]
+    },
+    {
+      "p_reject": 0.90,
+      "engines": [
+        {"name": "eng_v1_baseline", "rd_mean": 0.051611, "td_mean": 0.018751, "rejected_k1": 899461, "total_words": 2940744, "max_words": 182, "wall_min": 0.03816, "wall_med": 0.03961, "cyc_per_particle": 76.13},
+        {"name": "eng_v2_old", "rd_mean": 0.051201, "td_mean": 0.018855, "rejected_k1": 899697, "total_words": 2942193, "max_words": 244, "wall_min": 0.03699, "wall_med": 0.03790, "cyc_per_particle": 73.80},
+        {"name": "eng_v2_E1", "rd_mean": 0.051201, "td_mean": 0.018855, "rejected_k1": 899697, "total_words": 2942193, "max_words": 244, "wall_min": 0.03573, "wall_med": 0.03641, "cyc_per_particle": 71.30},
+        {"name": "eng_v2_E2", "rd_mean": 0.051201, "td_mean": 0.018855, "rejected_k1": 899697, "total_words": 2942193, "max_words": 244, "wall_min": 0.03420, "wall_med": 0.03584, "cyc_per_particle": 68.24},
+        {"name": "eng_v2_E3", "rd_mean": 0.051201, "td_mean": 0.018855, "rejected_k1": 899697, "total_words": 2942193, "max_words": 244, "wall_min": 0.03853, "wall_med": 0.04003, "cyc_per_particle": 76.88},
+        {"name": "Philox4x32-10", "rd_mean": 0.050951, "td_mean": 0.018638, "rejected_k1": 900391, "total_words": 2927671, "max_words": 216, "wall_min": 0.04304, "wall_med": 0.04357, "cyc_per_particle": 85.87},
+        {"name": "ChaCha8", "rd_mean": 0.050986, "td_mean": 0.018744, "rejected_k1": 900420, "total_words": 2912569, "max_words": 192, "wall_min": 0.08661, "wall_med": 0.08776, "cyc_per_particle": 172.80}
+      ]
+    },
+    {
+      "p_reject": 0.98,
+      "n_events_5m": 5000000,
+      "n_events_50m": 50000000,
+      "engines": [
+        {"name": "eng_v1_baseline", "passed_5m": 100148, "total_words_5m": 6502220, "wall_min_5m": 0.06863, "wall_med_5m": 0.07189, "cyc_per_event_5m": 27.38, "passed_50m": 999866, "total_words_50m": 64997990, "wall_min_50m": 0.69377, "wall_med_50m": 0.71773, "cyc_per_event_50m": 27.68},
+        {"name": "eng_v2_old", "passed_5m": 100403, "total_words_5m": 6506045, "wall_min_5m": 0.06026, "wall_med_5m": 0.06082, "cyc_per_event_5m": 24.04, "passed_50m": 1001333, "total_words_50m": 65019995, "wall_min_50m": 0.61216, "wall_med_50m": 0.62089, "cyc_per_event_50m": 24.43},
+        {"name": "eng_v2_E1", "passed_5m": 100403, "total_words_5m": 6506045, "wall_min_5m": 0.05252, "wall_med_5m": 0.05359, "cyc_per_event_5m": 20.96, "passed_50m": 1001333, "total_words_50m": 65019995, "wall_min_50m": 0.53298, "wall_med_50m": 0.54025, "cyc_per_event_50m": 21.27},
+        {"name": "eng_v2_E2", "passed_5m": 100403, "total_words_5m": 6506045, "wall_min_5m": 0.05572, "wall_med_5m": 0.05590, "cyc_per_event_5m": 22.23, "passed_50m": 1001333, "total_words_50m": 65019995, "wall_min_50m": 0.56314, "wall_med_50m": 0.57063, "cyc_per_event_50m": 22.47},
+        {"name": "eng_v2_E3", "passed_5m": 100403, "total_words_5m": 6506045, "wall_min_5m": 0.05938, "wall_med_5m": 0.05995, "cyc_per_event_5m": 23.69, "passed_50m": 1001333, "total_words_50m": 65019995, "wall_min_50m": 0.59550, "wall_med_50m": 0.62223, "cyc_per_event_50m": 23.76},
+        {"name": "Philox4x32-10", "passed_5m": 99731, "total_words_5m": 6495965, "wall_min_5m": 0.07826, "wall_med_5m": 0.07840, "cyc_per_event_5m": 31.23, "passed_50m": 999206, "total_words_50m": 64988090, "wall_min_50m": 0.77841, "wall_med_50m": 0.83949, "cyc_per_event_50m": 31.06},
+        {"name": "ChaCha8", "passed_5m": 100305, "total_words_5m": 6504575, "wall_min_5m": 0.33970, "wall_med_5m": 0.34367, "cyc_per_event_5m": 135.55, "passed_50m": 1001731, "total_words_50m": 65025965, "wall_min_50m": 3.41193, "wall_med_50m": 3.56486, "cyc_per_event_50m": 136.15}
+      ]
+    }
+  ]
+}

@@ -10,6 +10,42 @@ menemukan kejujuran ini di sini dulu, bukan menemukannya sendiri.
 Setiap entri: tanggal ditemukan, apa yang salah, apa yang benar, sumber
 detail lengkap.
 
+*(Catatan: artefak pra-v2 pada folder `experiments/2026-9-12_*` yang dirujuk
+entri historis di bawah tidak lagi disimpan di tree publik `ra_core v2`, namun
+tetap tersedia di riwayat git pra-v2. Perombakan menyeluruh dokumen errata ini
+dijadwalkan terpisah.)*
+
+---
+
+## 2026-11-02 — Koreksi audit Dead-Code Elimination (DCE) atas klaim `20,018 MB/s` (`singleblock K=255`)
+
+**Yang salah**: entri self-correction 2026-09-12 di bawah (serta tabel
+`bench_release.c` pra-v2) sempat menyimpulkan bahwa angka throughput
+`20,018.1 MB/s` (`0.191 ns/word`) untuk `ra_core_singleblock K=255` adalah
+valid dan mencerminkan gap ~17–21x yang nyata terhadap `orbit`. Kesimpulan
+tersebut **dibatalkan**.
+
+**Penyebab**: audit disassembly pada 2026-11-02 membuktikan bahwa setelah
+`always_inline` ditambahkan pada helper `ra_core_singleblock`, compiler
+GCC `-O3` menerapkan **Dead-Code Elimination (DCE)** saat fungsi dipanggil
+dengan `raw_stream == NULL` — GCC membuktikan bahwa
+`ra_permutation_cycle_singleblock` tidak memiliki efek samping teramati (tidak
+seperti `orbit` yang menukar `L[i] <-> L[d]`) lalu memancarkan lompatan
+kondisional yang melompati seluruh 255 putaran permutasi. Angka `20,018 MB/s`
+mengukur cabang kosong, bukan pembangkitan word nyata.
+
+**Yang benar**: pengukuran yang sah wajib memakai harness buffer nyata yang
+mengkonsumsi output. Setelah audit tersebut dan redesain penuh ke `ra_core v2`
+(`Opsi_A3` + `W2_D2_xag_opt` + `eng_v2_E2`), angka throughput terverifikasi
+pada mesin klien (Intel Core i3-1115G4, `-O3 -march=native`) berada di kisaran
+`1,596.5 MiB/s` (stateless scalar `K=255`), `1,103.3–1,219.4 MiB/s` (stateful
+OTF `eng_v2_E2` `K=255`), dan `10,687.9 MiB/s` (8-way AVX2 SIMD `K=255`).
+
+**Sumber terverifikasi**:
+[`research/2026-9_ra-core-paper/DRAFT_v2.md`](../research/2026-9_ra-core-paper/DRAFT_v2.md)
+dan
+[`experiments/2026-11-04_v2-final-battery/RESULTS.md`](../experiments/2026-11-04_v2-final-battery/RESULTS.md).
+
 ---
 
 ## 2026-09-12 — Off-by-one di `ra_core_orbit()` multi-cycle

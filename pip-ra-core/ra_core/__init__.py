@@ -15,6 +15,8 @@ from . import _engine
 
 __all__ = [
     "generate",
+    "generate_x8",
+    "eval_k1",
     "spawn_streams",
     "shuffle",
     "random_key",
@@ -37,6 +39,16 @@ _SINGLEBLOCK_MAX = 255
 
 def _mask32(x: int) -> int:
     return x & 0xFFFFFFFF
+
+
+def eval_k1(key: int, addr_hi: int = 0) -> int:
+    """Fast-path register-only evaluation for K=1 at address (key, addr_hi).
+
+    Computes the first uint32 word directly in registers (8 M[] taps in the
+    active fan-in cone) without allocating or initializing any state arrays.
+    Bit-exact with the first uint32 of generate(key, addr_hi, n).
+    """
+    return int(_engine._lib_handle().ra_core_eval_k1(_mask32(key), _mask32(addr_hi)))
 
 
 def generate(key: int, addr_hi: int, n: int, *, mode: str = "auto") -> bytes:
@@ -63,6 +75,29 @@ def generate(key: int, addr_hi: int, n: int, *, mode: str = "auto") -> bytes:
     else:
         raise ValueError(f"unknown mode {mode!r}, expected 'auto', 'orbit' or 'singleblock'")
     return bytes(buf)
+
+
+def generate_x8(keys, addr_his, n: int) -> bytes:
+    """8-way lockstep SIMD batch generation for 8 (key, addr_hi) addresses,
+    each producing `n` words (1 <= n <= 255).
+
+    Returns `n * 8` little-endian uint32 words as `bytes`, interleaved by
+    step (i.e. step 0 across all 8 lanes, then step 1 across all 8 lanes, ...).
+    Exploits the data-oblivious pre-reseed window (`n <= 255`) to run all 8
+    independent addresses in parallel in AVX2/vector registers (~7.5 GB/s).
+    """
+    if len(keys) != 8 or len(addr_his) != 8:
+        raise ValueError("generate_x8 requires exactly 8 keys and 8 addr_his")
+    if n == 0:
+        return b""
+    if n < 0 or n > _SINGLEBLOCK_MAX:
+        raise ValueError(f"generate_x8 supports 1 <= n <= 255, got n={n}")
+
+    k_arr = (ctypes.c_uint32 * 8)(*(_mask32(k) for k in keys))
+    a_arr = (ctypes.c_uint32 * 8)(*(_mask32(a) for a in addr_his))
+    out = (ctypes.c_uint32 * (n * 8))()
+    _engine._lib_handle().ra_core_singleblock_x8_into(k_arr, a_arr, n, out)
+    return bytes(out)
 
 
 def spawn_streams(key: int, n: int, addr_hi_start: int = 0) -> list:
@@ -144,6 +179,22 @@ class RaCoreEngine:
         buf = (ctypes.c_uint32 * n)()
         _engine._lib_handle().ra_core_engine_next(self._state, n, buf)
         return bytes(buf)
+
+    def next_u32(self) -> int:
+        """Pull a single 32-bit unsigned integer (xoshiro/PCG style).
+        For the entire first cycle (words 1..255), uses On-The-Fly Register
+        Rolling (1 rot32 per word with an 8-word ring buffer) without
+        allocating or initializing L[256] or M[256]."""
+        return int(_engine._lib_handle().ra_core_engine_next_u32(self._state))
+
+    def next_u64(self) -> int:
+        """Pull a single 64-bit unsigned integer (two consecutive 32-bit draws,
+        little-endian word order matching RaCoreBitGenerator)."""
+        return int(_engine._lib_handle().ra_core_engine_next_u64(self._state))
+
+    def next_double(self) -> float:
+        """Pull a standard uniform float64 in [0.0, 1.0) with 53-bit precision."""
+        return float(_engine._lib_handle().ra_core_engine_next_double(self._state))
 
     def fork(self) -> "RaCoreEngine":
         """A new, independent RaCoreEngine that has gone through one forced

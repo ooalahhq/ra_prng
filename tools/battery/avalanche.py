@@ -60,7 +60,7 @@ def capture_via_binary(binary: Path, seed: int, cycle_words: int,
     -- leave it None for the single-core CORE_FN convention (`<binary>
     --single ...`).
 
-    `addr_hi` (2026-09-11, HANDOVER.md state-size-pareto-frontier Tahap D
+    `addr_hi` (2026-09-11, state-size-pareto-frontier Tahap D
     fix): driver_main_template.c's --single/--stream/--stream-hashed gained
     a mandatory addr_hi argument on 2026-09-06 (Kandidat D 64-bit address
     widening) -- this function predates that and was calling the binary with

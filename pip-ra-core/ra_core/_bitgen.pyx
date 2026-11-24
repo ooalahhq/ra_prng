@@ -33,28 +33,26 @@ cdef extern from "ra_core_engine.h" nogil:
     size_t ra_core_engine_struct_size()
     void ra_core_engine_init(ra_core_engine_t *e, uint32_t key, uint32_t addr_hi)
     void ra_core_engine_next(ra_core_engine_t *e, size_t n, uint32_t *out)
+    uint32_t ra_core_engine_next_u32(ra_core_engine_t *e)
+    uint64_t ra_core_engine_next_u64(ra_core_engine_t *e)
+    double ra_core_engine_next_double(ra_core_engine_t *e)
     uint64_t ra_core_engine_position(const ra_core_engine_t *e)
 
 
 cdef uint32_t _next_uint32(void *st) noexcept nogil:
-    cdef uint32_t word
-    ra_core_engine_next(<ra_core_engine_t *>st, 1, &word)
-    return word
+    return ra_core_engine_next_u32(<ra_core_engine_t *>st)
 
 
 cdef uint64_t _next_uint64(void *st) noexcept nogil:
-    cdef uint32_t lo, hi
-    ra_core_engine_next(<ra_core_engine_t *>st, 1, &lo)
-    ra_core_engine_next(<ra_core_engine_t *>st, 1, &hi)
-    return (<uint64_t>hi << 32) | <uint64_t>lo
+    return ra_core_engine_next_u64(<ra_core_engine_t *>st)
 
 
 cdef double _next_double(void *st) noexcept nogil:
-    return (_next_uint64(st) >> 11) * (1.0 / 9007199254740992.0)  # 2**-53
+    return ra_core_engine_next_double(<ra_core_engine_t *>st)
 
 
 cdef uint64_t _next_raw(void *st) noexcept nogil:
-    return _next_uint64(st)
+    return ra_core_engine_next_u64(<ra_core_engine_t *>st)
 
 
 cdef class RaCoreBitGenerator(BitGenerator):

@@ -1,0 +1,21 @@
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_Z11bern_philoxPjm' for 'sm_120'
+ptxas info    : Function properties for _Z11bern_philoxPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 16 registers, used 1 barriers, 1024 bytes smem
+ptxas info    : Compile time = 79.034 ms
+ptxas info    : Compiling entry function '_Z7bern_raPjm' for 'sm_120'
+ptxas info    : Function properties for _Z7bern_raPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 12 registers, used 1 barriers, 1024 bytes smem
+ptxas info    : Compile time = 3.679 ms
+ptxas info    : Compiling entry function '_Z10raw_philoxPjm' for 'sm_120'
+ptxas info    : Function properties for _Z10raw_philoxPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 14 registers, used 0 barriers
+ptxas info    : Compile time = 1.836 ms
+ptxas info    : Compiling entry function '_Z6raw_raPjm' for 'sm_120'
+ptxas info    : Function properties for _Z6raw_raPjm
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 10 registers, used 0 barriers
+ptxas info    : Compile time = 1.444 ms

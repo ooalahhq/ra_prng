@@ -22,10 +22,14 @@ import sys
 from pathlib import Path
 
 import numpy
-from Cython.Build import cythonize
 from setuptools import Extension, setup
 from setuptools.command.build_py import build_py as _build_py
 from setuptools.dist import Distribution
+
+try:
+    from Cython.Build import cythonize
+except ImportError:
+    cythonize = None
 
 _ROOT = Path(__file__).resolve().parent
 _C_SOURCE = _ROOT.parent / "src" / "ra_core" / "c" / "ra_core_engine.c"
@@ -46,17 +50,28 @@ def _relpath(p: Path) -> str:
     return os.path.relpath(p, _ROOT).replace(os.sep, "/")
 
 
-_ext_modules = cythonize(
-    [
+_bitgen_c_fallback = _ROOT / "ra_core" / "_bitgen.c"
+if cythonize is not None and not _bitgen_c_fallback.exists():
+    _ext_modules = cythonize(
+        [
+            Extension(
+                "ra_core._bitgen",
+                sources=[_relpath(_ROOT / "ra_core" / "_bitgen.pyx"), _relpath(_C_SOURCE)],
+                include_dirs=[numpy.get_include(), str(_C_INCLUDE_DIR)],
+                extra_compile_args=_CFLAGS,
+            )
+        ],
+        language_level=3,
+    )
+else:
+    _ext_modules = [
         Extension(
             "ra_core._bitgen",
-            sources=[_relpath(_ROOT / "ra_core" / "_bitgen.pyx"), _relpath(_C_SOURCE)],
+            sources=[_relpath(_bitgen_c_fallback), _relpath(_C_SOURCE)],
             include_dirs=[numpy.get_include(), str(_C_INCLUDE_DIR)],
             extra_compile_args=_CFLAGS,
         )
-    ],
-    language_level=3,
-)
+    ]
 # cythonize() rewrites the .pyx source entry to its generated .c file using
 # an absolute path, regardless of what was passed in above -- re-relativize
 # every entry, since setuptools rejects Extension.sources containing any
